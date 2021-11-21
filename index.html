@@ -107,11 +107,11 @@
         </div>
         <div>
             Stockfish: 
-            <select id="controls-stockfish-select">
-                <option value="none">Disabled</option>
-                <option value="none">Enabled</option>
-                <option value="white">Play as white</option>
-                <option value="black">Play as black</option>
+            <select id="controls-stockfish-select" onchange="controlsStockfishSelect_onChange()">
+                <option value="disabled">Disabled</option>
+                <option value="enabled">Enabled</option>
+                <option value="play-as-white">Play as white</option>
+                <option value="play-as-black">Play as black</option>
             </select>
         </div>
     </div>

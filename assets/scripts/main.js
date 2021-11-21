@@ -516,7 +516,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
         return;
 
     makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
-    
+
     stockfishUpdateMessage("Moving...");
 }
 
@@ -748,6 +748,13 @@ function controlsRandomPuzzleButton_onClick()
 function controlsResetPuzzleButton_onClick()
 {
     resetCurrentPuzzle();
+}
+
+function controlsStockfishSelect_onChange()
+{
+    var select = document.getElementById("controls-stockfish-select");
+
+    _stockfishEnabled = select.selectedIndex - 1;
 }
 
 function resetButton_onClick()
