@@ -17,23 +17,41 @@
         <div>
             <button onclick="resetButton_onClick()">Reset</button>
         </div>
-        <div>
-            Play as: 
-            <select id="controls-play-as-select">
-                <option value="white">White</option>
-                <option value="black">Black</option>
-            </select>
-        </div>
-        <div>
-            Time: 
-            <select id="controls-time-select">
-                <option value="none">None</option>
-                <option value="standard">Standard</option>
-                <option value="rapid">Rapid</option>
-                <option value="blitz">Blitz</option>
-                <option value="bullet">Bullet</option>
-            </select>
-        </div>
+        <table>
+            <tr>
+                <td>
+                    <div>
+                        Play as: 
+                        <select id="controls-play-as-select">
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        Time: 
+                        <select id="controls-time-select">
+                            <option value="none">None</option>
+                            <option value="standard">Standard</option>
+                            <option value="rapid">Rapid</option>
+                            <option value="blitz">Blitz</option>
+                            <option value="bullet">Bullet</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        Stockfish: 
+                        <select id="controls-stockfish-select">
+                            <option value="none">Disabled</option>
+                            <option value="white">Play as white</option>
+                            <option value="black">Play as black</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <div>
             <input id="controls-fen-input" />
         </div>
