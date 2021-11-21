@@ -2,7 +2,7 @@ var _chessJS = new Chess();
 
 const _stockfish = STOCKFISH();
 var _stockfishIsReady = false;
-var _stockfishEnabledAsPlayer = 1;
+var _stockfishEnabled = 2;      // -1 = disabled; 0 = enabled; 1 = play as white; 2 = play as black;
 
 _stockfish.onmessage = function (event) {
 	stockfishReceiveData(event.data ? event.data : event);
@@ -283,7 +283,7 @@ function makeMoveFromCurrentBoardState(move)
     _currentSquareSelected = "";
     _boardStateHistory.add(move, _currentBoardState);
 
-    if((_chessJS.turn() == 'w' && _stockfishEnabledAsPlayer == 0) || (_chessJS.turn() == 'b' && _stockfishEnabledAsPlayer == 1))
+    if((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2))
         stockfishUpdate(move);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
@@ -302,7 +302,7 @@ function makeMoveFromCurrentBoardStateFromTo(moveFromTo)
     var move = history[history.length - 1];
     _boardStateHistory.add(move, _currentBoardState);
 
-    if((_chessJS.turn() == 'w' && _stockfishEnabledAsPlayer == 0) || (_chessJS.turn() == 'b' && _stockfishEnabledAsPlayer == 1))
+    if((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2))
         stockfishUpdate(move);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);

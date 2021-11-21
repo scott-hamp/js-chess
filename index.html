@@ -19,7 +19,7 @@
         </div>
         <table>
             <tr>
-                <td>
+                <td style="padding-left: 10px;">
                     <div>
                         Play as: 
                         <select id="controls-play-as-select">
@@ -28,7 +28,7 @@
                         </select>
                     </div>
                 </td>
-                <td>
+                <td style="padding-left: 10px;">
                     <div>
                         Time: 
                         <select id="controls-time-select">
@@ -37,16 +37,6 @@
                             <option value="rapid">Rapid</option>
                             <option value="blitz">Blitz</option>
                             <option value="bullet">Bullet</option>
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        Stockfish: 
-                        <select id="controls-stockfish-select">
-                            <option value="none">Disabled</option>
-                            <option value="white">Play as white</option>
-                            <option value="black">Play as black</option>
                         </select>
                     </div>
                 </td>
@@ -114,6 +104,15 @@
             <div id="controls-puzzle-div">
             
             </div>
+        </div>
+        <div>
+            Stockfish: 
+            <select id="controls-stockfish-select">
+                <option value="none">Disabled</option>
+                <option value="none">Enabled</option>
+                <option value="white">Play as white</option>
+                <option value="black">Play as black</option>
+            </select>
         </div>
     </div>
 </body>
