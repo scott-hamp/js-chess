@@ -502,7 +502,7 @@ function setupChessJS()
 
 function stockfishBestMoveDecided(moveAsFromTo) 
 {
-    alert(moveAsFromTo);
+    alert(`stockfishBestMoveDecided: "${moveAsFromTo}"`);
     return;
 
 	if (stockfishEnabledAsPlayer) 
