@@ -1,0 +1,102 @@
+<html>
+<head>
+    <link rel="stylesheet" href="assets/style/main.css">
+</head>
+<script src="assets/scripts/chess.js"></script>
+<script src="assets/scripts/stockfish.js"></script>
+<script src="assets/scripts/openings.js"></script>
+<script src="assets/scripts/puzzles.js"></script>
+<script src="assets/scripts/main.js"></script>
+<body onload="body_onLoad()">
+    <div id="board-div">
+        <table id="board-squares-table">
+
+        </table>
+    </div>
+    <div id="controls-div">
+        <div>
+            <button onclick="resetButton_onClick()">Reset</button>
+        </div>
+        <div>
+            Play as: 
+            <select id="controls-play-as-select">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+            </select>
+        </div>
+        <div>
+            Time: 
+            <select id="controls-time-select">
+                <option value="none">None</option>
+                <option value="standard">Standard</option>
+                <option value="rapid">Rapid</option>
+                <option value="blitz">Blitz</option>
+                <option value="bullet">Bullet</option>
+            </select>
+        </div>
+        <div>
+            <input id="controls-fen-input" />
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <div id="controls-game-moves-div">
+                            <table id="controls-game-moves-table">
+
+                            </table>
+                        </div>
+                    </td>
+                    <td style="padding-left: 15px;">
+                        <table style="border-spacing: 5px;">
+                            <tr><td>White: </td><td><input id="controls-game-details-white-input" /></td></tr>
+                            <tr><td>Black: </td><td><input id="controls-game-details-black-input" /></td></tr>
+                            <tr><td>Event: </td><td><input id="controls-game-details-event-input" /></td></tr>
+                            <tr><td>Site: </td><td><input id="controls-game-details-site-input" /></td></tr>
+                            <tr><td>Date: </td><td><input id="controls-game-details-date-input" /></td></tr>
+                            <tr><td>Event Date: </td><td><input id="controls-game-details-eventdate-input" /></td></tr>
+                            <tr><td>Result: </td><td><input id="controls-game-details-result-input" /></td></tr>
+                            <tr><td>Move Notes: </td><td><textarea id="controls-game-details-event-notes-text-area" rows="4">...</textarea></td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('to-start')"><img src="assets/images/arrow-0.png"></button>
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('previous')"><img src="assets/images/arrow-1.png"></button>
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('next')"><img src="assets/images/arrow-2.png"></button>
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('to-end')"><img src="assets/images/arrow-3.png"></button>
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('save')"><img src="assets/images/save-0.png"></button>
+                            <input id="loadGameInput" type="file" accept=".pgn" style="display: none;" onchange="loadGame()" />
+                            <button class="controls-game-button" onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Opening:
+            <div id="controls-opening-div">
+                ...
+            </div>
+            <div style="padding-top: 5px;">
+                <input id="controls-opening-input" oninput="controlsOpeningInput_onInput()" />
+                <select id="controls-opening-select" onchange="controlsOpeningSelect_onChange()">
+
+                </select>
+            </div>
+        </div>
+        <div>
+            Puzzle:
+            <div style="padding-top: 5px;">
+                <button onclick="controlsRandomPuzzleButton_onClick()">Random</button>
+                <button id="controls-reset-puzzle-button" onclick="controlsResetPuzzleButton_onClick()" disabled>Reset</button>
+            </div>
+            <div id="controls-puzzle-div">
+            
+            </div>
+        </div>
+    </div>
+</body>
+</html>

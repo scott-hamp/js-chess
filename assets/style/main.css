@@ -1,0 +1,139 @@
+#board-div > table 
+{
+	outline-style: double;
+}
+
+#board-div > table, table th, table tr, table td 
+{
+	margin: 0px;
+	border: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	padding: 0px;
+}
+
+#controls-div
+{
+    margin-left: 10px;
+    margin-top: 5px;
+    padding: 10px;
+    position: absolute;
+    left: 730px;
+    top: 0px;
+    background-color: lightgray;
+    filter: drop-shadow(3px 3px 3px lightgray);
+}
+
+#controls-div > div
+{
+    margin: 10px;
+}
+
+#controls-fen-input
+{
+    padding: 2px;
+    width: 650px;
+    text-align: center;
+}
+
+#controls-game-moves-div
+{
+    overflow-y: auto;
+    width: 310px;
+    height: 300px;
+    margin-top: 5px;
+    background-color: white;
+}
+
+#controls-game-moves-table
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 270px;
+    align-self: center;
+}
+
+#controls-opening-div
+{
+    height: 20px;
+    margin-top: 5px;
+    padding-top: 3px;
+    padding-left: 10px;
+    background-color: rgb(230, 230, 230);
+}
+
+#controls-opening-select
+{
+    width: 430px;
+}
+
+#controls-puzzle-div
+{
+    height: 25px;
+    margin-top: 5px;
+    padding-top: 3px;
+    padding-left: 10px;
+    background-color: rgb(230, 230, 230);
+}
+
+.board-square-td
+{
+    width: 90px;
+    height: 90px;
+}
+
+.controls-game-button
+{
+    width: 48px;
+    height: 48px;
+    margin-top: 10px;
+}
+
+.controls-game-button > img
+{
+    width: 32px;
+    height: 32px;
+}
+
+.controls-game-moves-table-cell
+{
+    border: 1px solid gray;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+body
+{
+    font-family: sans-serif;
+    font-size: 16px;
+    overflow: hidden;
+    background-color: white;
+}
+
+button, input, select
+{
+    font-size: 16px;
+}
+
+img 
+{
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+textarea
+{
+    resize: none;
+    font-size: 16px;
+}
