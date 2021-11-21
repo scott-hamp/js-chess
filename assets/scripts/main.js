@@ -289,6 +289,22 @@ function makeMoveFromCurrentBoardState(move)
     console.log(`Move: ${move.san}`);
 }
 
+function makeMoveFromCurrentBoardStateFromTo(moveFromTo)
+{
+    _chessJS.move(moveAsFromTo, { sloppy: true });
+    setCurrentBoardStateToChessJSBoard();
+    var history = _chessJS.history({ verbose: true });
+    var move = history[history.length - 1];
+    _boardStateHistory.add(move, _currentBoardState);
+
+    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateControlsFENInput();
+    updateControlsMovesTable();
+    updateControlsOpeningDiv();
+
+    console.log(`Move: ${move.san}`);
+}
+
 function positionNotationForRankAndFile(rank, file)
 {
     var fileLetters = [ "a", "b", "c", "d", "e", "f", "g", "h" ];
@@ -486,10 +502,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
 		if (playerPlayAs == turn)
 			return;
 
-		var from = moveAsFromTo.substr(0, 2);
-		var piece = GetPieceAtPosition(from);
-
-		Move(piece, moveAsFromTo);
+        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
 
 		stockfishUpdateMessage("Moving...");
 	}
