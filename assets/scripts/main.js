@@ -1,6 +1,7 @@
 var _chessJS = new Chess();
 
 const _stockfish = STOCKFISH();
+var _stockfishIsReady = false;
 
 _stockfish.onmessage = function (event) {
 	stockfishReceiveData(event.data ? event.data : event);
@@ -517,11 +518,11 @@ function stockfishReceiveData(data)
 {
 	console.log(`stockfishReceiveData: "${data}"`);
 
-	if (!stockfishIsReady) 
+	if (!_stockfishIsReady) 
     {
 		if (data == "uciok") 
         {
-			stockfishIsReady = true;
+			_stockfishIsReady = true;
 
 			stockfishUpdateMessage("Ready.");
 		}
@@ -539,7 +540,7 @@ function stockfishReceiveData(data)
 
 function stockfishUpdate(move) 
 {
-	if (!stockfishIsReady) return;
+	if (!_stockfishIsReady) return;
 
 	if (moveObject != null) 
     {
