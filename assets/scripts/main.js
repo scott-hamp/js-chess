@@ -503,17 +503,21 @@ function setupChessJS()
 function stockfishBestMoveDecided(moveAsFromTo) 
 {
     alert(`stockfishBestMoveDecided: "${moveAsFromTo}"`);
-    return;
 
-	if (stockfishEnabledAsPlayer) 
+	if(_stockfishEnabled == -1) return;
+
+    if(_stockfishEnabled == 0)
     {
-		if (playerPlayAs == turn)
-			return;
+        //...
+        return;
+    }
 
-        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
+    if(!((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
+        return;
 
-		stockfishUpdateMessage("Moving...");
-	}
+    makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
+    
+    stockfishUpdateMessage("Moving...");
 }
 
 function stockfishPostMessage(message) 
