@@ -510,7 +510,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
 
 function stockfishPostMessage(message) 
 {
-	stockfish.postMessage(message);
+	_stockfish.postMessage(message);
 }
 
 function stockfishReceiveData(data) 
