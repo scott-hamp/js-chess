@@ -2,6 +2,7 @@ var _chessJS = new Chess();
 
 const _stockfish = STOCKFISH();
 var _stockfishIsReady = false;
+var _stockfishEnabledAsPlayer = 1;
 
 _stockfish.onmessage = function (event) {
 	stockfishReceiveData(event.data ? event.data : event);
@@ -282,6 +283,9 @@ function makeMoveFromCurrentBoardState(move)
     _currentSquareSelected = "";
     _boardStateHistory.add(move, _currentBoardState);
 
+    if(_stockfishEnabledAsPlayer == 1)
+        stockfishUpdate(move);
+
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
@@ -542,7 +546,7 @@ function stockfishUpdate(move)
 {
 	if (!_stockfishIsReady) return;
 
-	if (moveObject != null) 
+	if (move != null) 
     {
 		var notation = move.from + move.to;
 
