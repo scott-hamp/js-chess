@@ -551,12 +551,12 @@ function stockfishUpdate(move)
 
 	if (move != null) 
     {
-		var notation = move.from + move.to;
+		var moveFromTo = move.from + move.to;
 
-		stockfishPostMessage("position fen " + chess.fen() + " moves " + notation);
+		stockfishPostMessage("position fen " + _chessJS.fen() + " moves " + moveFromTo);
 	}
 	else
-        stockfishPostMessage("position fen " + chess.fen());
+        stockfishPostMessage("position fen " + _chessJS.fen());
 
 	stockfishPostMessage("go depth 1");
 
