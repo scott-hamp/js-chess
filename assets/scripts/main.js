@@ -515,10 +515,12 @@ function stockfishPostMessage(message)
 
 function stockfishReceiveData(data) 
 {
-	console.log("StockfishReceiveData: '" + data + "'");
+	console.log(`stockfishReceiveData: "${data}"`);
 
-	if (!stockfishIsReady) {
-		if (data == "uciok") {
+	if (!stockfishIsReady) 
+    {
+		if (data == "uciok") 
+        {
 			stockfishIsReady = true;
 
 			stockfishUpdateMessage("Ready.");
