@@ -294,7 +294,7 @@ function makeMoveFromCurrentBoardState(move)
     console.log(`Move: ${move.san}`);
 }
 
-function makeMoveFromCurrentBoardStateFromTo(moveFromTo)
+function makeMoveFromCurrentBoardStateFromTo(moveAsFromTo)
 {
     _chessJS.move(moveAsFromTo, { sloppy: true });
     setCurrentBoardStateToChessJSBoard();
@@ -555,9 +555,9 @@ function stockfishUpdate(move)
 
 	if (move != null) 
     {
-		var moveFromTo = move.from + move.to;
+		var moveAsFromTo = move.from + move.to;
 
-		stockfishPostMessage("position fen " + _chessJS.fen() + " moves " + moveFromTo);
+		stockfishPostMessage("position fen " + _chessJS.fen() + " moves " + moveAsFromTo);
 	}
 	else
         stockfishPostMessage("position fen " + _chessJS.fen());
