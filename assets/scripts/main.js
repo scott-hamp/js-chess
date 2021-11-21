@@ -2,7 +2,7 @@ var _chessJS = new Chess();
 
 const _stockfish = STOCKFISH();
 var _stockfishIsReady = false;
-var _stockfishEnabled = 2;      // -1 = disabled; 0 = enabled; 1 = play as white; 2 = play as black;
+var _stockfishEnabled = -1;      // -1 = disabled; 0 = enabled; 1 = play as white; 2 = play as black;
 
 _stockfish.onmessage = function (event) {
 	stockfishReceiveData(event.data ? event.data : event);
