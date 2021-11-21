@@ -2,7 +2,7 @@ var _chessJS = new Chess();
 
 const _stockfish = STOCKFISH();
 
-stockfish.onmessage = function (event) {
+_stockfish.onmessage = function (event) {
 	stockfishReceiveData(event.data ? event.data : event);
 };
 
