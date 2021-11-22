@@ -712,7 +712,7 @@ function updateControlsMovesTable()
 
     for(var i = 0; i < _boardStateHistory.moves.length; i++)
     {
-        innerHTML += `<tr><td style="padding-right: 10px; text-align: right;">${(i / 2) + 1}. </td>`;
+        innerHTML += `<tr><td style="text-align: center;">${(i / 2) + 1}. </td>`;
         for(var j = i; j < Math.min(i + 2, _boardStateHistory.moves.length); j++)
         {
             var move = _boardStateHistory.moves[j];
@@ -851,7 +851,7 @@ function controlsStockfishSelect_onChange()
 
     _stockfishEnabled = select.selectedIndex - 1;
 
-    if((_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+    if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
         stockfishUpdate();
 
     document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
