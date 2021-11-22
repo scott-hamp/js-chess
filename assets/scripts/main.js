@@ -282,7 +282,8 @@ function makeMoveFromCurrentBoardState(move)
     _currentSquareSelected = "";
     _boardStateHistory.add(move, _currentBoardState);
 
-    if(_stockfishEnabled > -1) stockfishUpdate(move);
+    if(_stockfishEnabled > -1 && !_chessJS.in_checkmate()) 
+        stockfishUpdate(move);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
@@ -300,7 +301,7 @@ function makeMoveFromCurrentBoardStateFromTo(moveAsFromTo)
     var move = history[history.length - 1];
     _boardStateHistory.add(move, _currentBoardState);
 
-    if((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2))
+    if(_stockfishEnabled > -1 && !_chessJS.in_checkmate()) 
         stockfishUpdate(move);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
