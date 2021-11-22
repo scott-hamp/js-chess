@@ -255,7 +255,6 @@ function loadGame()
         updateControlsMovesTable();
 
         var pgn = _chessJS.pgn();
-        alert(pgn);
         pgn = pgn.replaceAll("[", "").replaceAll("]", "");
         var pgnLines = pgn.split("\n");
         for(var i = 0; i < pgnLines.length; i++)
@@ -502,9 +501,7 @@ function setupChessJS()
 
 function stockfishBestMoveDecided(moveAsFromTo) 
 {
-    alert(`stockfishBestMoveDecided: "${moveAsFromTo}"`);
-
-	if(_stockfishEnabled == -1) return;
+    if(_stockfishEnabled == -1) return;
 
     if(_stockfishEnabled == 0)
     {
