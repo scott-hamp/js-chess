@@ -257,7 +257,7 @@ function getMoveForNotation(notation)
 {
     if(notation.length != 4) return null;
 
-    var moves = _chessJS({ verbose: true });
+    var moves = _chessJS.moves({ verbose: true });
     var from = moveAsFromTo.substring(0, 2);
     var to = moveAsFromTo.substring(2, 2);
 
@@ -712,7 +712,7 @@ function updateControlsMovesTable()
 
     for(var i = 0; i < _boardStateHistory.moves.length; i++)
     {
-        innerHTML += `<tr><td style="text-align: right;">${(i / 2) + 1}. </td>`;
+        innerHTML += `<tr><td style="padding-right: 10px; text-align: right;">${(i / 2) + 1}. </td>`;
         for(var j = i; j < Math.min(i + 2, _boardStateHistory.moves.length); j++)
         {
             var move = _boardStateHistory.moves[j];
