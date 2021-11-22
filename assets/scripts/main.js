@@ -505,7 +505,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
 
     if(_stockfishEnabled == 0)
     {
-        //...
+        stockfishUpdateMessage(`Best move: ${moveAsFromTo}.`);
         return;
     }
 
@@ -515,11 +515,6 @@ function stockfishBestMoveDecided(moveAsFromTo)
     {
         stockfishUpdateMessage("Moving...");
         makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
-    }
-    else
-    {
-        if(_stockfishEnabled == 0)
-            stockfishUpdateMessage(`Best move: ${moveAsFromTo}.`);
     }
 }
 
