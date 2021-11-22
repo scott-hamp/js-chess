@@ -543,12 +543,12 @@ function stockfishReceiveData(data)
 		return;
 	}
 
+    stockfishUpdateMessage("Ready.");
+
 	var parts = data.split(" ");
 
 	if (parts[0] == "bestmove")
 		stockfishBestMoveDecided(parts[1]);
-
-	stockfishUpdateMessage("Ready.");
 }
 
 function stockfishUpdate(move) 
