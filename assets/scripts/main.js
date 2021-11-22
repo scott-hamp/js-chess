@@ -259,7 +259,7 @@ function getMoveForNotation(notation)
 
     var moves = _chessJS.moves({ verbose: true });
     var from = notation.substring(0, 2);
-    var to = notation.substring(2, 2);
+    var to = notation.substring(2);
 
     for(var i = 0; i < moves.length; i++)
     {
