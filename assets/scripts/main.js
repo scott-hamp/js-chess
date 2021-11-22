@@ -253,6 +253,27 @@ function clockMillisecondIntervalTick(turn)
     span.textContent = `${minutes}:${seconds}`;
 }
 
+function getMoveForNotation(notation)
+{
+    if(notation.length != 4) return null;
+
+    var moves = _chessJS({ verbose: true });
+    var from = moveAsFromTo.substring(0, 2);
+    var to = moveAsFromTo.substring(2, 2);
+
+    for(var i = 0; i < moves.length; i++)
+    {
+        var move = moves[i];
+
+        if(move.san == notation) return move;
+        if(move.from != from || move.to != to) continue;
+
+        return move;
+    }
+
+    return null;
+}
+
 function loadGame()
 {
 	var element = document.getElementById("loadGameInput");
@@ -573,7 +594,11 @@ function stockfishBestMoveDecided(moveAsFromTo)
 
     if(_stockfishEnabled == 0)
     {
-        stockfishUpdateMessage(`Best move: ${moveAsFromTo}.`);
+        var move = getMoveForNotation(moveAsFromTo);
+        var moveValue = (move == null) ? moveAsFromTo : move.san;
+
+        stockfishUpdateMessage(`Best move: ${moveValue}.`);
+        
         return;
     }
 
