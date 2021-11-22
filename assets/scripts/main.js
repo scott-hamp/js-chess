@@ -19,6 +19,7 @@ var _moveClockMillisecondIntervals =
     setInterval(clockMillisecondIntervalTick, 10, 0),
     setInterval(clockMillisecondIntervalTick, 10, 1)
 ];
+var _rightMouseDragFrom = null;
 var _sounds = 
 [
     new Audio("assets/sounds/move-0.wav"),
@@ -157,6 +158,73 @@ class BoardStateHistory
     }
 }
 
+class Vector
+{
+    constructor(x, y) { this.x = x; this.y = y; }
+
+    add(other) { this.x += other.x; this.y += other.y; }
+
+    subtract(other) { this.x -= other.x; this.y -= other.y; }
+
+    scaleBy(value) { this.x *= value; this.y *= value; }
+
+    length() { return Math.hypot(this.x, this.y); }
+
+    normalize() { this.scaleBy(1 / this.length()); }
+    
+    rotate(degrees)
+    {
+        var radians = degrees * (Math.PI/180)
+        var cos = Math.cos(radians);
+        var sin = Math.sin(radians);
+
+        this.x = Math.round(10000*(this.x * cos - this.y * sin)) / 10000;
+        this.y = Math.round(10000*(this.x * sin + this.y * cos)) / 10000;
+    };
+}
+
+function boardCanvasClear()
+{
+    var canvas = document.getElementById("board-canvas");
+    var context = canvas.getContext("2d");
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function boardCanvasDrawArrow(from, to)
+{
+    var canvas = document.getElementById("board-canvas");
+    var context = canvas.getContext("2d");
+
+    var size = 30;
+
+    context.fillStyle = 'red';
+    context.strokeStyle = 'red';
+    context.lineWidth = size;
+
+    var angle = Math.atan2((to.y - from.y) , (to.x - from.x));
+    var hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
+
+    context.save();
+    context.translate(from.x, from.y);
+    context.rotate(angle);
+
+    // line
+    context.beginPath();	
+    context.moveTo(0, 0);
+    context.lineTo(hyp - size, 0);
+    context.stroke();
+
+    // triangle
+    context.beginPath();
+    context.lineTo(hyp - size, size);
+    context.lineTo(hyp, 0);
+    context.lineTo(hyp - size, -size);
+    context.fill();
+
+    context.restore();
+}
+
 function boardSquareSelected(positionNotation)
 {
     var rank = 8 - parseInt(positionNotation[1]);
@@ -257,6 +325,19 @@ function clockMillisecondIntervalTick(turn)
     }
 
     span.textContent = `${minutes}:${seconds}`;
+}
+
+function getBoardSquareCenterPosition(moveEventClientPosition)
+{
+    var boardDiv = document.getElementById("board-div");
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var boardDivSquareSize = boardDivSize / 8;
+
+    var x = (Math.floor(((moveEventClientPosition.x - boardDivRect.left) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+    var y = (Math.floor(((moveEventClientPosition.y - boardDivRect.top) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+
+    return { x: x, y: y };
 }
 
 function getMoveForNotation(notation)
@@ -782,14 +863,25 @@ function updateControlsPuzzleDiv()
 
 function boardDiv_onMouseDown(mouseEvent)
 {
-    var boardDiv = document.getElementById("board-div");
-    //console.log(mouseEvent.screenX + "," + mouseEvent.screenY);
+    if(mouseEvent.button == 0)
+    {
+        boardCanvasClear();
+        return;
+    }
+
+    if(mouseEvent.button != 2) return;
+
+    _rightMouseDragFrom = getBoardSquareCenterPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
 }
 
 function boardDiv_onMouseUp(mouseEvent)
 {
-    var boardDiv = document.getElementById("board-div");
-    //console.log(mouseEvent.screenX + "," + mouseEvent.screenY);
+    if(mouseEvent.button != 2 || _rightMouseDragFrom == null) return;
+
+    var to = getBoardSquareCenterPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
+
+    boardCanvasDrawArrow(_rightMouseDragFrom, to);
+    _rightMouseDragFrom = null;
 }
 
 function boardSquare_onMouseDown(positionNotation)
