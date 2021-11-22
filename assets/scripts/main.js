@@ -512,8 +512,8 @@ function stockfishBestMoveDecided(moveAsFromTo)
 
     if(((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
     {
-        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
         stockfishUpdateMessage("Moving...");
+        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
     }
     else
     {
@@ -564,9 +564,11 @@ function stockfishUpdate(move)
 	else
         stockfishPostMessage("position fen " + _chessJS.fen());
 
-	stockfishPostMessage("go depth 1");
+    stockfishUpdateMessage("Thinking...");
 
-	stockfishUpdateMessage("Thinking...");
+    setTimeout(() => {
+        stockfishPostMessage("go depth 10");
+    }, 1000);
 }
 
 function stockfishUpdateMessage(message)
