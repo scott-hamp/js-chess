@@ -282,8 +282,7 @@ function makeMoveFromCurrentBoardState(move)
     _currentSquareSelected = "";
     _boardStateHistory.add(move, _currentBoardState);
 
-    if((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2))
-        stockfishUpdate(move);
+    if(_stockfishEnabled > -1) stockfishUpdate(move);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
@@ -509,12 +508,18 @@ function stockfishBestMoveDecided(moveAsFromTo)
         return;
     }
 
-    if(!((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
-        return;
+    stockfishUpdateMessage("Ready.");
 
-    makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
-
-    stockfishUpdateMessage("Moving...");
+    if(((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
+    {
+        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
+        stockfishUpdateMessage("Moving...");
+    }
+    else
+    {
+        if(_stockfishEnabled == 0)
+            stockfishUpdateMessage(`Best move: ${moveAsFromTo}.`);
+    }
 }
 
 function stockfishPostMessage(message) 
