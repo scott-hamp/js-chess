@@ -569,7 +569,9 @@ function stockfishUpdate(move)
 
 function stockfishUpdateMessage(message)
 {
-    alert("Stockfish: " + message);
+    console.log("Stockfish: " + message);
+
+    document.getElementById("controls-stockfish-message-span").textContent = message;
 }
 
 function updateBoardSquaresTableFromBoardState(boardState)
