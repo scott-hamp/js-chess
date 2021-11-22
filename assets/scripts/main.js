@@ -851,7 +851,7 @@ function controlsStockfishSelect_onChange()
 
     _stockfishEnabled = select.selectedIndex - 1;
 
-    if((_stockfishEnabled == 1 && _chessJS.turn() == 'w') && (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+    if((_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
         stockfishUpdate();
 
     document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
