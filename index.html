@@ -1,5 +1,8 @@
 <html>
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style/main.css">
 </head>
 <script src="assets/scripts/chess.js"></script>
@@ -22,16 +25,16 @@
                 <td style="padding-left: 10px;">
                     <div>
                         Play as: 
-                        <select id="controls-play-as-select">
+                        <select id="controls-play-as-select" style="margin-left: 5px;">
                             <option value="white">White</option>
                             <option value="black">Black</option>
                         </select>
                     </div>
                 </td>
-                <td style="padding-left: 10px;">
-                    <div>
+                <td style="padding-left: 5px;">
+                    <div style="margin-left: 10px;">
                         Time: 
-                        <select id="controls-time-select">
+                        <select id="controls-time-select" style="margin-left: 5px;">
                             <option value="none">None</option>
                             <option value="standard">Standard</option>
                             <option value="rapid">Rapid</option>
@@ -106,14 +109,25 @@
             </div>
         </div>
         <div>
-            Stockfish: 
-            <select id="controls-stockfish-select" onchange="controlsStockfishSelect_onChange()">
-                <option value="disabled">Disabled</option>
-                <option value="enabled">Enabled</option>
-                <option value="play-as-white">Play as white</option>
-                <option value="play-as-black">Play as black</option>
-            </select>
-            <span id="controls-stockfish-message-span">...</span>
+            <table>
+                <tr>
+                    <td>
+                        <img src="assets/images/stockfish-0.png" width="24" height="24" />
+                    </td>
+                    <td style="padding-left: 5px;">Stockfish</td>
+                    <td style="padding-left: 10px;">
+                        <select id="controls-stockfish-select" onchange="controlsStockfishSelect_onChange()">
+                            <option value="disabled">Disabled</option>
+                            <option value="enabled">Enabled</option>
+                            <option value="play-as-white">Play as white</option>
+                            <option value="play-as-black">Play as black</option>
+                        </select>
+                    </td>
+                    <td style="padding-left: 5px;">
+                        <span id="controls-stockfish-message-span">...</span>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>
