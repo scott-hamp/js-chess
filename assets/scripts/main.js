@@ -587,6 +587,9 @@ function setup()
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
+
+    var boardDiv = document.getElementById("board-div");
+    boardDiv.addEventListener('contextmenu', event => event.preventDefault());
 }
 
 function setupChessJS()
@@ -777,14 +780,26 @@ function updateControlsPuzzleDiv()
     controlsPuzzleDiv.innerHTML = innerHTML;
 }
 
-function body_onLoad()
+function boardDiv_onMouseDown(mouseEvent)
 {
-    setup();
+    var boardDiv = document.getElementById("board-div");
+    //console.log(mouseEvent.screenX + "," + mouseEvent.screenY);
+}
+
+function boardDiv_onMouseUp(mouseEvent)
+{
+    var boardDiv = document.getElementById("board-div");
+    //console.log(mouseEvent.screenX + "," + mouseEvent.screenY);
 }
 
 function boardSquare_onMouseDown(positionNotation)
 {
     boardSquareSelected(positionNotation);
+}
+
+function body_onLoad()
+{
+    setup();
 }
 
 function controlsGameButton_onClick(descriptor)
