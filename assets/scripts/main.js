@@ -19,6 +19,12 @@ var _moveClockMillisecondIntervals =
     setInterval(clockMillisecondIntervalTick, 10, 0),
     setInterval(clockMillisecondIntervalTick, 10, 1)
 ];
+var _sounds = 
+[
+    new Audio("assets/sounds/move-0.wav"),
+    new Audio("assets/sounds/capture-0.wav"),
+    new Audio("assets/sounds/castle-0.wav")
+];
 
 class BoardState
 {
@@ -340,6 +346,16 @@ function makeMoveFromCurrentBoardState(move)
     _currentSquareSelected = "";
     _boardStateHistory.add(move, _currentBoardState);
 
+    if(move.san.includes("x"))
+        _sounds[1].play();
+    else
+    {
+        if(move.san == "O-O" || move.san == "O-O-O")
+            _sounds[2].play();
+        else
+            _sounds[0].play();
+    }
+
     if(_stockfishEnabled > -1 && !_chessJS.in_checkmate()) 
         stockfishUpdate(move);
 
@@ -353,21 +369,11 @@ function makeMoveFromCurrentBoardState(move)
 
 function makeMoveFromCurrentBoardStateFromTo(moveAsFromTo)
 {
-    _chessJS.move(moveAsFromTo, { sloppy: true });
-    setCurrentBoardStateToChessJSBoard();
-    var history = _chessJS.history({ verbose: true });
-    var move = history[history.length - 1];
-    _boardStateHistory.add(move, _currentBoardState);
+    var move = getMoveForNotation(moveAsFromTo);
 
-    if(_stockfishEnabled > -1 && !_chessJS.in_checkmate()) 
-        stockfishUpdate(move);
+    if(move == null) return;
 
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
-    updateControlsFENInput();
-    updateControlsMovesTable();
-    updateControlsOpeningDiv();
-
-    console.log(`Move: ${move.san}`);
+    makeMoveFromCurrentBoardState(move);
 }
 
 function positionNotationForRankAndFile(rank, file)
