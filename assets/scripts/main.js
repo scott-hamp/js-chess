@@ -13,6 +13,12 @@ var _currentSquareSelected = "";
 var _currentSquareSelectedMoves = null;
 var _boardStateHistory = null;
 var _currentPuzzle = null;
+var _moveClockSecondTimers = [ 1000, 1000 ];
+var _moveClockMillisecondIntervals = 
+[
+    setInterval(clockMillisecondIntervalTick, 10, 0),
+    setInterval(clockMillisecondIntervalTick, 10, 1)
+];
 
 class BoardState
 {
@@ -216,6 +222,37 @@ function buildBoardSquaresTable()
     boardSquaresTable.innerHTML = innerHTML;
 }
 
+function clockMillisecondIntervalTick(turn)
+{
+    var select = document.getElementById("controls-time-select");
+
+    if(select.selectedIndex == 0) return;
+    if(!((_chessJS.turn() == 'w' && turn == 0) || (_chessJS.turn() == 'b' && turn == 1)))
+        return;
+
+    _moveClockSecondTimers[turn] -= 10;
+
+    if(_moveClockSecondTimers[turn] > 0) return;
+    _moveClockSecondTimers[turn] += 1000;
+
+    var span = (turn == 0) ? document.getElementById("controls-time-white-span") : document.getElementById("controls-time-black-span");
+    var textContentParts = span.textContent.split(":");
+    var minutes = parseInt(textContentParts[0]);
+    var seconds = parseInt(textContentParts[1]);
+
+    if(minutes == 0 && seconds == 0) return;
+
+    seconds--;
+
+    if(seconds < 0)
+    {
+        minutes--;
+        seconds = 59;
+    }
+
+    span.textContent = `${minutes}:${seconds}`;
+}
+
 function loadGame()
 {
 	var element = document.getElementById("loadGameInput");
@@ -362,6 +399,8 @@ function reset()
     updateControlsOpeningDiv();
     updateControlsPuzzleDiv();
 
+    resetMoveClocks();
+
     var gameDetailsFields = 
     [
         "white",
@@ -385,6 +424,33 @@ function reset()
     document.getElementById("controls-reset-puzzle-button").disabled = true;
 }
 
+function resetMoveClocks()
+{
+    var select = document.getElementById("controls-time-select");
+
+    var timeSpans = 
+    [
+        document.getElementById("controls-time-white-span"),
+        document.getElementById("controls-time-black-span")
+    ];
+
+    var time = 0;
+
+    if(select.selectedIndex == 1)
+        time = 90;
+    if(select.selectedIndex == 2)
+        time = 10;
+    if(select.selectedIndex == 3)
+        time = 5;
+    if(select.selectedIndex == 4)
+        time = 3;
+
+    _moveClockSecondTimers = [ 1000, 1000 ];
+
+    for(var i = 0; i < 2; i++)
+        timeSpans[i].textContent = `${time}:00`;
+}
+
 function resetCurrentPuzzle()
 {
     if(_currentPuzzle == null) return;
@@ -398,6 +464,8 @@ function resetCurrentPuzzle()
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
         _boardStateHistory.add(null, null);
+
+    resetMoveClocks();
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
@@ -758,7 +826,15 @@ function controlsStockfishSelect_onChange()
 
     _stockfishEnabled = select.selectedIndex - 1;
 
+    if((_stockfishEnabled == 1 && _chessJS.turn() == 'w') && (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+        stockfishUpdate();
+
     document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
+}
+
+function controlsTimeSelect_onChange()
+{
+    resetMoveClocks();
 }
 
 function resetButton_onClick()
