@@ -621,7 +621,7 @@ function updateControlsMovesTable()
 
     for(var i = 0; i < _boardStateHistory.moves.length; i++)
     {
-        innerHTML += `<tr><td>${(i / 2) + 1}. </td>`;
+        innerHTML += `<tr><td style="text-align: right;">${(i / 2) + 1}. </td>`;
         for(var j = i; j < Math.min(i + 2, _boardStateHistory.moves.length); j++)
         {
             var move = _boardStateHistory.moves[j];
@@ -759,6 +759,8 @@ function controlsStockfishSelect_onChange()
     var select = document.getElementById("controls-stockfish-select");
 
     _stockfishEnabled = select.selectedIndex - 1;
+
+    document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
 }
 
 function resetButton_onClick()
