@@ -620,15 +620,7 @@ function makeMoveFromCurrentBoardState(move)
         _currentSquareSelected = "";
         _boardStateHistory.add(move, _currentBoardState);
 
-        if(move.san.includes("x"))
-            _sounds[1].play();
-        else
-        {
-            if(move.san == "O-O" || move.san == "O-O-O")
-                _sounds[2].play();
-            else
-                _sounds[0].play();
-        }
+        playSoundForMove(move);
 
         if(_stockfishEnabled > -1 && !_chessJS.in_checkmate()) 
             stockfishUpdate(move);
@@ -651,6 +643,19 @@ function makeMoveFromCurrentBoardStateFromTo(moveAsFromTo)
     if(move == null) return;
 
     makeMoveFromCurrentBoardState(move);
+}
+
+function playSoundForMove(move)
+{
+    if(move.san.includes("x"))
+        _sounds[1].play();
+    else
+    {
+        if(move.san == "O-O" || move.san == "O-O-O")
+            _sounds[2].play();
+        else
+            _sounds[0].play();
+    }
 }
 
 function positionDistance(from, to)
@@ -1093,7 +1098,7 @@ function boardDiv_onMouseUp(mouseEvent)
 function boardSquare_onMouseDown(mouseEvent, positionNotation)
 {
     if(mouseEvent.button != 0) return;
-    
+
     boardSquareSelected(positionNotation);
 }
 
@@ -1113,14 +1118,23 @@ function controlsGameButton_onClick(descriptor)
     if(descriptor == "previous")
     {
         _boardStateHistory.atIndex = Math.max(_boardStateHistory.atIndex - 2, 0);
+
         setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
+
         return;
     }
 
     if(descriptor == "next")
     {
         _boardStateHistory.atIndex = Math.min(_boardStateHistory.atIndex, _boardStateHistory.moves.length - 1);
-        setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
+        
+        var move = _boardStateHistory.moves[_boardStateHistory.atIndex];
+        animateMove(move, () => 
+        {
+            setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
+            playSoundForMove(move);
+        });
+
         return;
     }
 
