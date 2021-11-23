@@ -753,7 +753,6 @@ function reset()
         input.value = "";
     }
 
-    document.getElementById("controls-game-details-event-notes-text-area").innerHTML = "...";
     document.getElementById("controls-reset-puzzle-button").disabled = true;
 }
 
