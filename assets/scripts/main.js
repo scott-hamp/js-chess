@@ -123,6 +123,7 @@ class BoardStateHistory
     constructor()
     {
         this.atIndex = 0;
+        this.comments = [];
         this.moves = [];
         this.states = [];
     }
@@ -131,11 +132,13 @@ class BoardStateHistory
     {
         if(this.atIndex == this.moves.length)
         {
+            this.comments.push("");
             this.moves.push(move);
             this.states.push(boardState);
         }
         else
         {
+            this.comments[this.atIndex] = "";
             this.moves[this.atIndex] = move;
             this.states[this.atIndex] = boardState;
 
@@ -589,6 +592,7 @@ function loadGame()
         updateBoardSquaresTableFromBoardState(_currentBoardState);
         updateControlsFENInput();
         updateControlsMovesTable();
+        updateGameDetailsMoveCommentTextArea();
 
         var pgn = _chessJS.pgn();
         pgn = pgn.replaceAll("[", "").replaceAll("]", "");
@@ -789,6 +793,81 @@ function resetMoveClocks()
         timeSpans[i].textContent = `${time}:00`;
 }
 
+function saveGame() 
+{
+    var content = "";
+    var result = "?";
+    var date = new Date();
+
+    var headers = 
+    [
+        "White",
+        "Black",
+        "Event",
+        "Site",
+        "Date",
+        "EventDate",
+        "Result"
+    ];
+
+    for(var i = 0; i < headers.length; i++)
+    {
+        var input = document.getElementById(`controls-game-details-${headers[i].toLowerCase()}-input`);
+        if(input == null) continue;
+
+        var inputValue = input.value.trim();
+        if(inputValue.length == 0)
+        {
+            inputValue = "?";
+            if(headers[i] == "Date")
+                inputValue = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+            if(headers[i] == "EventDate")
+                inputValue = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+            if(headers[i] == "Result" && _chessJS.in_checkmate())
+            {
+                result = (_chessJS.turn() == 'w') ? "1-0" : "0-1";
+                inputValue = result;
+            }
+        }
+
+        content += `[${headers[i]} "${inputValue}"]\n`;
+    }
+
+    content += "\n";
+    var fullMoveNumber = 1;
+    for(var i = 0; i < _boardStateHistory.moves.length; i += 2)
+    {
+        var moveWhite = _boardStateHistory.moves[i];
+        content += `${fullMoveNumber}. ${moveWhite.san} `;
+
+        var comment = _boardStateHistory.comments[i].trim();
+
+        if(comment.length > 0) content += `{${comment}} `;
+
+        if(i < _boardStateHistory.moves.length - 1)
+        {
+            var moveBlack = _boardStateHistory.moves[i + 1];
+            content += `${moveBlack.san} `;
+
+            comment = _boardStateHistory.comments[i + 1].trim();
+            if(comment.length > 0) content += `{${comment}} `;
+        }
+
+        fullMoveNumber++;
+    }
+    content += result;
+
+    var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    var link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", "game.pgn");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    //window.open("data:application/txt," + encodeURIComponent(content), "_self");
+}
+
 function selectOpening(opening)
 {
     reset();
@@ -846,6 +925,7 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
+    updateGameDetailsMoveCommentTextArea();
 }
 
 function setCurrentBoardStateToChessJSBoard()
@@ -1068,6 +1148,14 @@ function updateControlsPuzzleDiv()
     controlsPuzzleDiv.innerHTML = innerHTML;
 }
 
+function updateGameDetailsMoveCommentTextArea()
+{
+    var comment = _boardStateHistory.comments[_boardStateHistory.atIndex]
+    if(comment == null) comment = "";
+
+    document.getElementById("controls-game-details-move-comment-text-area").value = comment;
+}
+
 function boardDiv_onMouseDown(mouseEvent)
 {
     if(mouseEvent.button == 0)
@@ -1120,7 +1208,6 @@ function controlsGameButton_onClick(descriptor)
         _boardStateHistory.atIndex = Math.max(_boardStateHistory.atIndex - 2, 0);
 
         setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
-
         return;
     }
 
@@ -1141,6 +1228,12 @@ function controlsGameButton_onClick(descriptor)
     if(descriptor == "to-end")
     {
         setCurrentBoardStateByMoveIndex(_boardStateHistory.moves.length - 1);
+        return;
+    }
+
+    if(descriptor == "save")
+    {
+        saveGame();
         return;
     }
 
@@ -1195,6 +1288,12 @@ function controlsStockfishSelect_onChange()
 function controlsTimeSelect_onChange()
 {
     resetMoveClocks();
+}
+
+function getDetailsMoveCommentTextArea_onInput()
+{
+    var value = document.getElementById("controls-game-details-move-comment-text-area").value;
+    _boardStateHistory.comments[_boardStateHistory.atIndex] = value;
 }
 
 function resetButton_onClick()

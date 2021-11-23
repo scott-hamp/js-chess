@@ -120,15 +120,15 @@
 
 .controls-game-button
 {
-    width: 48px;
-    height: 48px;
-    margin-top: 10px;
+    width: 32px;
+    height: 32px;
+    margin-top: 5px;
 }
 
 .controls-game-button > img
 {
-    width: 32px;
-    height: 32px;
+    width: 18px;
+    height: 18px;
 }
 
 .controls-game-moves-table-cell

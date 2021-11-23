@@ -75,20 +75,20 @@
                                     <tr><td>Date: </td><td style="padding-left: 15px;"><input id="controls-game-details-date-input" /></td></tr>
                                     <tr><td>Event Date: </td><td style="padding-left: 15px;"><input id="controls-game-details-eventdate-input" /></td></tr>
                                     <tr><td>Result: </td><td style="padding-left: 15px;"><input id="controls-game-details-result-input" /></td></tr>
-                                    <tr><td>Move Notes: </td><td style="padding-left: 15px;"><textarea id="controls-game-details-event-notes-text-area" rows="4">...</textarea></td></tr>
+                                    <tr><td>Move Comment: </td><td style="padding-left: 15px;"><textarea id="controls-game-details-move-comment-text-area" rows="4" oninput="getDetailsMoveCommentTextArea_onInput()"></textarea></td></tr>
                                 </table>
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td colspan="2">
                                 <div>
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('to-start')"><img src="assets/images/arrow-0.png"></button>
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('previous')"><img src="assets/images/arrow-1.png"></button>
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('next')"><img src="assets/images/arrow-2.png"></button>
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('to-end')"><img src="assets/images/arrow-3.png"></button>
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('save')"><img src="assets/images/save-0.png"></button>
+                                    <button class="controls-game-button" title="Go to first move." onclick="controlsGameButton_onClick('to-start')"><img src="assets/images/arrow-0.png"></button>
+                                    <button class="controls-game-button" title="Go to previous move." onclick="controlsGameButton_onClick('previous')"><img src="assets/images/arrow-1.png"></button>
+                                    <button class="controls-game-button" title="Go to next move." onclick="controlsGameButton_onClick('next')"><img src="assets/images/arrow-2.png"></button>
+                                    <button class="controls-game-button" title="Go to last move." onclick="controlsGameButton_onClick('to-end')"><img src="assets/images/arrow-3.png"></button>
+                                    <button class="controls-game-button" title="Save the game (.pgn)." onclick="controlsGameButton_onClick('save')"><img src="assets/images/save-0.png"></button>
                                     <input id="loadGameInput" type="file" accept=".pgn" style="display: none;" onchange="loadGame()" />
-                                    <button class="controls-game-button" onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
+                                    <button class="controls-game-button" title="Load a game (.pgn)." onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
                                 </div>
                             </td>
                         </tr>
