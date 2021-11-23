@@ -128,17 +128,17 @@ class BoardStateHistory
         this.states = [];
     }
 
-    add(move, boardState)
+    add(move, boardState, comment)
     {
         if(this.atIndex == this.moves.length)
         {
-            this.comments.push("");
+            this.comments.push(comment);
             this.moves.push(move);
             this.states.push(boardState);
         }
         else
         {
-            this.comments[this.atIndex] = "";
+            this.comments[this.atIndex] = comment;
             this.moves[this.atIndex] = move;
             this.states[this.atIndex] = boardState;
 
@@ -581,8 +581,19 @@ function loadGame()
             var move = history[i];
             chessJSAlt.move(move.san);
 
-            var boardState = new BoardState(chessJSAlt.fen());
-            _boardStateHistory.add(move, boardState);
+            var fen = chessJSAlt.fen();
+            var boardState = new BoardState(fen);
+            var comments = _chessJS.get_comments();
+            var comment = "";
+
+            for(var j = 0; j < comments.length; j++)
+            {
+                if(comments[j].fen != fen) continue;
+                comment = comments[j].comment;
+                break;
+            }
+
+            _boardStateHistory.add(move, boardState, comment);
 
             updateControlsOpeningDiv(chessJSAlt.history());
         }
@@ -599,7 +610,10 @@ function loadGame()
         var pgnLines = pgn.split("\n");
         for(var i = 0; i < pgnLines.length; i++)
         {
-            var pgnLineParts = pgnLines[i].split("\"");
+            var pgnLine = pgnLines[i].trim();
+            if(pgnLine.length == 0) break;
+
+            var pgnLineParts = pgnLine.split("\"");
             var key = pgnLineParts[0].trim().toLowerCase();
             var value = pgnLineParts[1].trim();
 
@@ -622,7 +636,7 @@ function makeMoveFromCurrentBoardState(move)
         _chessJS.move(move.san);
         setCurrentBoardStateToChessJSBoard();
         _currentSquareSelected = "";
-        _boardStateHistory.add(move, _currentBoardState);
+        _boardStateHistory.add(move, _currentBoardState, _chessJS.get_comment());
 
         playSoundForMove(move);
 
@@ -713,6 +727,7 @@ function reset()
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
+    updateGameDetailsMoveCommentTextArea();
     updateControlsOpeningDiv();
     updateControlsPuzzleDiv();
 
@@ -754,7 +769,7 @@ function resetCurrentPuzzle()
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
-        _boardStateHistory.add(null, null);
+        _boardStateHistory.add(null, null, "");
 
     boardCanvasClear();
     resetMoveClocks();
@@ -762,6 +777,7 @@ function resetCurrentPuzzle()
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
+    updateGameDetailsMoveCommentTextArea();
 
     document.getElementById("controls-reset-puzzle-button").disabled = false;
 }
@@ -878,7 +894,7 @@ function selectOpening(opening)
         setCurrentBoardStateToChessJSBoard();
         var history = _chessJS.history({ verbose: true });
         var move = history[history.length - 1];
-        _boardStateHistory.add(move, _currentBoardState);
+        _boardStateHistory.add(move, _currentBoardState, "");
     }
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
@@ -897,7 +913,7 @@ function selectRandomPuzzle()
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
-        _boardStateHistory.add(null, null);
+        _boardStateHistory.add(null, null, "");
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
