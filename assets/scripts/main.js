@@ -421,7 +421,7 @@ function buildBoardSquaresTable()
             var bgColor = (colorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td class="board-square-td" style="background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width=90 height=90 onmousedown="boardSquare_onMouseDown('${positionNotation}')" /></td>`;
+            innerHTML += `<td class="board-square-td" style="background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width=90 height=90 onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" /></td>`;
             
             colorIndex++;
         }
@@ -1090,8 +1090,10 @@ function boardDiv_onMouseUp(mouseEvent)
     _rightMouseDragFrom = null;
 }
 
-function boardSquare_onMouseDown(positionNotation)
+function boardSquare_onMouseDown(mouseEvent, positionNotation)
 {
+    if(mouseEvent.button != 0) return;
+    
     boardSquareSelected(positionNotation);
 }
 
