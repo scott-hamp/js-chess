@@ -856,17 +856,24 @@ function saveGame()
         var moveWhite = _boardStateHistory.moves[i];
         content += `${fullMoveNumber}. ${moveWhite.san} `;
 
-        var comment = _boardStateHistory.comments[i].trim();
-
-        if(comment.length > 0) content += `{${comment}} `;
+        var comment = _boardStateHistory.comments[i];
+        if(comment != null)
+        {
+            comment = comment.trim();
+            if(comment.length > 0) content += `{${comment}} `;
+        }
 
         if(i < _boardStateHistory.moves.length - 1)
         {
             var moveBlack = _boardStateHistory.moves[i + 1];
             content += `${moveBlack.san} `;
 
-            comment = _boardStateHistory.comments[i + 1].trim();
-            if(comment.length > 0) content += `{${comment}} `;
+            comment = _boardStateHistory.comments[i + 1];
+            if(comment != null)
+            {
+                comment = comment.trim();
+                if(comment.length > 0) content += `{${comment}} `;
+            }
         }
 
         fullMoveNumber++;
