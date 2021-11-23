@@ -567,6 +567,8 @@ function loadGame()
 
 	fileReader.onload = (e) => 
 	{
+        reset();
+
         var fileContent = e.target.result;
 
 		_chessJS.load_pgn(fileContent);
@@ -944,6 +946,7 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
 
     setCurrentBoardStateToFEN(state.fen);
 
+    boardCanvasClear();
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
