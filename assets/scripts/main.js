@@ -1604,6 +1604,9 @@ function controlsPasteFENButton_onClick()
         reset();
         setCurrentBoardStateToFEN(text);
 
+        if(_chessJS.turn() == 'b')
+            _boardStateHistory.add(null, null, "");
+
         boardCanvasClear();
         resetMoveClocks();
 
