@@ -12,6 +12,7 @@ var _currentBoardState = null;
 var _currentSquareSelected = "";
 var _currentSquareSelectedMoves = null;
 var _boardStateHistory = null;
+var _boardStateHistoryLoadedGame = null;
 var _currentPuzzle = null;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
@@ -650,6 +651,7 @@ function loadGame()
 
 		_chessJS.load_pgn(fileContent);
         _boardStateHistory.clear();
+        _boardStateHistoryLoadedGame = new BoardStateHistory();
 
         chessJSAlt = new Chess();
         chessJSAlt.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -673,6 +675,7 @@ function loadGame()
             }
 
             _boardStateHistory.add(move, boardState, comment);
+            _boardStateHistoryLoadedGame.add(move, boardState, comment);
 
             updateControlsOpeningDiv(chessJSAlt.history());
         }
@@ -701,6 +704,13 @@ function loadGame()
 
             input.value = value;
         }
+
+        document.getElementById("controls-game-button-first-move").disabled = false;
+        document.getElementById("controls-game-button-previous-move").disabled = false;
+        document.getElementById("controls-game-button-next-move").disabled = false;
+        document.getElementById("controls-game-button-last-move").disabled = false;
+        document.getElementById("controls-game-button-save").disabled = false;
+        document.getElementById("controls-game-button-reset").disabled = false;
 	};
 
 	fileReader.onerror = (e) => alert(`Could not load file "${e.target.error.name}".`);
@@ -735,6 +745,12 @@ function makeMoveFromCurrentBoardState(move, animate)
         updateControlsFENInput();
         updateControlsMovesTable();
         updateControlsOpeningDiv();
+
+        document.getElementById("controls-game-button-first-move").disabled = false;
+        document.getElementById("controls-game-button-previous-move").disabled = false;
+        document.getElementById("controls-game-button-next-move").disabled = false;
+        document.getElementById("controls-game-button-last-move").disabled = false;
+        document.getElementById("controls-game-button-save").disabled = false;
 
         console.log(`Move: ${move.san}`);
     }
@@ -815,6 +831,7 @@ function reset()
     _chessJS.reset();
     setCurrentBoardStateToChessJSBoard();
     _boardStateHistory.clear();
+    _boardStateHistoryLoadedGame = null;
     _currentSquareSelected = "";
     _currentPuzzle = null;
 
@@ -848,6 +865,12 @@ function reset()
         input.value = "";
     }
 
+    document.getElementById("controls-game-button-first-move").disabled = true;
+    document.getElementById("controls-game-button-previous-move").disabled = true;
+    document.getElementById("controls-game-button-next-move").disabled = true;
+    document.getElementById("controls-game-button-last-move").disabled = true;
+    document.getElementById("controls-game-button-save").disabled = true;
+    document.getElementById("controls-game-button-reset").disabled = true;
     document.getElementById("controls-reset-puzzle-button").disabled = true;
 }
 
@@ -1264,20 +1287,60 @@ function updateControlsMovesTable()
     var controlsMovesTable = document.getElementById("controls-game-moves-table");
     var innerHTML = "";
 
-    for(var i = 0; i < _boardStateHistory.moves.length; i++)
+    if(_boardStateHistoryLoadedGame != null)
     {
-        innerHTML += `<tr><td style="text-align: center;">${(i / 2) + 1}. </td>`;
-        for(var j = i; j < Math.min(i + 2, _boardStateHistory.moves.length); j++)
+        var divergenceFound = false;
+        for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
         {
-            var move = _boardStateHistory.moves[j];
+            innerHTML += `<tr><td style="text-align: center;">${(i / 2) + 1}. </td>`;
+            for(var j = i; j < Math.min(i + 2, Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length)); j++)
+            {
+                var moveBSH = _boardStateHistory.moves[j];
+                var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
 
-            var backgroundColor = (j == _boardStateHistory.atIndex - 1) ? "lightgray" : "white";
-            var san = (move != null) ? move.san : "...";
-            
-            innerHTML += `<td id="controls-game-moves-table-td_${j}" class="controls-game-moves-table-cell" style="background-color: ${backgroundColor}" onmousedown="controlsGamesMovesTableCell_onMouseDown(${j})">${san}</td>`;
+                var san = "...";
+                var foregroundColor = (divergenceFound) ? "red" : "black";
+                var backgroundColor = "white";
+
+                if(moveBSH != null)
+                {
+                    san = moveBSH.san;
+                    if(j == _boardStateHistory.atIndex - 1)
+                        backgroundColor = "lightgray";
+                }
+                else
+                {
+                    san = moveBSHLG.san;
+                    if(j == _boardStateHistoryLoadedGame.atIndex - 1)
+                        backgroundColor = "lightgray";
+                }
+                
+                innerHTML += `<td id="controls-game-moves-table-td_${j}" class="controls-game-moves-table-cell" style="color: ${foregroundColor} ; background-color: ${backgroundColor}" onmousedown="controlsGamesMovesTableCell_onMouseDown(${j})">${san}</td>`;
+
+                if(moveBSH != null && moveBSHLG != null && moveBSH != moveBSHLG)
+                    divergenceFound = true;
+            }
+            innerHTML += "</tr>";
+            i++;
         }
-        innerHTML += "</tr>";
-        i++;
+    }
+    else
+    {
+        for(var i = 0; i < _boardStateHistory.moves.length; i++)
+        {
+            innerHTML += `<tr><td style="text-align: center;">${(i / 2) + 1}. </td>`;
+            for(var j = i; j < Math.min(i + 2, _boardStateHistory.moves.length); j++)
+            {
+                var move = _boardStateHistory.moves[j];
+
+                var backgroundColor = (j == _boardStateHistory.atIndex - 1) ? "lightgray" : "white";
+                var san = (move != null) ? move.san : "...";
+                
+                innerHTML += `<td id="controls-game-moves-table-td_${j}" class="controls-game-moves-table-cell" style="background-color: ${backgroundColor}" onmousedown="controlsGamesMovesTableCell_onMouseDown(${j})">${san}</td>`;
+            }
+            innerHTML += "</tr>";
+            i++;
+        }
     }
 
     controlsMovesTable.innerHTML = innerHTML;
@@ -1457,6 +1520,44 @@ function controlsGameButton_onClick(descriptor)
     if(descriptor == "load")
     {
         document.getElementById("loadGameInput").click();
+        return;
+    }
+
+    if(descriptor == "reset")
+    {
+        if(_boardStateHistoryLoadedGame == null) return;
+
+        var atIndex = _boardStateHistory.atIndex;
+        if(atIndex > _boardStateHistoryLoadedGame.moves.length)
+            atIndex = _boardStateHistoryLoadedGame.moves.length - 1;
+
+        var divergenceAt = -1;
+        for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
+        {
+            for(var j = i; j < Math.min(i + 2, Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length)); j++)
+            {
+                var moveBSH = _boardStateHistory.moves[j];
+                var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
+                
+                if(moveBSH != null && moveBSHLG != null && moveBSH != moveBSHLG)
+                {
+                    divergenceAt = j;
+                    break;
+                }
+            }
+            i++;
+
+            if(divergenceAt != -1) break;
+        }
+
+        if(divergenceAt != -1) atIndex = divergenceAt;
+
+        _boardStateHistory.clear();
+        for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
+            _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i]);
+
+        setCurrentBoardStateByMoveIndex(atIndex - 1);
+
         return;
     }
 }

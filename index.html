@@ -83,13 +83,14 @@
                         <tr>
                             <td colspan="2">
                                 <div>
-                                    <button class="controls-game-button" title="Go to first move." onclick="controlsGameButton_onClick('to-start')"><img src="assets/images/arrow-0.png"></button>
-                                    <button class="controls-game-button" title="Go to previous move." onclick="controlsGameButton_onClick('previous')"><img src="assets/images/arrow-1.png"></button>
-                                    <button class="controls-game-button" title="Go to next move." onclick="controlsGameButton_onClick('next')"><img src="assets/images/arrow-2.png"></button>
-                                    <button class="controls-game-button" title="Go to last move." onclick="controlsGameButton_onClick('to-end')"><img src="assets/images/arrow-3.png"></button>
-                                    <button class="controls-game-button" title="Save the game (.pgn)." onclick="controlsGameButton_onClick('save')"><img src="assets/images/save-0.png"></button>
+                                    <button id="controls-game-button-first-move" class="controls-game-button" title="Go to first move." onclick="controlsGameButton_onClick('to-start')" disabled><img src="assets/images/arrow-0.png"></button>
+                                    <button id="controls-game-button-previous-move" class="controls-game-button" title="Go to previous move." onclick="controlsGameButton_onClick('previous')" disabled><img src="assets/images/arrow-1.png"></button>
+                                    <button id="controls-game-button-next-move" class="controls-game-button" title="Go to next move." onclick="controlsGameButton_onClick('next')" disabled><img src="assets/images/arrow-2.png"></button>
+                                    <button id="controls-game-button-last-move" class="controls-game-button" title="Go to last move." onclick="controlsGameButton_onClick('to-end')" disabled><img src="assets/images/arrow-3.png"></button>
+                                    <button id="controls-game-button-save" class="controls-game-button" title="Save the game (.pgn)." onclick="controlsGameButton_onClick('save')" disabled><img src="assets/images/save-0.png"></button>
                                     <input id="loadGameInput" type="file" accept=".pgn" style="display: none;" onchange="loadGame()" />
-                                    <button class="controls-game-button" title="Load a game (.pgn)." onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
+                                    <button id="controls-game-button-load" class="controls-game-button" title="Load a game (.pgn)." onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
+                                    <button id="controls-game-button-reset" class="controls-game-button" title="Reset the game (.pgn)." onclick="controlsGameButton_onClick('reset')" disabled><img src="assets/images/redo-0.png"></button>
                                 </div>
                             </td>
                         </tr>
