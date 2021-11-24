@@ -636,9 +636,7 @@ function getRankAndFileForPositionNotation(notation)
 function loadGame()
 {
 	var element = document.getElementById("loadGameInput");
-
 	var files = element.files;
-
 	if (files.length == 0) return;
 
 	var fileReader = new FileReader();
@@ -648,6 +646,7 @@ function loadGame()
         reset();
 
         var fileContent = e.target.result;
+        element.value = null;
 
 		_chessJS.load_pgn(fileContent);
         _boardStateHistory.clear();
