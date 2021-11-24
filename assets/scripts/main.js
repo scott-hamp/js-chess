@@ -1584,6 +1584,39 @@ function controlsOpeningSelect_onChange()
     selectOpening(opening);
 }
 
+function controlsPasteFENButton_onClick()
+{
+    async function pasteFEN()
+    {
+        const text = await navigator.clipboard.readText();
+        if(text == null) return;
+        if(text.length == 0) return;
+
+        var validate = _chessJS.validate_fen(text);
+        if(!validate.valid)
+        {
+            alert(`FEN string is invalid:\n"${validate.error}"`);
+            return;
+        }
+
+        document.getElementById("controls-fen-input").value = text;
+
+        reset();
+        setCurrentBoardStateToFEN(text);
+
+        boardCanvasClear();
+        resetMoveClocks();
+
+        clearBoardHighlights();
+        updateBoardSquaresTableFromBoardState(_currentBoardState);
+        updateControlsFENInput();
+        updateControlsMovesTable();
+        updateGameDetailsMoveCommentTextArea();
+    }
+
+    pasteFEN();
+}
+
 function controlsRandomPuzzleButton_onClick()
 {
     selectRandomPuzzle();

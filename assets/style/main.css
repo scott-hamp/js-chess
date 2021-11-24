@@ -107,6 +107,19 @@
     text-overflow: ellipsis;
 }
 
+#controls-fen-paste-button
+{
+    width: 28px;
+    height: 28px;
+    margin-left: 2px;
+}
+
+#controls-fen-paste-button > img
+{
+    width: 14px;
+    height: 14px;
+}
+
 #controls-puzzle-div
 {
     height: 25px;
