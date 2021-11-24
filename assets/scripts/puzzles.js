@@ -5922,6 +5922,11 @@ Reddit, 12/09/2020
 r1bq2k1/1p3ppp/p1ppr3/4p3/B3Pn2/2PP1N1P/PP1QNbPK/R3R3 w - - 0 0
 1 ...
 
+Black to move.
+Hewitt vs Steinitz, 1866
+5rk1/p1pb2pp/2p5/3p3q/2P3n1/1Q4B1/PP1NprPP/R3R1K1 b - - 0 1
+1. ... Rg2
+
 `;
 
 
