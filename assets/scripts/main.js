@@ -723,7 +723,6 @@ function loadGame()
 
 function makeMoveFromCurrentBoardState(move, animate)
 {
-    boardCanvasClear();
     clearBoardHighlights();
 
     function completedActions()
@@ -1486,6 +1485,7 @@ function controlsGameButton_onClick(descriptor)
         var move = _boardStateHistory.moves[_boardStateHistory.atIndex];
 
         document.getElementById(`board-square-td-img_${move.from}`).src = "assets/images/empty-0.png";
+        boardCanvasClear();
         setBoardHighlight(move.from, "from");
         setBoardHighlight(move.to, "to");
 
