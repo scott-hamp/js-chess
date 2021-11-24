@@ -723,6 +723,7 @@ function loadGame()
 
 function makeMoveFromCurrentBoardState(move, animate)
 {
+    boardCanvasClear();
     clearBoardHighlights();
 
     function completedActions()
@@ -757,8 +758,6 @@ function makeMoveFromCurrentBoardState(move, animate)
 
         console.log(`Move: ${move.san}`);
     }
-
-    boardCanvasClear();
     
     setBoardHighlight(move.from, "from");
     setBoardHighlight(move.to, "to");
