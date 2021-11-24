@@ -1302,7 +1302,6 @@ function updateControlsMovesTable()
                 var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
 
                 var san = "...";
-                var foregroundColor = (divergenceFound) ? "red" : "black";
                 var backgroundColor = "white";
 
                 if(moveBSH != null)
@@ -1310,6 +1309,14 @@ function updateControlsMovesTable()
                     san = moveBSH.san;
                     if(j == _boardStateHistory.atIndex - 1)
                         backgroundColor = "lightgray";
+
+                    if(moveBSHLG == null) 
+                        divergenceFound = true;
+                    else
+                    {
+                        if(moveBSH.san != moveBSHLG.san)
+                            divergenceFound = true;
+                    }
                 }
                 else
                 {
@@ -1317,6 +1324,8 @@ function updateControlsMovesTable()
                     if(j == _boardStateHistoryLoadedGame.atIndex - 1)
                         backgroundColor = "lightgray";
                 }
+
+                var foregroundColor = (divergenceFound) ? "red" : "black";
                 
                 innerHTML += `<td id="controls-game-moves-table-td_${j}" class="controls-game-moves-table-cell" style="color: ${foregroundColor} ; background-color: ${backgroundColor}" onmousedown="controlsGamesMovesTableCell_onMouseDown(${j})">${san}</td>`;
 
@@ -1554,7 +1563,10 @@ function controlsGameButton_onClick(descriptor)
             if(divergenceAt != -1) break;
         }
 
-        if(divergenceAt != -1) atIndex = divergenceAt;
+        if(divergenceAt != -1) 
+            atIndex = divergenceAt;
+        else 
+            atIndex++;
 
         _boardStateHistory.clear();
         for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
