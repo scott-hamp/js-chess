@@ -13,13 +13,14 @@
 <body onload="body_onLoad()">
     <div id="content">
         <div id="main-div">
-            <div id="board-div" onmousedown="boardDiv_onMouseDown(event)" onmouseup="boardDiv_onMouseUp(event)">
+            <div id="board-div" onmousedown="boardDiv_onMouseDown(event)" onmouseup="boardDiv_onMouseUp(event)" onmousemove="boardDiv_onMouseMove(event)">
                 <table id="board-squares-table">
 
                 </table>
                 <canvas id="board-canvas" width="720" height="720">
 
                 </canvas>
+                <div id="board-dragging-piece-div"><img src="assets/images/empty-0.png" /></div>
             </div>
             <div id="controls-div">
                 <div>

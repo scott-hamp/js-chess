@@ -24,6 +24,23 @@
 	padding: 0px;
 }
 
+#board-dragging-piece-div
+{
+    position: absolute;
+    left: 100px;
+    top: 100px;
+    width: 90px;
+    height: 90px;
+    pointer-events: none;
+}
+
+#board-dragging-piece-div > img
+{
+    width: 90px;
+    height: 90px;
+    transform-origin: center;
+}
+
 #content
 {
     width: 100%;
