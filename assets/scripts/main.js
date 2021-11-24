@@ -758,6 +758,8 @@ function makeMoveFromCurrentBoardState(move, animate)
         console.log(`Move: ${move.san}`);
     }
 
+    boardCanvasClear();
+    
     setBoardHighlight(move.from, "from");
     setBoardHighlight(move.to, "to");
 
