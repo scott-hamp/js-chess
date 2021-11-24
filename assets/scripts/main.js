@@ -408,6 +408,10 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 return;
             }
         }
+
+        var colorAndPiece = getColorAndPieceForPositionNotation(_currentSquareSelected); 
+        var imageSrc = getImageSourceForColorAndPiece(colorAndPiece);
+        document.getElementById(`board-square-td-img_${_currentSquareSelected}`).src = imageSrc;
     }
     
     if(squareValue != "")

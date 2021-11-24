@@ -5859,20 +5859,15 @@ function getOpeningWithMoves(moves)
 
 		if(opening.moves.length < moves.length) continue;
 
-		var matches = true;
 		var matchingCount = 0;
 		for(var j = 0; j < moves.length; j++)
 		{
-			if(opening.moves[j] != moves[j])
-			{
-				matches = false;
-				break;
-			}
+			if(opening.moves[j] != moves[j]) break;
 
 			matchingCount++;
 		}
 
-		if(!matches) continue;
+		if(matchingCount == 0) continue;
 
 		if(result == null)
 		{
