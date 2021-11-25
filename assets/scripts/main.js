@@ -1108,7 +1108,7 @@ function selectRandomPuzzle()
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
-        _boardStateHistory.add(null, null, "", false);
+        _boardStateHistory.add(null, _currentBoardState, "", false);
 
     updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
@@ -1140,6 +1140,7 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
     if(state == null)
     {
         if(_currentPuzzle != null) resetCurrentPuzzle();
+
         return;
     }
 
@@ -1742,7 +1743,7 @@ function controlsPasteFENButton_onClick()
         setCurrentBoardStateToFEN(text);
 
         if(_chessJS.turn() == 'b')
-            _boardStateHistory.add(null, null, "", false);
+            _boardStateHistory.add(null, _currentBoardState, "", false);
 
         boardCanvasClear();
         resetMoveClocks();
