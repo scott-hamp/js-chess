@@ -130,7 +130,7 @@ class BoardStateHistory
         this.states = [];
     }
 
-    add(move, boardState, comment)
+    add(move, boardState, comment, popRemaining)
     {
         if(this.atIndex == this.moves.length)
         {
@@ -144,10 +144,13 @@ class BoardStateHistory
             this.moves[this.atIndex] = move;
             this.states[this.atIndex] = boardState;
 
-            while(this.moves.length > this.atIndex + 1)
+            if(popRemaining)
             {
-                this.moves.pop();
-                this.states.pop();
+                while(this.moves.length > this.atIndex + 1)
+                {
+                    this.moves.pop();
+                    this.states.pop();
+                }
             }
         }
 
@@ -677,8 +680,8 @@ function loadGame()
                 break;
             }
 
-            _boardStateHistory.add(move, boardState, comment);
-            _boardStateHistoryLoadedGame.add(move, boardState, comment);
+            _boardStateHistory.add(move, boardState, comment, false);
+            _boardStateHistoryLoadedGame.add(move, boardState, comment, false);
 
             updateControlsOpeningDiv(chessJSAlt.history());
         }
@@ -728,9 +731,20 @@ function makeMoveFromCurrentBoardState(move, animate)
     function completedActions()
     {
         _chessJS.move(move.san);
+
         setCurrentBoardStateToChessJSBoard();
         _currentSquareSelected = "";
-        _boardStateHistory.add(move, _currentBoardState, _chessJS.get_comment());
+
+        var popRemaining = true;
+        if(_boardStateHistoryLoadedGame != null)
+        {   
+            var moveOther = _boardStateHistoryLoadedGame.moves[_boardStateHistory.atIndex];
+            if(moveOther != null)
+            {
+                if(move.san == moveOther.san) popRemaining = false;
+            }
+        }
+        _boardStateHistory.add(move, _currentBoardState, _chessJS.get_comment(), popRemaining);
 
         playSoundForMove(move);
 
@@ -889,7 +903,7 @@ function resetCurrentPuzzle()
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
-        _boardStateHistory.add(null, null, "");
+        _boardStateHistory.add(null, null, "", false);
 
     boardCanvasClear();
     resetMoveClocks();
@@ -1022,7 +1036,7 @@ function selectOpening(opening)
         setCurrentBoardStateToChessJSBoard();
         var history = _chessJS.history({ verbose: true });
         var move = history[history.length - 1];
-        _boardStateHistory.add(move, _currentBoardState, "");
+        _boardStateHistory.add(move, _currentBoardState, "", false);
     }
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
@@ -1041,7 +1055,7 @@ function selectRandomPuzzle()
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
-        _boardStateHistory.add(null, null, "");
+        _boardStateHistory.add(null, null, "", false);
 
     updateBoardSquaresTableFromBoardState(_currentBoardState);
     updateControlsFENInput();
@@ -1307,8 +1321,6 @@ function updateControlsMovesTable()
                 if(moveBSH != null)
                 {
                     san = moveBSH.san;
-                    if(j == _boardStateHistory.atIndex - 1)
-                        backgroundColor = "lightgray";
 
                     if(moveBSHLG == null) 
                         divergenceFound = true;
@@ -1317,19 +1329,22 @@ function updateControlsMovesTable()
                         if(moveBSH.san != moveBSHLG.san)
                             divergenceFound = true;
                     }
+
+                    if(j == _boardStateHistory.atIndex - 1)
+                        backgroundColor = (divergenceFound) ? "rgb(255,204,204)" : "rgb(224,224,224)";
                 }
                 else
                 {
                     san = moveBSHLG.san;
                     if(j == _boardStateHistoryLoadedGame.atIndex - 1)
-                        backgroundColor = "lightgray";
+                        backgroundColor = "rgb(224,224,224)";
                 }
 
                 var foregroundColor = (divergenceFound) ? "red" : "black";
                 
                 innerHTML += `<td id="controls-game-moves-table-td_${j}" class="controls-game-moves-table-cell" style="color: ${foregroundColor} ; background-color: ${backgroundColor}" onmousedown="controlsGamesMovesTableCell_onMouseDown(${j})">${san}</td>`;
 
-                if(moveBSH != null && moveBSHLG != null && moveBSH != moveBSHLG)
+                if(moveBSH != null && moveBSHLG != null && moveBSH.san != moveBSHLG.san)
                     divergenceFound = true;
             }
             innerHTML += "</tr>";
@@ -1570,7 +1585,7 @@ function controlsGameButton_onClick(descriptor)
 
         _boardStateHistory.clear();
         for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
-            _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i]);
+            _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i], false);
 
         setCurrentBoardStateByMoveIndex(atIndex - 1);
 
@@ -1618,7 +1633,7 @@ function controlsPasteFENButton_onClick()
         setCurrentBoardStateToFEN(text);
 
         if(_chessJS.turn() == 'b')
-            _boardStateHistory.add(null, null, "");
+            _boardStateHistory.add(null, null, "", false);
 
         boardCanvasClear();
         resetMoveClocks();
