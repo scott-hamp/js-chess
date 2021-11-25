@@ -401,6 +401,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
     {
         var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
         boardDraggingPieceDiv.innerHTML = "";
+        document.getElementsByTagName('body')[0].classList.remove("grabbing");
 
         for(var i = 0; i < _currentSquareSelectedMoves.length; i++)
         {
@@ -439,6 +440,8 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" />`;
                 boardDraggingPieceDiv.style.left = ((rankAndFile.file * boardDivSquareSize)) + "px";
                 boardDraggingPieceDiv.style.top = ((rankAndFile.rank * boardDivSquareSize)) + "px";
+
+                document.getElementsByTagName('body')[0].classList.add("grabbing");
             }
         }
         else
@@ -448,6 +451,8 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
             _currentSquareSelected = "";
             _currentSquareSelectedMoves = null;
+
+            document.getElementsByTagName('body')[0].classList.remove("grabbing");
         }
     }
 }
@@ -1253,6 +1258,7 @@ function updateBoardSquaresTableFromBoardState(boardState)
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
 
             boardSquareTD.style.backgroundColor = bgColor;
+            boardSquareTDImg.style.cursor = "default";
 
             for(var i = 0; i < _boardHighlights.length; i++)
             {
@@ -1287,19 +1293,22 @@ function updateBoardSquaresTableFromBoardState(boardState)
             if(squareValue == "q") boardSquareTDImg.src = "assets/images/queen-1.png";
             if(squareValue == "k") boardSquareTDImg.src = "assets/images/king-1.png";
 
-            if(_chessJS.turn() == 'w')
+            if(squareValue != "")
             {
-                if(squareValue.toLowerCase() != squareValue)
-                    boardSquareTDImg.style.cursor = "grab";
+                if(_chessJS.turn() == 'w')
+                {
+                    if(squareValue.toLowerCase() != squareValue)
+                        boardSquareTDImg.style.cursor = "grab";
+                    else
+                        boardSquareTDImg.style.cursor = "default";
+                }
                 else
-                    boardSquareTDImg.style.cursor = "default";
-            }
-            else
-            {
-                if(squareValue.toLowerCase() == squareValue)
-                    boardSquareTDImg.style.cursor = "grab";
-                else
-                    boardSquareTDImg.style.cursor = "default";
+                {
+                    if(squareValue.toLowerCase() == squareValue)
+                        boardSquareTDImg.style.cursor = "grab";
+                    else
+                        boardSquareTDImg.style.cursor = "default";
+                }
             }
 
             squareIndex++;
@@ -1470,7 +1479,7 @@ function boardDiv_onMouseMove(mouseEvent)
 function boardDiv_onMouseUp(mouseEvent)
 {
     var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
-    
+
     /*if(mouseEvent.button == 0 && _currentSquareSelected != "")
     {
         var positionNotation = getPositionNotationForRealBoardPosition(mousePosition);

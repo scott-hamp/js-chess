@@ -172,6 +172,8 @@
     cursor: pointer;
 }
 
+.grabbing, .grabbing * { cursor: grabbing !important; }
+
 body
 {
     font-family: 'Open Sans', sans-serif;
