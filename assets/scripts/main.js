@@ -13,6 +13,7 @@ var _currentSquareSelected = "";
 var _currentSquareSelectedMoves = null;
 var _boardStateHistory = null;
 var _boardStateHistoryLoadedGame = null;
+var _boardOrientation = 0;
 var _currentPuzzle = null;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
@@ -24,6 +25,9 @@ var _rightMouseDragFrom = null;
 var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasSquares = [];
+var _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
+var _controlsVisible = true;
+var _inFullscreen = false;
 var _sounds = 
 [
     new Audio("assets/sounds/move-0.wav"),
@@ -438,8 +442,10 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 document.getElementById(`board-square-td-img_${positionNotation}`).src = "assets/images/empty-0.png";
                 var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
                 boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" />`;
-                boardDraggingPieceDiv.style.left = ((rankAndFile.file * boardDivSquareSize)) + "px";
-                boardDraggingPieceDiv.style.top = ((rankAndFile.rank * boardDivSquareSize)) + "px";
+                var left = (_boardOrientation == 0) ? (rankAndFile.file * boardDivSquareSize) : ((7 - rankAndFile.file) * boardDivSquareSize);
+                var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
+                boardDraggingPieceDiv.style.left =  left + "px";
+                boardDraggingPieceDiv.style.top = top + "px";
 
                 document.getElementsByTagName('body')[0].classList.add("grabbing");
             }
@@ -485,7 +491,7 @@ function buildBoardSquaresTable()
 function clearBoardHighlights()
 {
     _boardHighlights = [];
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
 }
 
 function clockMillisecondIntervalTick(turn)
@@ -501,8 +507,10 @@ function clockMillisecondIntervalTick(turn)
     if(_moveClockSecondTimers[turn] > 0) return;
     _moveClockSecondTimers[turn] += 1000;
 
-    var span = (turn == 0) ? document.getElementById("controls-time-white-span") : document.getElementById("controls-time-black-span");
-    var textContentParts = span.textContent.split(":");
+    var span1 = (turn == 0) ? document.getElementById("controls-time-white-span") : document.getElementById("controls-time-black-span");
+    var span2 = (turn == 0) ? document.getElementById("side-time-white-span") : document.getElementById("side-time-black-span");
+
+    var textContentParts = span1.textContent.split(":");
     var minutes = parseInt(textContentParts[0]);
     var seconds = parseInt(textContentParts[1]);
 
@@ -516,7 +524,8 @@ function clockMillisecondIntervalTick(turn)
         seconds = 59;
     }
 
-    span.textContent = `${minutes}:${seconds}`;
+    span1.textContent = `${minutes}:${seconds}`;
+    span2.textContent = `${minutes}:${seconds}`;
 }
 
 function getBoardSquareCenterPosition(moveEventClientPosition)
@@ -526,8 +535,19 @@ function getBoardSquareCenterPosition(moveEventClientPosition)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    var x = (Math.floor(((moveEventClientPosition.x - boardDivRect.left) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
-    var y = (Math.floor(((moveEventClientPosition.y - boardDivRect.top) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+    var x = 0;
+    var y = 0;
+
+    if(_boardOrientation == 0)
+    {
+        x = (Math.floor(((moveEventClientPosition.x - boardDivRect.left) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+        y = (Math.floor(((moveEventClientPosition.y - boardDivRect.top) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+    }
+    else
+    {
+        x = (Math.floor(((boardDivSize - (moveEventClientPosition.x - boardDivRect.left)) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+        y = (Math.floor(((boardDivSize - (moveEventClientPosition.y - boardDivRect.top)) / boardDivSize) * 8) * boardDivSquareSize) + (boardDivSquareSize / 2);
+    }
 
     return { x: x, y: y };
 }
@@ -541,7 +561,10 @@ function getBoardSquarePositionForPositionNotation(notation)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    return { x: rankFile.file * boardDivSquareSize, y: rankFile.rank * boardDivSquareSize };
+    if(_boardOrientation == 0)
+        return { x: rankFile.file * boardDivSquareSize, y: rankFile.rank * boardDivSquareSize };
+    else
+        return { x: (7 - rankFile.file) * boardDivSquareSize, y: (7 - rankFile.rank) * boardDivSquareSize };
 }
 
 function getColorAndPieceForPositionNotation(notation)
@@ -710,7 +733,7 @@ function loadGame()
 
         _currentBoardState = new BoardState(chessJSAlt.fen);
 
-        updateBoardSquaresTableFromBoardState(_currentBoardState);
+        updateBoardFromBoardState(_currentBoardState);
         updateControlsFENInput();
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
@@ -780,7 +803,7 @@ function makeMoveFromCurrentBoardState(move, animate)
             setBoardHighlight(getPositionNotationForBoardSquareValue(value), highlight);
         }
 
-        updateBoardSquaresTableFromBoardState(_currentBoardState);
+        updateBoardFromBoardState(_currentBoardState);
         updateControlsFENInput();
         updateControlsMovesTable();
         updateControlsOpeningDiv();
@@ -875,7 +898,7 @@ function reset()
     _currentPuzzle = null;
 
     clearBoardHighlights();
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
     updateGameDetailsMoveCommentTextArea();
@@ -931,7 +954,7 @@ function resetCurrentPuzzle()
     resetMoveClocks();
 
     clearBoardHighlights();
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
     updateGameDetailsMoveCommentTextArea();
@@ -946,7 +969,9 @@ function resetMoveClocks()
     var timeSpans = 
     [
         document.getElementById("controls-time-white-span"),
-        document.getElementById("controls-time-black-span")
+        document.getElementById("controls-time-black-span"),
+        document.getElementById("side-time-white-span"),
+        document.getElementById("side-time-black-span")
     ];
 
     var time = 0;
@@ -962,7 +987,7 @@ function resetMoveClocks()
 
     _moveClockSecondTimers = [ 1000, 1000 ];
 
-    for(var i = 0; i < 2; i++)
+    for(var i = 0; i < 4; i++)
         timeSpans[i].textContent = `${time}:00`;
 }
 
@@ -1061,7 +1086,7 @@ function selectOpening(opening)
         _boardStateHistory.add(move, _currentBoardState, "", false);
     }
 
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
     updateControlsOpeningDiv();
@@ -1085,7 +1110,7 @@ function selectRandomPuzzle()
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
         _boardStateHistory.add(null, null, "", false);
 
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
     updateControlsOpeningDiv();
@@ -1106,7 +1131,7 @@ function setBoardHighlight(positionNotation, highlightType)
     }
 
     _boardHighlights.push({ position: positionNotation, highlight: highlightType });
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
 }
 
 function setCurrentBoardStateByMoveIndex(moveIndex)
@@ -1125,7 +1150,7 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
 
     boardCanvasClear();
     clearBoardHighlights();
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
     updateGameDetailsMoveCommentTextArea();
@@ -1155,7 +1180,7 @@ function setup()
     loadOpenings();
     loadPuzzles();
 
-    updateBoardSquaresTableFromBoardState(_currentBoardState);
+    updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
 
@@ -1247,24 +1272,25 @@ function stockfishUpdateMessage(message)
     document.getElementById("controls-stockfish-message-span").textContent = message;
 }
 
-function updateBoardSquaresTableFromBoardState(boardState)
+function updateBoardFromBoardState(boardState)
 {
     //var boardSquaresTable = document.getElementById("board-squares-table");
-    var squareIndex = 0;
     var bgColorIndex = 0;
 
     for(var rank = 0; rank < 8; rank++)
     {
         for(var file = 0; file < 8; file++)
         {
+            var squareIndex = ((rank * 8) + file);
             var squareValue = boardState.squares[squareIndex];
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
             var boardSquareTD = document.getElementById(`board-square-td_${positionNotation}`);
             var boardSquareTDImg = document.getElementById(`board-square-td-img_${positionNotation}`);
-            var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
+            var bgColor = (bgColorIndex % 2 == 0) ? _boardColorScheme.light : _boardColorScheme.dark;
 
             boardSquareTD.style.backgroundColor = bgColor;
             boardSquareTDImg.style.cursor = "default";
+            boardSquareTDImg.style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
 
             for(var i = 0; i < _boardHighlights.length; i++)
             {
@@ -1317,7 +1343,6 @@ function updateBoardSquaresTableFromBoardState(boardState)
                 }
             }
 
-            squareIndex++;
             bgColorIndex++;
         }
 
@@ -1478,7 +1503,8 @@ function boardDiv_onMouseMove(mouseEvent)
     var boardDivSquareSize = boardDivSize / 8;
 
     var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-    boardDraggingPieceDiv.style.left = (mouseEvent.clientX - boardDivSquareSize + (boardDivSquareSize / 3.5)) + "px";
+    var left = (_controlsVisible) ? (mouseEvent.clientX - boardDivSquareSize + (boardDivSquareSize / 3.5)) : (mouseEvent.clientX - boardDivSquareSize + (boardDivSquareSize / 3.5)) - (boardDivSize / 2);
+    boardDraggingPieceDiv.style.left = left + "px";
     boardDraggingPieceDiv.style.top = (mouseEvent.clientY - boardDivSquareSize + (boardDivSquareSize / 3.5)) + "px";
 }
 
@@ -1545,6 +1571,23 @@ function body_onKeyDown(keyboardEvent)
 function body_onLoad()
 {
     setup();
+}
+
+function controlsColorSchemeSelect_onChange()
+{
+    var select = document.getElementById("controls-color-scheme-select");
+    var index = select.selectedIndex;
+
+    if(index == 0)
+        _boardColorScheme = { light: "rgb(234, 240, 215)", dark: "rgb(73, 101, 147)" };
+
+    if(index == 1)
+        _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
+
+    if(index == 2)
+        _boardColorScheme = { light: "rgb(234, 244, 209)", dark: "rgb(99, 166, 83)" };
+
+    updateBoardFromBoardState(_currentBoardState);
 }
 
 function controlsGameButton_onClick(descriptor)
@@ -1700,7 +1743,7 @@ function controlsPasteFENButton_onClick()
         resetMoveClocks();
 
         clearBoardHighlights();
-        updateBoardSquaresTableFromBoardState(_currentBoardState);
+        updateBoardFromBoardState(_currentBoardState);
         updateControlsFENInput();
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
@@ -1736,13 +1779,49 @@ function controlsTimeSelect_onChange()
     resetMoveClocks();
 }
 
+function flipBoardButton_onClick()
+{
+    _boardOrientation = (_boardOrientation == 0) ? 1 : 0;
+
+    document.getElementById("board-squares-table").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+    document.getElementById("board-canvas").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+
+    updateBoardFromBoardState(_currentBoardState);
+}
+
 function getDetailsMoveCommentTextArea_onInput()
 {
     var value = document.getElementById("controls-game-details-move-comment-text-area").value;
     _boardStateHistory.comments[_boardStateHistory.atIndex] = value;
 }
 
+function hideControlsButton_onClick()
+{
+    _controlsVisible = false;
+    document.getElementById("controls-div").style.display = "none";
+
+    var boardDiv = document.getElementById("board-div");
+    var content = document.getElementById("content");
+    boardDiv.style.transform = `translateX(${((content.offsetWidth / 2) - (boardDiv.offsetWidth / 2))}px)`;
+
+    document.getElementById("show-controls-button").style.display = "block";
+    document.getElementById("side-time-div").style.display = "block";
+}
+
 function resetButton_onClick()
 {
     reset();
+}
+
+function showControlsButton_onClick()
+{
+    _controlsVisible = true;
+    document.getElementById("controls-div").style.display = "block";
+
+    var boardDiv = document.getElementById("board-div");
+    var content = document.getElementById("content");
+    boardDiv.style.transform = "";
+
+    document.getElementById("show-controls-button").style.display = "none";
+    document.getElementById("side-time-div").style.display = "none";
 }

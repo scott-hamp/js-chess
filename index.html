@@ -13,6 +13,27 @@
 <body onload="body_onLoad()" onkeydown="body_onKeyDown(event)">
     <div id="content">
         <div id="main-div">
+            <button id="show-controls-button" onclick="showControlsButton_onClick()" style="display: none;">Show Controls</button>
+            <div id="side-time-div" style="display: none;">
+                <table>
+                    <tr>
+                        <td style="padding-left: 10px;">
+                            <img src="assets/images/king-0.png" width="24" height="24" />
+                        </td>
+                        <td style="padding-left: 5px;">
+                            <span id="side-time-white-span" style="color: white;">00:00</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 10px;">
+                            <img src="assets/images/king-1.png" width="24" height="24" />
+                        </td>
+                        <td style="padding-left: 5px;">
+                            <span id="side-time-black-span" style="color: white;">00:00</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div id="board-div" onmousedown="boardDiv_onMouseDown(event)" onmouseup="boardDiv_onMouseUp(event)" onmousemove="boardDiv_onMouseMove(event)">
                 <table id="board-squares-table">
 
@@ -24,7 +45,26 @@
             </div>
             <div id="controls-div">
                 <div>
-                    <button onclick="resetButton_onClick()">Reset</button>
+                    <table>
+                        <tr>
+                            <td>
+                                <button onclick="resetButton_onClick()">Reset</button>
+                            </td>
+                            <td style="padding-left: 2px;">
+                                <button onclick="flipBoardButton_onClick()">Flip Board</button>
+                            </td>
+                            <td style="padding-left: 2px;">
+                                <button onclick="hideControlsButton_onClick()">Hide Controls</button>
+                            </td>
+                            <td style="padding-left: 5px;"> Color Scheme: 
+                                <select id="controls-color-scheme-select" onchange="controlsColorSchemeSelect_onChange()">
+                                    <option>Blue</option>
+                                    <option selected>Brown</option>
+                                    <option>Green</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <table>
                     <tr>

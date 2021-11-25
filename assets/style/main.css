@@ -12,7 +12,7 @@
 #board-div > table 
 {
 	outline-style: double;
-    filter: drop-shadow(3px 3px 3px lightgray);
+    filter: drop-shadow(0px 0px 3px lightgray);
 }
 
 #board-div > table, table th, table tr, table td 
@@ -39,6 +39,11 @@
     width: 90px;
     height: 90px;
     transform-origin: center;
+}
+
+#controls-color-scheme-select
+{
+    width: 80px;
 }
 
 #content
@@ -143,6 +148,20 @@
     left: 50%;
     top: 50%;
     transform: translate(-100%, -50%);
+}
+
+#show-controls-button
+{
+    position: absolute;
+    left: 10px;
+    top: 0px
+}
+
+#side-time-div
+{
+    position: absolute;
+    left: 0px;
+    top: 40px;
 }
 
 .board-square-td
