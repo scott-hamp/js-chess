@@ -142,6 +142,11 @@
     margin-left: 10px;
 }
 
+#controls-stockfish-select
+{
+    width: 130px;
+}
+
 #main-div
 {
     position: absolute;
