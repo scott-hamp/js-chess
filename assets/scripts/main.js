@@ -1611,6 +1611,11 @@ function controlsGameButton_onClick(descriptor)
         _boardStateHistory.atIndex = Math.min(_boardStateHistory.atIndex, _boardStateHistory.moves.length - 1);
         
         var move = _boardStateHistory.moves[_boardStateHistory.atIndex];
+        if(move == null)
+        {
+            _boardStateHistory.atIndex++;
+            move = _boardStateHistory.moves[_boardStateHistory.atIndex];
+        }
 
         document.getElementById(`board-square-td-img_${move.from}`).src = "assets/images/empty-0.png";
         boardCanvasClear();
