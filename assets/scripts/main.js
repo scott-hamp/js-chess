@@ -439,8 +439,6 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" />`;
                 boardDraggingPieceDiv.style.left = ((rankAndFile.file * boardDivSquareSize)) + "px";
                 boardDraggingPieceDiv.style.top = ((rankAndFile.rank * boardDivSquareSize)) + "px";
-
-                boardDiv.style.cursor = "grabbing !important";
             }
         }
         else
@@ -610,6 +608,25 @@ function getPositionNotationForBoardSquareValue(value)
             if(squareValue == value) return positionNotation;
 
             squareIndex++;
+        }
+    }
+
+    return "";
+}
+
+function getPositionNotationForRealBoardPosition(position)
+{
+    var boardDiv = document.getElementById("board-div");
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var boardDivSquareSize = boardDivSize / 8;
+
+    for(var rank = 0; rank < 9; rank++)
+    {
+        for(var file = 0; file < 9; file++)
+        {
+            if(position.x < file * boardDivSquareSize && position.y < rank * boardDivSquareSize)
+                return getPositionNotationForRankAndFile(rank - 1, file - 1);
         }
     }
 
@@ -1221,7 +1238,7 @@ function stockfishUpdateMessage(message)
 
 function updateBoardSquaresTableFromBoardState(boardState)
 {
-    var boardSquaresTable = document.getElementById("board-squares-table");
+    //var boardSquaresTable = document.getElementById("board-squares-table");
     var squareIndex = 0;
     var bgColorIndex = 0;
 
@@ -1273,14 +1290,14 @@ function updateBoardSquaresTableFromBoardState(boardState)
             if(_chessJS.turn() == 'w')
             {
                 if(squareValue.toLowerCase() != squareValue)
-                    boardSquareTDImg.style.cursor = "pointer";
+                    boardSquareTDImg.style.cursor = "grab";
                 else
                     boardSquareTDImg.style.cursor = "default";
             }
             else
             {
                 if(squareValue.toLowerCase() == squareValue)
-                    boardSquareTDImg.style.cursor = "pointer";
+                    boardSquareTDImg.style.cursor = "grab";
                 else
                     boardSquareTDImg.style.cursor = "default";
             }
@@ -1452,10 +1469,20 @@ function boardDiv_onMouseMove(mouseEvent)
 
 function boardDiv_onMouseUp(mouseEvent)
 {
+    var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
+    
+    /*if(mouseEvent.button == 0 && _currentSquareSelected != "")
+    {
+        var positionNotation = getPositionNotationForRealBoardPosition(mousePosition);
+        boardSquareSelected(positionNotation, "up");
+
+        return;
+    }
+    */
+
     if(mouseEvent.button != 2 || _rightMouseDragFrom == null) return;
 
-    var to = getBoardSquareCenterPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
-
+    var to = getBoardSquareCenterPosition(mousePosition);
     if(_rightMouseDragFrom.x == to.x && _rightMouseDragFrom.y == to.y)
         boardCanvasDrawSquare(to);
     else
@@ -1477,8 +1504,6 @@ function boardSquare_onMouseUp(mouseEvent, positionNotation)
     if(_currentSquareSelected == "") return;
 
     boardSquareSelected(positionNotation, "up");
-
-    document.getElementById("board-div").style.cursor = "default !important";
 }
 
 function body_onLoad()
