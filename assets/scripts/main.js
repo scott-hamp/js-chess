@@ -1065,6 +1065,12 @@ function selectOpening(opening)
     updateControlsFENInput();
     updateControlsMovesTable();
     updateControlsOpeningDiv();
+
+    document.getElementById("controls-game-button-first-move").disabled = false;
+    document.getElementById("controls-game-button-previous-move").disabled = false;
+    document.getElementById("controls-game-button-next-move").disabled = false;
+    document.getElementById("controls-game-button-last-move").disabled = false;
+    document.getElementById("controls-game-button-save").disabled = false;
 }
 
 function selectRandomPuzzle()
