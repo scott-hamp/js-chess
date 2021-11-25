@@ -1521,6 +1521,27 @@ function boardSquare_onMouseUp(mouseEvent, positionNotation)
     boardSquareSelected(positionNotation, "up");
 }
 
+function body_onKeyDown(keyboardEvent)
+{
+    var activeElementID = document.activeElement.id;
+    if(activeElementID.includes("input") || activeElementID.includes("select")) 
+        return;
+    
+    var keyCode = keyboardEvent.keyCode;
+    
+    if(keyCode == 37 && !document.getElementById("controls-game-button-previous-move").disabled)
+    {
+        controlsGameButton_onClick("previous");
+        return;
+    }
+
+    if(keyCode == 39 && !document.getElementById("controls-game-button-next-move").disabled)
+    {
+        controlsGameButton_onClick("next");
+        return;
+    }
+}
+
 function body_onLoad()
 {
     setup();
