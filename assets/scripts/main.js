@@ -466,6 +466,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
 function buildBoardSquaresTable()
 {
     var boardSquaresTable = document.getElementById("board-squares-table");
+    var boardSquareSize = (document.getElementById("content").offsetHeight * 0.95) / 8;
     var innerHTML = "";
     var bgColorIndex = 0;
 
@@ -477,7 +478,7 @@ function buildBoardSquaresTable()
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td id="board-square-td_${positionNotation}" class="board-square-td" style="background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width=90 height=90 onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
+            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width=90 height=90 onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
             
             bgColorIndex++;
         }
@@ -621,6 +622,19 @@ function getMoveForNotation(notation)
     }
 
     return null;
+}
+
+function getPositionForBoardDraggingPieceDivFromMouseEvent(mouseEvent)
+{
+    var boardDiv = document.getElementById("board-div");
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var boardDivSquareSize = boardDivSize / 8;
+
+    var left = (_controlsVisible) ? (mouseEvent.clientX - ((boardDivSquareSize / 2) + boardDivRect.left)) : (mouseEvent.clientX - (boardDivRect.left + (boardDivSquareSize / 2)));
+    var top = mouseEvent.clientY - boardDivSquareSize + boardDivRect.top;
+
+    return { x: left, y: top };
 }
 
 function getPositionNotationForBoardSquareValue(value)
@@ -1498,15 +1512,11 @@ function boardDiv_onMouseMove(mouseEvent)
 {
     if(_currentSquareSelected == "") return;
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
-    var boardDivSize = (boardDivRect.right - boardDivRect.left);
-    var boardDivSquareSize = boardDivSize / 8;
+    var position = getPositionForBoardDraggingPieceDivFromMouseEvent(mouseEvent);
 
     var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-    var left = (_controlsVisible) ? (mouseEvent.clientX - boardDivSquareSize + (boardDivSquareSize / 3.5)) : (mouseEvent.clientX - boardDivSquareSize + (boardDivSquareSize / 3.5)) - (boardDivSize / 2);
-    boardDraggingPieceDiv.style.left = left + "px";
-    boardDraggingPieceDiv.style.top = (mouseEvent.clientY - boardDivSquareSize + (boardDivSquareSize / 3.5)) + "px";
+    boardDraggingPieceDiv.style.left = position.x + "px";
+    boardDraggingPieceDiv.style.top = position.y + "px";
 }
 
 function boardDiv_onMouseUp(mouseEvent)
