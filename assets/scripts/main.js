@@ -26,7 +26,40 @@ var _rightMouseDragFrom = null;
 var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasSquares = [];
-var _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
+var _boardThemes = 
+[
+    {
+        name: "Blue",
+        light: "rgb(234, 240, 215)", 
+        dark: "rgb(73, 101, 147)",
+        backgroundImage: ""
+    },
+    {
+        name: "Brown",
+        light: "rgb(240, 219, 174)", 
+        dark: "rgb(193, 136, 93)",
+        backgroundImage: ""
+    },
+    {
+        name: "Green",
+        light: "rgb(234, 244, 209)", 
+        dark: "rgb(99, 166, 83)",
+        backgroundImage: ""
+    },
+    {
+        name: "Stone",
+        light: "rgba(180, 177, 169, 0.3)", 
+        dark: "rgba(37, 36, 34, 0.3)",
+        backgroundImage: "assets/images/background-stone-0.png"
+    },
+    {
+        name: "Wood",
+        light: "rgba(188, 159, 115, 0.3)", 
+        dark: "rgba(70, 36, 9, 0.3)",
+        backgroundImage: "assets/images/background-wood-0.png"
+    }
+];
+var _boardTheme = _boardThemes[4];
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
@@ -1024,7 +1057,7 @@ function resetLoadedGame()
     if(divergenceAt != -1) 
         atIndex = divergenceAt;
     else 
-        atIndex = 1;
+        atIndex = 0;
 
     _boardStateHistory.clear();
     for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
@@ -1361,7 +1394,10 @@ function stockfishUpdateMessage(message)
 
 function updateBoardFromBoardState(boardState)
 {
-    //var boardSquaresTable = document.getElementById("board-squares-table");
+    var boardDiv = document.getElementById("board-div");
+    boardDiv.style.background = "rgba(255, 255, 255, 0)";
+    boardDiv.style.backgroundImage = (_boardTheme.backgroundImage != "") ? `url(${_boardTheme.backgroundImage})` : "none";
+
     var bgColorIndex = 0;
 
     for(var rank = 0; rank < 8; rank++)
@@ -1373,7 +1409,7 @@ function updateBoardFromBoardState(boardState)
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
             var boardSquareTD = document.getElementById(`board-square-td_${positionNotation}`);
             var boardSquareTDImg = document.getElementById(`board-square-td-img_${positionNotation}`);
-            var bgColor = (bgColorIndex % 2 == 0) ? _boardColorScheme.light : _boardColorScheme.dark;
+            var bgColor = (bgColorIndex % 2 == 0) ? _boardTheme.light : _boardTheme.dark;
 
             boardSquareTD.style.backgroundColor = bgColor;
             boardSquareTDImg.style.cursor = "default";
@@ -1384,14 +1420,28 @@ function updateBoardFromBoardState(boardState)
                 if(_boardHighlights[i].position == positionNotation)
                 {
                     var bgColorHighlight = "white";
-                    if(_boardHighlights[i].highlight == "check")
-                        bgColorHighlight = "rgb(255, 100, 100)";
-                    if(_boardHighlights[i].highlight == "checkmate")
-                        bgColorHighlight = "rgb(255, 0, 0)";
-                    if(_boardHighlights[i].highlight == "from")
-                        bgColorHighlight = "rgb(210, 210, 0)";
-                    if(_boardHighlights[i].highlight == "to")
-                        bgColorHighlight = "rgb(225, 225, 0)";
+                    if(_boardTheme.backgroundImage != "")
+                    {
+                        if(_boardHighlights[i].highlight == "check")
+                            bgColorHighlight = "rgba(255, 100, 100, 0.5)";
+                        if(_boardHighlights[i].highlight == "checkmate")
+                            bgColorHighlight = "rgba(255, 0, 0, 0.5)";
+                        if(_boardHighlights[i].highlight == "from")
+                            bgColorHighlight = "rgba(210, 210, 0, 0.5)";
+                        if(_boardHighlights[i].highlight == "to")
+                            bgColorHighlight = "rgba(225, 225, 0, 0.5)";
+                    }
+                    else
+                    {
+                        if(_boardHighlights[i].highlight == "check")
+                            bgColorHighlight = "rgb(255, 100, 100)";
+                        if(_boardHighlights[i].highlight == "checkmate")
+                            bgColorHighlight = "rgb(255, 0, 0)";
+                        if(_boardHighlights[i].highlight == "from")
+                            bgColorHighlight = "rgb(210, 210, 0)";
+                        if(_boardHighlights[i].highlight == "to")
+                            bgColorHighlight = "rgb(225, 225, 0)";
+                    }
 
                     boardSquareTD.style.backgroundColor = bgColorHighlight;
                     break;
@@ -1657,19 +1707,12 @@ function body_onLoad()
     setup();
 }
 
-function controlsColorSchemeSelect_onChange()
+function controlsBoardThemeSelect_onChange()
 {
-    var select = document.getElementById("controls-color-scheme-select");
+    var select = document.getElementById("controls-board-theme-select");
     var index = select.selectedIndex;
 
-    if(index == 0)
-        _boardColorScheme = { light: "rgb(234, 240, 215)", dark: "rgb(73, 101, 147)" };
-
-    if(index == 1)
-        _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
-
-    if(index == 2)
-        _boardColorScheme = { light: "rgb(234, 244, 209)", dark: "rgb(99, 166, 83)" };
+    _boardTheme = _boardThemes[index];
 
     updateBoardFromBoardState(_currentBoardState);
 }

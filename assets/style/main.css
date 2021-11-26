@@ -9,6 +9,11 @@
     pointer-events: none;
 }
 
+#board-div
+{
+    background-size: contain;
+}
+
 #board-div > table 
 {
 	outline-style: double;
