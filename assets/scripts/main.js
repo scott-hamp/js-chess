@@ -47,19 +47,13 @@ var _boardThemes =
         backgroundImage: ""
     },
     {
-        name: "Stone",
-        light: "rgba(180, 177, 169, 0.3)", 
-        dark: "rgba(37, 36, 34, 0.3)",
-        backgroundImage: "assets/images/background-stone-0.png"
-    },
-    {
         name: "Wood",
         light: "rgba(188, 159, 115, 0.3)", 
         dark: "rgba(70, 36, 9, 0.3)",
         backgroundImage: "assets/images/background-wood-0.png"
     }
 ];
-var _boardTheme = _boardThemes[4];
+var _boardTheme = _boardThemes[1];
 var _pieceset = "cburnett";
 var _controlsVisible = true;
 var _inFullscreen = false;
