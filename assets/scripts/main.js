@@ -14,6 +14,7 @@ var _currentSquareSelectedMoves = null;
 var _boardStateHistory = null;
 var _boardStateHistoryLoadedGame = null;
 var _boardOrientation = 0;
+var _boardInAnimation = false;
 var _currentPuzzle = null;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
@@ -208,6 +209,8 @@ function animateMove(move, completedFunction)
 
     function animateMoveSub(color, piece, fromNotation, toNotation, callCompletedFunction)
     {
+        _boardInAnimation = true;
+
         var from = getBoardSquarePositionForPositionNotation(fromNotation);
         var to = getBoardSquarePositionForPositionNotation(toNotation);
 
@@ -245,6 +248,8 @@ function animateMove(move, completedFunction)
             {
                 clearInterval(moveInterval);
                 boardDiv.removeChild(image);
+
+                _boardInAnimation = false;
 
                 if(callCompletedFunction) completedFunction();
             }
@@ -1621,12 +1626,16 @@ function controlsGameButton_onClick(descriptor)
 {
     if(descriptor == "to-start")
     {
+        if(_boardInAnimation) return;
+
         setCurrentBoardStateByMoveIndex(-1);
         return;
     }
 
     if(descriptor == "previous")
     {
+        if(_boardInAnimation) return;
+
         _boardStateHistory.atIndex = Math.max(_boardStateHistory.atIndex - 2, -1);
 
         setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
@@ -1635,6 +1644,8 @@ function controlsGameButton_onClick(descriptor)
 
     if(descriptor == "next")
     {
+        if(_boardInAnimation) return;
+
         _boardStateHistory.atIndex = Math.min(_boardStateHistory.atIndex, _boardStateHistory.moves.length - 1);
         
         var move = _boardStateHistory.moves[_boardStateHistory.atIndex];
@@ -1671,6 +1682,8 @@ function controlsGameButton_onClick(descriptor)
 
     if(descriptor == "to-end")
     {
+        if(_boardInAnimation) return;
+        
         setCurrentBoardStateByMoveIndex(_boardStateHistory.moves.length - 1);
         return;
     }
@@ -1732,6 +1745,18 @@ function controlsGameButton_onClick(descriptor)
 function controlsGamesMovesTableCell_onMouseDown(index)
 {
     setCurrentBoardStateByMoveIndex(index);
+
+    if(index == 0) return;
+
+    var move = _boardStateHistory.moves[index];
+
+    setBoardHighlight(move.from, "from");
+    setBoardHighlight(move.to, "to");
+
+    animateMove(move, () => 
+        { 
+            playSoundForMove(move);
+        });
 }
 
 function controlsOpeningInput_onInput()

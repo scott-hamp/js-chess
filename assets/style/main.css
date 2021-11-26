@@ -190,6 +190,12 @@
     cursor: pointer;
 }
 
+td.controls-game-moves-table-cell:hover
+{
+    background-color: "gray";
+    font-weight: bold;
+}
+
 .grabbing, .grabbing * { cursor: grabbing !important; }
 
 body
