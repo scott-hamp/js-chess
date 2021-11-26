@@ -1517,18 +1517,18 @@ function updateControlsMovesTable()
     controlsMovesTable.innerHTML = innerHTML;
 }
 
-function updateControlsOpeningDiv(moves)
+function updateControlsOpeningDiv(movesNotation)
 {
-    if(moves == null) moves = _chessJS.history();
+    if(movesNotation == null) movesNotation = _chessJS.history();
     var controlsOpeningDiv = document.getElementById("controls-opening-div");
 
-    if(moves.length == 0)
+    if(movesNotation.length == 0)
     {
         controlsOpeningDiv.innerHTML = "...";
         return;
     }
 
-    var opening = getOpeningWithMoves(moves);
+    var opening = getOpeningWithMoves(movesNotation);
     var innerHTML = controlsOpeningDiv.innerHTML;
 
     if(opening == null)

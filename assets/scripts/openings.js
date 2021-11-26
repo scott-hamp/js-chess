@@ -5848,7 +5848,7 @@ King's Indian Defence
 
 var _openings = [];
 
-function getOpeningWithMoves(moves)
+function getOpeningWithMoves(movesNotation)
 {
 	var result = null;
 	var resultMovesMatchingCount = 0;
@@ -5856,13 +5856,11 @@ function getOpeningWithMoves(moves)
 	for(var i = 0; i < _openings.length; i++)
 	{
 		var opening = _openings[i];
-
-		if(opening.moves.length < moves.length) continue;
-
 		var matchingCount = 0;
-		for(var j = 0; j < moves.length; j++)
+		for(var j = 0; j < movesNotation.length; j++)
 		{
-			if(opening.moves[j] != moves[j]) break;
+			if(opening.movesNotation[j] == null) break;
+			if(opening.movesNotation[j] != movesNotation[j]) break;
 
 			matchingCount++;
 		}
@@ -5906,18 +5904,18 @@ function loadOpenings()
 			continue;
 		}
 
-		var movesLine = lines[i].replace("  ", " ").trim();
+		var movesNotationLine = lines[i].replace("  ", " ").trim();
 
 		for(var n = 1; n < 100; n++)
-			movesLine = movesLine.replace(`${n}. `, "");
+		movesNotationLine = movesNotationLine.replace(`${n}. `, "");
 
-		var moves = movesLine.split(" ");
+		var movesNotation = movesNotationLine.split(" ");
 
 		var opening = 
 			{
 				ECOCode: ECOCode, 
 				name: name, 
-				moves: moves
+				movesNotation: movesNotation
 			};
 
 		_openings.push(opening);
