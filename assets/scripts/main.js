@@ -132,6 +132,7 @@ class BoardStateHistory
         this.comments = [];
         this.moves = [];
         this.states = [];
+        this.startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
 
     add(move, boardState, comment, popRemaining)
@@ -169,6 +170,7 @@ class BoardStateHistory
             this.moves.pop();
             this.states.pop();
         }
+        this.startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
 }
 
@@ -1120,6 +1122,7 @@ function selectRandomPuzzle()
     _currentPuzzle = puzzle;
 
     setCurrentBoardStateToFEN(_currentPuzzle.FEN);
+    _boardStateHistory.startingFEN = _currentPuzzle.FEN;
 
     if(_currentPuzzle.instructions.toLowerCase().includes("black"))
         _boardStateHistory.add(null, _currentBoardState, "", false);
@@ -1151,17 +1154,30 @@ function setBoardHighlight(positionNotation, highlightType)
 function setCurrentBoardStateByMoveIndex(moveIndex)
 {
     var state = _boardStateHistory.states[moveIndex];
+    var FEN = "";
+
     if(state == null)
     {
-        if(_currentPuzzle != null) resetCurrentPuzzle();
-
-        return;
+        if(_currentPuzzle != null)
+        {
+            resetCurrentPuzzle();
+            return;
+        }
+        else
+        {
+            FEN = _boardStateHistory.startingFEN;
+            _boardStateHistory.atIndex = 0;
+        }
+    }
+    else
+    {
+        FEN = state.fen;
+        _boardStateHistory.atIndex = moveIndex + 1;
     }
 
     _currentSquareSelected = "";
-    _boardStateHistory.atIndex = moveIndex + 1;
 
-    setCurrentBoardStateToFEN(state.fen);
+    setCurrentBoardStateToFEN(FEN);
 
     boardCanvasClear();
     clearBoardHighlights();
@@ -1605,13 +1621,13 @@ function controlsGameButton_onClick(descriptor)
 {
     if(descriptor == "to-start")
     {
-        setCurrentBoardStateByMoveIndex(0);
+        setCurrentBoardStateByMoveIndex(-1);
         return;
     }
 
     if(descriptor == "previous")
     {
-        _boardStateHistory.atIndex = Math.max(_boardStateHistory.atIndex - 2, 0);
+        _boardStateHistory.atIndex = Math.max(_boardStateHistory.atIndex - 2, -1);
 
         setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
         return;
@@ -1736,21 +1752,22 @@ function controlsPasteFENButton_onClick()
 {
     async function pasteFEN()
     {
-        const text = await navigator.clipboard.readText();
-        if(text == null) return;
-        if(text.length == 0) return;
+        const FEN = await navigator.clipboard.readText();
+        if(FEN == null) return;
+        if(FEN.length == 0) return;
 
-        var validate = _chessJS.validate_fen(text);
+        var validate = _chessJS.validate_fen(FEN);
         if(!validate.valid)
         {
             alert(`FEN string is invalid:\n"${validate.error}"`);
             return;
         }
 
-        document.getElementById("controls-fen-input").value = text;
+        document.getElementById("controls-fen-input").value = FEN;
 
         reset();
-        setCurrentBoardStateToFEN(text);
+        setCurrentBoardStateToFEN(FEN);
+        _boardStateHistory.startingFEN = FEN;
 
         if(_chessJS.turn() == 'b')
             _boardStateHistory.add(null, _currentBoardState, "", false);
