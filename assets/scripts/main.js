@@ -994,6 +994,45 @@ function resetCurrentPuzzle()
     document.getElementById("controls-reset-puzzle-button").disabled = false;
 }
 
+function resetLoadedGame()
+{
+    if(_boardStateHistoryLoadedGame == null) return;
+
+    var atIndex = _boardStateHistory.atIndex;
+    if(atIndex > _boardStateHistoryLoadedGame.moves.length)
+        atIndex = _boardStateHistoryLoadedGame.moves.length - 1;
+
+    var divergenceAt = -1;
+    for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
+    {
+        for(var j = i; j < i + 2; j++)
+        {
+            var moveBSH = _boardStateHistory.moves[j];
+            var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
+            
+            if(moveBSH != null && moveBSHLG != null && moveBSH.san != moveBSHLG.san)
+            {
+                divergenceAt = j;
+                break;
+            }
+        }
+        i++;
+
+        if(divergenceAt != -1) break;
+    }
+
+    if(divergenceAt != -1) 
+        atIndex = divergenceAt;
+    else 
+        atIndex = 1;
+
+    _boardStateHistory.clear();
+    for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
+        _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i], false);
+
+    setCurrentBoardStateByMoveIndex(atIndex - 1);
+}
+
 function resetMoveClocks()
 {
     var select = document.getElementById("controls-time-select");
@@ -1528,6 +1567,7 @@ function updateGameDetailsMoveCommentTextArea()
     document.getElementById("controls-game-details-move-comment-text-area").value = comment;
 }
 
+
 function boardDiv_onMouseDown(mouseEvent)
 {
     if(mouseEvent.button == 0)
@@ -1714,41 +1754,7 @@ function controlsGameButton_onClick(descriptor)
 
     if(descriptor == "reset")
     {
-        if(_boardStateHistoryLoadedGame == null) return;
-
-        var atIndex = _boardStateHistory.atIndex;
-        if(atIndex > _boardStateHistoryLoadedGame.moves.length)
-            atIndex = _boardStateHistoryLoadedGame.moves.length - 1;
-
-        var divergenceAt = -1;
-        for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
-        {
-            for(var j = i; j < Math.min(i + 2, Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length)); j++)
-            {
-                var moveBSH = _boardStateHistory.moves[j];
-                var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
-                
-                if(moveBSH != null && moveBSHLG != null && moveBSH != moveBSHLG)
-                {
-                    divergenceAt = j;
-                    break;
-                }
-            }
-            i++;
-
-            if(divergenceAt != -1) break;
-        }
-
-        if(divergenceAt != -1) 
-            atIndex = divergenceAt;
-        else 
-            atIndex++;
-
-        _boardStateHistory.clear();
-        for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
-            _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i], false);
-
-        setCurrentBoardStateByMoveIndex(atIndex - 1);
+        resetLoadedGame();
 
         return;
     }
