@@ -54,10 +54,8 @@
 
 #controls-div
 {
-    margin-left: 10px;
-    padding: 5px;
     position: absolute;
-    left: 730px;
+    padding: 5px;
     top: 0px;
     background-color: lightgray;
     filter: drop-shadow(3px 3px 3px lightgray);

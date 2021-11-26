@@ -485,7 +485,7 @@ function buildBoardSquaresTable()
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width=90 height=90 onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
+            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
             
             bgColorIndex++;
         }
@@ -869,6 +869,13 @@ function playSoundForMove(move)
     }
 }
 
+function positionControlsDiv()
+{
+    var content = document.getElementById("content");
+    var controlsDiv = document.getElementById("controls-div");
+    controlsDiv.style.left = (content.offsetWidth - (controlsDiv.offsetWidth + 40)) + "px";
+}
+
 function positionDistance(from, to)
 {
     var xs = to.x - from.x;
@@ -1206,6 +1213,7 @@ function setCurrentBoardStateToFEN(fen)
 function setup()
 {
     buildBoardSquaresTable();
+    positionControlsDiv();
 
     setupChessJS();
     setCurrentBoardStateToChessJSBoard();
