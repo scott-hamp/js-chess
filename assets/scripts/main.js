@@ -872,8 +872,12 @@ function playSoundForMove(move)
 function positionControlsDiv()
 {
     var content = document.getElementById("content");
+    var contentDivRect = content.getBoundingClientRect();
+    var contentDivSize = contentDivRect.right - contentDivRect.left;
     var controlsDiv = document.getElementById("controls-div");
-    controlsDiv.style.left = (content.offsetWidth - (controlsDiv.offsetWidth + 40)) + "px";
+    var controlsDivRect = controlsDiv.getBoundingClientRect();
+    var controlsDivSize = controlsDivRect.right - controlsDivRect.left;
+    controlsDiv.style.left = (contentDivSize - controlsDivSize) + "px";
 }
 
 function positionDistance(from, to)
