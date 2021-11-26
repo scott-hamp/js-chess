@@ -60,6 +60,7 @@ var _boardThemes =
     }
 ];
 var _boardTheme = _boardThemes[4];
+var _pieceset = "cburnett";
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
@@ -629,15 +630,14 @@ function getImageSourceForColorAndPiece(colorAndPiece)
     var piece = colorAndPiece.piece.toLowerCase();
     var src = "assets/images/";
 
-    if(piece == 'p') src += "pawn-";
-    if(piece == 'n') src += "knight-";
-    if(piece == 'b') src += "bishop-";
-    if(piece == 'r') src += "rook-";
-    if(piece == 'q') src += "queen-";
-    if(piece == 'k') src += "king-";
+    if(piece == 'p') src += `${_pieceset}-pawn-`;
+    if(piece == 'n') src += `${_pieceset}-knight-`;
+    if(piece == 'b') src += `${_pieceset}-bishop-`;
+    if(piece == 'r') src += `${_pieceset}-rook-`;
+    if(piece == 'q') src += `${_pieceset}-queen-`;
+    if(piece == 'k') src += `${_pieceset}-king-`;
 
     src += (colorAndPiece.color == 'w') ? '0' : '1';
-
     src += ".png";
 
     return src;
@@ -1449,18 +1449,18 @@ function updateBoardFromBoardState(boardState)
             }
 
             if(squareValue == "") boardSquareTDImg.src = "assets/images/empty-0.png";
-            if(squareValue == "P") boardSquareTDImg.src = "assets/images/pawn-0.png";
-            if(squareValue == "N") boardSquareTDImg.src = "assets/images/knight-0.png";
-            if(squareValue == "B") boardSquareTDImg.src = "assets/images/bishop-0.png";
-            if(squareValue == "R") boardSquareTDImg.src = "assets/images/rook-0.png";
-            if(squareValue == "Q") boardSquareTDImg.src = "assets/images/queen-0.png";
-            if(squareValue == "K") boardSquareTDImg.src = "assets/images/king-0.png";
-            if(squareValue == "p") boardSquareTDImg.src = "assets/images/pawn-1.png";
-            if(squareValue == "n") boardSquareTDImg.src = "assets/images/knight-1.png";
-            if(squareValue == "b") boardSquareTDImg.src = "assets/images/bishop-1.png";
-            if(squareValue == "r") boardSquareTDImg.src = "assets/images/rook-1.png";
-            if(squareValue == "q") boardSquareTDImg.src = "assets/images/queen-1.png";
-            if(squareValue == "k") boardSquareTDImg.src = "assets/images/king-1.png";
+            if(squareValue == "P") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-0.png`;
+            if(squareValue == "N") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-0.png`;
+            if(squareValue == "B") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-0.png`;
+            if(squareValue == "R") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-0.png`;
+            if(squareValue == "Q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-0.png`;
+            if(squareValue == "K") boardSquareTDImg.src = `assets/images/${_pieceset}-king-0.png`;
+            if(squareValue == "p") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-1.png`;
+            if(squareValue == "n") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-1.png`;
+            if(squareValue == "b") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-1.png`;
+            if(squareValue == "r") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-1.png`;
+            if(squareValue == "q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-1.png`;
+            if(squareValue == "k") boardSquareTDImg.src = `assets/images/${_pieceset}-king-1.png`;
 
             if(squareValue != "")
             {
@@ -1869,6 +1869,16 @@ function controlsPasteFENButton_onClick()
     }
 
     pasteFEN();
+}
+
+function controlsPiecesetSelect_onChange()
+{
+    var select = document.getElementById("controls-pieceset-select");
+    var index = select.selectedIndex;
+
+    _pieceset = select.value;
+
+    updateBoardFromBoardState(_currentBoardState);
 }
 
 function controlsRandomPuzzleButton_onClick()

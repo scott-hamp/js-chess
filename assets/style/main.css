@@ -78,6 +78,19 @@
     text-align: center;
 }
 
+#controls-fen-paste-button
+{
+    width: 28px;
+    height: 28px;
+    margin-left: 2px;
+}
+
+#controls-fen-paste-button > img
+{
+    width: 14px;
+    height: 14px;
+}
+
 #controls-game-moves-div
 {
     overflow-y: auto;
@@ -115,17 +128,9 @@
     text-overflow: ellipsis;
 }
 
-#controls-fen-paste-button
+#controls-pieceset-select
 {
-    width: 28px;
-    height: 28px;
-    margin-left: 2px;
-}
-
-#controls-fen-paste-button > img
-{
-    width: 14px;
-    height: 14px;
+    width: 100px;
 }
 
 #controls-puzzle-div
@@ -148,6 +153,11 @@
 #controls-stockfish-select
 {
     width: 130px;
+}
+
+#controls-board-theme-select
+{
+    width: 80px;
 }
 
 #main-div

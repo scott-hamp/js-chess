@@ -18,7 +18,7 @@
                 <table>
                     <tr>
                         <td style="padding-left: 10px;">
-                            <img src="assets/images/king-0.png" width="24" height="24" />
+                            <img src="assets/images/cburnett-king-0.png" width="24" height="24" />
                         </td>
                         <td style="padding-left: 5px;">
                             <span id="side-time-white-span" style="color: white;">00:00</span>
@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <td style="padding-left: 10px;">
-                            <img src="assets/images/king-1.png" width="24" height="24" />
+                            <img src="assets/images/cburnett-king-1.png" width="24" height="24" />
                         </td>
                         <td style="padding-left: 5px;">
                             <span id="side-time-black-span" style="color: white;">00:00</span>
@@ -56,13 +56,19 @@
                             <td style="padding-left: 2px;">
                                 <button onclick="hideControlsButton_onClick()">Hide Controls</button>
                             </td>
-                            <td style="padding-left: 5px;"> Theme: 
+                            <td style="padding-left: 5px;"> Board: 
                                 <select id="controls-board-theme-select" onchange="controlsBoardThemeSelect_onChange()">
                                     <option>Blue</option>
                                     <option>Brown</option>
                                     <option>Green</option>
                                     <option>Stone</option>
                                     <option selected>Wood</option>
+                                </select>
+                            </td>
+                            <td style="padding-left: 5px;"> Pieceset: 
+                                <select id="controls-pieceset-select" onchange="controlsPiecesetSelect_onChange()">
+                                    <option value="cburnett" selected>CBurnett</option>
+                                    <option value="maestro" >Maestro</option>
                                 </select>
                             </td>
                         </tr>
@@ -83,13 +89,13 @@
                             </div>
                         </td>
                         <td style="padding-left: 10px;">
-                            <img src="assets/images/king-0.png" width="24" height="24" />
+                            <img src="assets/images/cburnett-king-0.png" width="24" height="24" />
                         </td>
                         <td style="padding-left: 5px;">
                             <span id="controls-time-white-span">00:00</span>
                         </td>
                         <td style="padding-left: 10px;">
-                            <img src="assets/images/king-1.png" width="24" height="24" />
+                            <img src="assets/images/cburnett-king-1.png" width="24" height="24" />
                         </td>
                         <td style="padding-left: 5px;">
                             <span id="controls-time-black-span">00:00</span>
