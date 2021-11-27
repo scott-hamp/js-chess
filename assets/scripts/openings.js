@@ -1003,8 +1003,6 @@ var _openings = [];
 
 function getOpeningWithMoves(movesNotation)
 {
-	console.log(movesNotation);
-
 	var opening = null;
 	var openingMovesMatchingCount = 0;
 
