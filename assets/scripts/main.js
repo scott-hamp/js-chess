@@ -1181,9 +1181,9 @@ function selectOpening(opening)
 {
     reset();
 
-    for(var i = 0; i < opening.moves.length; i++)
+    for(var i = 0; i < opening.movesNotation.length; i++)
     {
-        _chessJS.move(opening.moves[i]);
+        _chessJS.move(opening.movesNotation[i]);
         setCurrentBoardStateToChessJSBoard();
         var history = _chessJS.history({ verbose: true });
         var move = history[history.length - 1];
