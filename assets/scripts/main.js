@@ -781,8 +781,6 @@ function loadGame()
 
             _boardStateHistory.add(move, boardState, comment, false);
             _boardStateHistoryLoadedGame.add(move, boardState, comment, false);
-
-            updateControlsOpeningDiv(chessJSAlt.history());
         }
 
         _currentBoardState = new BoardState(chessJSAlt.fen);
@@ -791,6 +789,7 @@ function loadGame()
         updateControlsFENInput();
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
+        updateControlsOpeningDiv();
 
         var pgn = _chessJS.pgn();
         pgn = pgn.replaceAll("[", "").replaceAll("]", "");
