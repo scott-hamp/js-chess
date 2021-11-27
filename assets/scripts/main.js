@@ -47,9 +47,15 @@ var _boardThemes =
         backgroundImage: ""
     },
     {
+        name: "Stone",
+        light: "rgba(188, 179, 165, 0.5)", 
+        dark: "rgba(38, 36, 39, 0.5)",
+        backgroundImage: "assets/images/background-stone-0.png"
+    },
+    {
         name: "Wood",
         light: "rgba(188, 159, 115, 0.3)", 
-        dark: "rgba(70, 36, 9, 0.3)",
+        dark: "rgba(60, 26, 0, 0.35)",
         backgroundImage: "assets/images/background-wood-0.png"
     }
 ];
@@ -513,7 +519,7 @@ function buildBoardSquaresTable()
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
+            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
             
             bgColorIndex++;
         }
