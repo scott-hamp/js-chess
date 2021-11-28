@@ -1335,7 +1335,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
         var move = getMoveForNotation(moveAsFromTo);
         var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-        stockfishUpdateMessage(`Best move: <u>${moveValue}</u> (Score: ${stockfishScore})`);
+        stockfishUpdateMessage(`Best move: "${moveValue}" (Score: ${stockfishScore})`);
         
         return;
     }
