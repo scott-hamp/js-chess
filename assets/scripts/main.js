@@ -535,6 +535,12 @@ function buildBoardSquaresTable()
     }
 
     boardSquaresTable.innerHTML = innerHTML;
+
+    var boardCanvas = document.getElementById("board-canvas");
+    boardCanvas.width = boardSquareSize * 8;
+    boardCanvas.height = boardSquareSize * 8;
+    boardCanvas.style.width = boardSquareSize * 8;
+    boardCanvas.style.height = boardSquareSize * 8;
 }
 
 function clearBoardHighlights()
