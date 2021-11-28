@@ -153,6 +153,7 @@
 #controls-stockfish-message-div
 {
     margin-left: 10px;
+    opacity: 0.3;
 }
 
 #controls-stockfish-select
@@ -160,9 +161,15 @@
     width: 125px;
 }
 
+#controls-stockfish-skill-level-span
+{
+    opacity: 0.3;
+}
+
 #controls-stockfish-skill-level-select
 {
     width: 45px;
+    opacity: 0.3;
 }
 
 #main-div

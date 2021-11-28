@@ -1946,7 +1946,11 @@ function controlsStockfishSelect_onChange()
     if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
         stockfishUpdate();
 
-    document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
+    var skillLevelSelect = document.getElementById("controls-stockfish-skill-level-select");
+    skillLevelSelect.disabled = (_stockfishEnabled > -1) ? false : true;
+    skillLevelSelect.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
+    document.getElementById("controls-stockfish-skill-level-span").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
+    document.getElementById("controls-stockfish-message-div").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
 }
 
 function controlsStockfishSkillLevelSelect_onChange()
