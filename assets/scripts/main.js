@@ -1327,12 +1327,15 @@ function stockfishBestMoveDecided(moveAsFromTo)
 {
     if(_stockfishEnabled == -1) return;
 
+    var stockfishScore = (_stockfishScoreEvaluation / 1000.0);
+    if(stockfishScore >= 0.0) stockfishScore = "+" + stockfishScore;
+
     if(_stockfishEnabled == 0)
     {
         var move = getMoveForNotation(moveAsFromTo);
         var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-        stockfishUpdateMessage(`Best move: ${moveValue}; Score: ${_stockfishScoreEvaluation / 1000.0}`);
+        stockfishUpdateMessage(`Best move: <u>${moveValue}</u> (Score: ${stockfishScore})`);
         
         return;
     }
