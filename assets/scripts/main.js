@@ -871,9 +871,13 @@ function playSoundForMove(move)
 
 function positionControlsDiv()
 {
-    var content = document.getElementById("content");
+    var boardDiv = document.getElementById("board-div");
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+
     var controlsDiv = document.getElementById("controls-div");
-    controlsDiv.style.left = (content.offsetWidth - (controlsDiv.offsetWidth + 40)) + "px";
+    //var controlsDivRect = controlsDiv.getBoundingClientRect();
+    controlsDiv.style.left = (boardDivRect.left + boardDivSize) + "px";
 }
 
 function positionDistance(from, to)
