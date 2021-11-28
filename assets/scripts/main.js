@@ -1283,6 +1283,14 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
     updateControlsFENInput();
     updateControlsMovesTable();
     updateGameDetailsMoveCommentTextArea();
+
+    if(_stockfishEnabled != 0) return;
+
+    stockfishUpdateMessage("Thinking...");
+
+    setTimeout(() => {
+        stockfishPostMessage("go depth 10");
+    }, 100);
 }
 
 function setCurrentBoardStateToChessJSBoard()
