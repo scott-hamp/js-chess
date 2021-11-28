@@ -1421,8 +1421,8 @@ function stockfishUpdate(move)
     stockfishUpdateMessage("Thinking...");
 
     setTimeout(() => {
-        stockfishPostMessage("go depth 40");
-    }, 100);
+        stockfishPostMessage("go depth 10");
+    }, 1000);
 }
 
 function stockfishUpdateMessage(message)
