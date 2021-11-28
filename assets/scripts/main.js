@@ -1339,7 +1339,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
         var move = getMoveForNotation(moveAsFromTo);
         var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-        stockfishUpdateMessage(`Best move: "${moveValue}" (Score: ${stockfishScore})`);
+        stockfishUpdateMessage(`Best move: <u>${moveValue}</u> (Score: ${stockfishScore})`);
         
         return;
     }
@@ -1435,7 +1435,7 @@ function stockfishUpdateMessage(message)
 {
     console.log("Stockfish: " + message);
 
-    document.getElementById("controls-stockfish-message-span").textContent = message;
+    document.getElementById("controls-stockfish-message-div").innerHTML = message;
 }
 
 function updateBoardFromBoardState(boardState)
