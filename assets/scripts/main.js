@@ -1430,7 +1430,7 @@ function updateBoardFromBoardState(boardState)
                         if(_boardHighlights[i].highlight == "check")
                             bgColorHighlight = "rgba(255, 100, 100, 0.5)";
                         if(_boardHighlights[i].highlight == "checkmate")
-                            bgColorHighlight = "rgba(255, 0, 0, 0.5)";
+                            bgColorHighlight = "rgba(255, 0, 0, 0.75)";
                         if(_boardHighlights[i].highlight == "from")
                             bgColorHighlight = "rgba(210, 210, 0, 0.5)";
                         if(_boardHighlights[i].highlight == "to")
