@@ -1356,7 +1356,7 @@ function stockfishSetOption(option, value)
         value = valueInt;
     }
 
-    stockfishPostMessage(`setoption ${option} value ${value}`);
+    stockfishPostMessage(`setoption name ${option} value ${value}`);
 }
 
 function stockfishPostMessage(message) 
