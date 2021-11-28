@@ -1286,11 +1286,7 @@ function setCurrentBoardStateByMoveIndex(moveIndex)
 
     if(_stockfishEnabled != 0) return;
 
-    stockfishUpdateMessage("Thinking...");
-
-    setTimeout(() => {
-        stockfishPostMessage("go depth 10");
-    }, 100);
+    stockfishUpdate();
 }
 
 function setCurrentBoardStateToChessJSBoard()
@@ -1428,9 +1424,11 @@ function stockfishUpdate(move)
 
     stockfishUpdateMessage("Thinking...");
 
+    var delay = (move == null) ? 100 : 1000;
+
     setTimeout(() => {
         stockfishPostMessage("go depth 10");
-    }, 1000);
+    }, delay);
 }
 
 function stockfishUpdateMessage(message)
