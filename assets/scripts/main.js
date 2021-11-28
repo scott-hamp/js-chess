@@ -48,14 +48,20 @@ var _boardThemes =
         backgroundImage: ""
     },
     {
+        name: "Ice",
+        light: "rgba(236, 257, 241, 0.55)", 
+        dark: "rgba(102, 130, 159, 0.55)",
+        backgroundImage: "assets/images/background-ice-0.png"
+    },
+    {
         name: "Stone",
-        light: "rgba(188, 179, 165, 0.5)", 
+        light: "rgba(188, 179, 165, 0.4)", 
         dark: "rgba(38, 36, 39, 0.5)",
         backgroundImage: "assets/images/background-stone-0.png"
     },
     {
         name: "Tournament",
-        light: "rgba(236, 239, 234, 0.5)", 
+        light: "rgba(236, 239, 234, 0.4)", 
         dark: "rgba(0, 113, 79, 0.75)",
         backgroundImage: "assets/images/background-vinyl-0.png"
     },
@@ -1351,7 +1357,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
         var move = getMoveForNotation(moveAsFromTo);
         var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-        stockfishUpdateMessage(`Best move: <u>${moveValue}</u> (Score: ${stockfishScore})`);
+        stockfishUpdateMessage(`Best move: <b>${moveValue}</b> (Score: ${stockfishScore})`);
         
         return;
     }
