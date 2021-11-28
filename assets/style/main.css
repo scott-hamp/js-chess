@@ -57,6 +57,11 @@
     height: 100%;
 }
 
+#controls-board-theme-select
+{
+    width: 80px;
+}
+
 #controls-div
 {
     position: absolute;
@@ -155,9 +160,9 @@
     width: 130px;
 }
 
-#controls-board-theme-select
+#controls-stockfish-skill-level-select
 {
-    width: 80px;
+    width: 45px;
 }
 
 #main-div

@@ -16,6 +16,7 @@ var _boardStateHistoryLoadedGame = null;
 var _boardOrientation = 0;
 var _boardInAnimation = false;
 var _currentPuzzle = null;
+var _stockfishScoreEvaluation = 0;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
 [
@@ -1327,7 +1328,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
         var move = getMoveForNotation(moveAsFromTo);
         var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-        stockfishUpdateMessage(`Best move: ${moveValue}.`);
+        stockfishUpdateMessage(`Best move: ${moveValue}; Score: ${_stockfishScoreEvaluation / 1000.0}`);
         
         return;
     }
@@ -1339,6 +1340,19 @@ function stockfishBestMoveDecided(moveAsFromTo)
         stockfishUpdateMessage("Moving...");
         makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
     }
+}
+
+function stockfishSetOption(option, value)
+{
+    if(!_stockfishIsReady) return;
+
+    if(option == "Skill Level")
+    {
+        var valueInt = Math.min(Math.max(parseInt(value), 0), 20);
+        value = valueInt;
+    }
+
+    stockfishPostMessage(`setoption ${option} value ${value}`);
 }
 
 function stockfishPostMessage(message) 
@@ -1366,8 +1380,20 @@ function stockfishReceiveData(data)
 
 	var parts = data.split(" ");
 
-	if (parts[0] == "bestmove")
-		stockfishBestMoveDecided(parts[1]);
+    if(parts[0] == "info")
+    {
+        for(var i = 0; i < parts.length; i++)
+        {
+            if(parts[i] == "cp")
+            {
+                _stockfishScoreEvaluation = parseInt(parts[i + 1])
+                continue;
+            }
+        }
+    }
+
+    if (parts[0] == "bestmove")
+        stockfishBestMoveDecided(parts[1]);
 }
 
 function stockfishUpdate(move) 
@@ -1906,6 +1932,13 @@ function controlsStockfishSelect_onChange()
         stockfishUpdate();
 
     document.getElementById("controls-stockfish-message-span").style = (_stockfishEnabled > -1) ? "opacity: 1.0;" : "opacity: 0.3;";
+}
+
+function controlsStockfishSkillLevelSelect_onChange()
+{
+    var select = document.getElementById("controls-stockfish-skill-level-select");
+
+    stockfishSetOption("Skill Level", select.value);
 }
 
 function controlsTimeSelect_onChange()
