@@ -1250,6 +1250,10 @@ function selectRandomPuzzle()
     updateControlsPuzzleDiv();
 
     document.getElementById("controls-reset-puzzle-button").disabled = false;
+
+    if(_stockfishEnabled == -1) return;
+
+    stockfishUpdate();
 }
 
 function setBoardHighlight(positionNotation, highlightType)
@@ -1930,6 +1934,10 @@ function controlsPasteFENButton_onClick()
         updateControlsFENInput();
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
+
+        if(_stockfishEnabled == -1) return;
+
+        stockfishUpdate();
     }
 
     pasteFEN();
