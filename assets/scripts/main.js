@@ -54,6 +54,12 @@ var _boardThemes =
         backgroundImage: "assets/images/background-stone-0.png"
     },
     {
+        name: "Tournament",
+        light: "rgba(236, 239, 234, 0.5)", 
+        dark: "rgba(0, 113, 79, 0.75)",
+        backgroundImage: "assets/images/background-vinyl-0.png"
+    },
+    {
         name: "Wood",
         light: "rgba(188, 159, 115, 0.3)", 
         dark: "rgba(60, 26, 0, 0.35)",
