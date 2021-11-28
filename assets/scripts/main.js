@@ -26,7 +26,41 @@ var _rightMouseDragFrom = null;
 var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasSquares = [];
-var _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
+var _boardThemes = 
+[
+    {
+        name: "Blue",
+        light: "rgb(234, 240, 215)", 
+        dark: "rgb(73, 101, 147)",
+        backgroundImage: ""
+    },
+    {
+        name: "Brown",
+        light: "rgb(240, 219, 174)", 
+        dark: "rgb(193, 136, 93)",
+        backgroundImage: ""
+    },
+    {
+        name: "Green",
+        light: "rgb(234, 244, 209)", 
+        dark: "rgb(99, 166, 83)",
+        backgroundImage: ""
+    },
+    {
+        name: "Stone",
+        light: "rgba(188, 179, 165, 0.5)", 
+        dark: "rgba(38, 36, 39, 0.5)",
+        backgroundImage: "assets/images/background-stone-0.png"
+    },
+    {
+        name: "Wood",
+        light: "rgba(188, 159, 115, 0.3)", 
+        dark: "rgba(60, 26, 0, 0.35)",
+        backgroundImage: "assets/images/background-wood-0.png"
+    }
+];
+var _boardTheme = _boardThemes[1];
+var _pieceset = "cburnett";
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
@@ -485,7 +519,7 @@ function buildBoardSquaresTable()
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
+            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
             
             bgColorIndex++;
         }
@@ -596,15 +630,14 @@ function getImageSourceForColorAndPiece(colorAndPiece)
     var piece = colorAndPiece.piece.toLowerCase();
     var src = "assets/images/";
 
-    if(piece == 'p') src += "pawn-";
-    if(piece == 'n') src += "knight-";
-    if(piece == 'b') src += "bishop-";
-    if(piece == 'r') src += "rook-";
-    if(piece == 'q') src += "queen-";
-    if(piece == 'k') src += "king-";
+    if(piece == 'p') src += `${_pieceset}-pawn-`;
+    if(piece == 'n') src += `${_pieceset}-knight-`;
+    if(piece == 'b') src += `${_pieceset}-bishop-`;
+    if(piece == 'r') src += `${_pieceset}-rook-`;
+    if(piece == 'q') src += `${_pieceset}-queen-`;
+    if(piece == 'k') src += `${_pieceset}-king-`;
 
     src += (colorAndPiece.color == 'w') ? '0' : '1';
-
     src += ".png";
 
     return src;
@@ -748,8 +781,6 @@ function loadGame()
 
             _boardStateHistory.add(move, boardState, comment, false);
             _boardStateHistoryLoadedGame.add(move, boardState, comment, false);
-
-            updateControlsOpeningDiv(chessJSAlt.history());
         }
 
         _currentBoardState = new BoardState(chessJSAlt.fen);
@@ -758,6 +789,7 @@ function loadGame()
         updateControlsFENInput();
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
+        updateControlsOpeningDiv();
 
         var pgn = _chessJS.pgn();
         pgn = pgn.replaceAll("[", "").replaceAll("]", "");
@@ -871,13 +903,13 @@ function playSoundForMove(move)
 
 function positionControlsDiv()
 {
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
-    var boardDivSize = (boardDivRect.right - boardDivRect.left);
-
+    var content = document.getElementById("content");
+    var contentDivRect = content.getBoundingClientRect();
+    var contentDivSize = contentDivRect.right - contentDivRect.left;
     var controlsDiv = document.getElementById("controls-div");
-    //var controlsDivRect = controlsDiv.getBoundingClientRect();
-    controlsDiv.style.left = (boardDivRect.left + boardDivSize) + "px";
+    var controlsDivRect = controlsDiv.getBoundingClientRect();
+    var controlsDivSize = controlsDivRect.right - controlsDivRect.left;
+    controlsDiv.style.left = (contentDivSize - controlsDivSize) + "px";
 }
 
 function positionDistance(from, to)
@@ -992,6 +1024,45 @@ function resetCurrentPuzzle()
     updateGameDetailsMoveCommentTextArea();
 
     document.getElementById("controls-reset-puzzle-button").disabled = false;
+}
+
+function resetLoadedGame()
+{
+    if(_boardStateHistoryLoadedGame == null) return;
+
+    var atIndex = _boardStateHistory.atIndex;
+    if(atIndex > _boardStateHistoryLoadedGame.moves.length)
+        atIndex = _boardStateHistoryLoadedGame.moves.length - 1;
+
+    var divergenceAt = -1;
+    for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
+    {
+        for(var j = i; j < i + 2; j++)
+        {
+            var moveBSH = _boardStateHistory.moves[j];
+            var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
+            
+            if(moveBSH != null && moveBSHLG != null && moveBSH.san != moveBSHLG.san)
+            {
+                divergenceAt = j;
+                break;
+            }
+        }
+        i++;
+
+        if(divergenceAt != -1) break;
+    }
+
+    if(divergenceAt != -1) 
+        atIndex = divergenceAt;
+    else 
+        atIndex = 0;
+
+    _boardStateHistory.clear();
+    for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
+        _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i], false);
+
+    setCurrentBoardStateByMoveIndex(atIndex - 1);
 }
 
 function resetMoveClocks()
@@ -1109,9 +1180,9 @@ function selectOpening(opening)
 {
     reset();
 
-    for(var i = 0; i < opening.moves.length; i++)
+    for(var i = 0; i < opening.movesNotation.length; i++)
     {
-        _chessJS.move(opening.moves[i]);
+        _chessJS.move(opening.movesNotation[i]);
         setCurrentBoardStateToChessJSBoard();
         var history = _chessJS.history({ verbose: true });
         var move = history[history.length - 1];
@@ -1322,7 +1393,10 @@ function stockfishUpdateMessage(message)
 
 function updateBoardFromBoardState(boardState)
 {
-    //var boardSquaresTable = document.getElementById("board-squares-table");
+    var boardDiv = document.getElementById("board-div");
+    boardDiv.style.background = "rgba(255, 255, 255, 0)";
+    boardDiv.style.backgroundImage = (_boardTheme.backgroundImage != "") ? `url(${_boardTheme.backgroundImage})` : "none";
+
     var bgColorIndex = 0;
 
     for(var rank = 0; rank < 8; rank++)
@@ -1334,7 +1408,7 @@ function updateBoardFromBoardState(boardState)
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
             var boardSquareTD = document.getElementById(`board-square-td_${positionNotation}`);
             var boardSquareTDImg = document.getElementById(`board-square-td-img_${positionNotation}`);
-            var bgColor = (bgColorIndex % 2 == 0) ? _boardColorScheme.light : _boardColorScheme.dark;
+            var bgColor = (bgColorIndex % 2 == 0) ? _boardTheme.light : _boardTheme.dark;
 
             boardSquareTD.style.backgroundColor = bgColor;
             boardSquareTDImg.style.cursor = "default";
@@ -1345,14 +1419,28 @@ function updateBoardFromBoardState(boardState)
                 if(_boardHighlights[i].position == positionNotation)
                 {
                     var bgColorHighlight = "white";
-                    if(_boardHighlights[i].highlight == "check")
-                        bgColorHighlight = "rgb(255, 100, 100)";
-                    if(_boardHighlights[i].highlight == "checkmate")
-                        bgColorHighlight = "rgb(255, 0, 0)";
-                    if(_boardHighlights[i].highlight == "from")
-                        bgColorHighlight = "rgb(210, 210, 0)";
-                    if(_boardHighlights[i].highlight == "to")
-                        bgColorHighlight = "rgb(225, 225, 0)";
+                    if(_boardTheme.backgroundImage != "")
+                    {
+                        if(_boardHighlights[i].highlight == "check")
+                            bgColorHighlight = "rgba(255, 100, 100, 0.5)";
+                        if(_boardHighlights[i].highlight == "checkmate")
+                            bgColorHighlight = "rgba(255, 0, 0, 0.5)";
+                        if(_boardHighlights[i].highlight == "from")
+                            bgColorHighlight = "rgba(210, 210, 0, 0.5)";
+                        if(_boardHighlights[i].highlight == "to")
+                            bgColorHighlight = "rgba(225, 225, 0, 0.5)";
+                    }
+                    else
+                    {
+                        if(_boardHighlights[i].highlight == "check")
+                            bgColorHighlight = "rgb(255, 100, 100)";
+                        if(_boardHighlights[i].highlight == "checkmate")
+                            bgColorHighlight = "rgb(255, 0, 0)";
+                        if(_boardHighlights[i].highlight == "from")
+                            bgColorHighlight = "rgb(210, 210, 0)";
+                        if(_boardHighlights[i].highlight == "to")
+                            bgColorHighlight = "rgb(225, 225, 0)";
+                    }
 
                     boardSquareTD.style.backgroundColor = bgColorHighlight;
                     break;
@@ -1360,18 +1448,18 @@ function updateBoardFromBoardState(boardState)
             }
 
             if(squareValue == "") boardSquareTDImg.src = "assets/images/empty-0.png";
-            if(squareValue == "P") boardSquareTDImg.src = "assets/images/pawn-0.png";
-            if(squareValue == "N") boardSquareTDImg.src = "assets/images/knight-0.png";
-            if(squareValue == "B") boardSquareTDImg.src = "assets/images/bishop-0.png";
-            if(squareValue == "R") boardSquareTDImg.src = "assets/images/rook-0.png";
-            if(squareValue == "Q") boardSquareTDImg.src = "assets/images/queen-0.png";
-            if(squareValue == "K") boardSquareTDImg.src = "assets/images/king-0.png";
-            if(squareValue == "p") boardSquareTDImg.src = "assets/images/pawn-1.png";
-            if(squareValue == "n") boardSquareTDImg.src = "assets/images/knight-1.png";
-            if(squareValue == "b") boardSquareTDImg.src = "assets/images/bishop-1.png";
-            if(squareValue == "r") boardSquareTDImg.src = "assets/images/rook-1.png";
-            if(squareValue == "q") boardSquareTDImg.src = "assets/images/queen-1.png";
-            if(squareValue == "k") boardSquareTDImg.src = "assets/images/king-1.png";
+            if(squareValue == "P") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-0.png`;
+            if(squareValue == "N") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-0.png`;
+            if(squareValue == "B") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-0.png`;
+            if(squareValue == "R") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-0.png`;
+            if(squareValue == "Q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-0.png`;
+            if(squareValue == "K") boardSquareTDImg.src = `assets/images/${_pieceset}-king-0.png`;
+            if(squareValue == "p") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-1.png`;
+            if(squareValue == "n") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-1.png`;
+            if(squareValue == "b") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-1.png`;
+            if(squareValue == "r") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-1.png`;
+            if(squareValue == "q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-1.png`;
+            if(squareValue == "k") boardSquareTDImg.src = `assets/images/${_pieceset}-king-1.png`;
 
             if(squareValue != "")
             {
@@ -1478,18 +1566,18 @@ function updateControlsMovesTable()
     controlsMovesTable.innerHTML = innerHTML;
 }
 
-function updateControlsOpeningDiv(moves)
+function updateControlsOpeningDiv(movesNotation)
 {
-    if(moves == null) moves = _chessJS.history();
+    if(movesNotation == null) movesNotation = _chessJS.history();
     var controlsOpeningDiv = document.getElementById("controls-opening-div");
 
-    if(moves.length == 0)
+    if(movesNotation.length == 0)
     {
         controlsOpeningDiv.innerHTML = "...";
         return;
     }
 
-    var opening = getOpeningWithMoves(moves);
+    var opening = getOpeningWithMoves(movesNotation);
     var innerHTML = controlsOpeningDiv.innerHTML;
 
     if(opening == null)
@@ -1527,6 +1615,7 @@ function updateGameDetailsMoveCommentTextArea()
 
     document.getElementById("controls-game-details-move-comment-text-area").value = comment;
 }
+
 
 function boardDiv_onMouseDown(mouseEvent)
 {
@@ -1617,19 +1706,12 @@ function body_onLoad()
     setup();
 }
 
-function controlsColorSchemeSelect_onChange()
+function controlsBoardThemeSelect_onChange()
 {
-    var select = document.getElementById("controls-color-scheme-select");
+    var select = document.getElementById("controls-board-theme-select");
     var index = select.selectedIndex;
 
-    if(index == 0)
-        _boardColorScheme = { light: "rgb(234, 240, 215)", dark: "rgb(73, 101, 147)" };
-
-    if(index == 1)
-        _boardColorScheme = { light: "rgb(240, 219, 174)", dark: "rgb(193, 136, 93)" };
-
-    if(index == 2)
-        _boardColorScheme = { light: "rgb(234, 244, 209)", dark: "rgb(99, 166, 83)" };
+    _boardTheme = _boardThemes[index];
 
     updateBoardFromBoardState(_currentBoardState);
 }
@@ -1714,41 +1796,7 @@ function controlsGameButton_onClick(descriptor)
 
     if(descriptor == "reset")
     {
-        if(_boardStateHistoryLoadedGame == null) return;
-
-        var atIndex = _boardStateHistory.atIndex;
-        if(atIndex > _boardStateHistoryLoadedGame.moves.length)
-            atIndex = _boardStateHistoryLoadedGame.moves.length - 1;
-
-        var divergenceAt = -1;
-        for(var i = 0; i < Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length); i++)
-        {
-            for(var j = i; j < Math.min(i + 2, Math.max(_boardStateHistory.moves.length, _boardStateHistoryLoadedGame.moves.length)); j++)
-            {
-                var moveBSH = _boardStateHistory.moves[j];
-                var moveBSHLG = _boardStateHistoryLoadedGame.moves[j];
-                
-                if(moveBSH != null && moveBSHLG != null && moveBSH != moveBSHLG)
-                {
-                    divergenceAt = j;
-                    break;
-                }
-            }
-            i++;
-
-            if(divergenceAt != -1) break;
-        }
-
-        if(divergenceAt != -1) 
-            atIndex = divergenceAt;
-        else 
-            atIndex++;
-
-        _boardStateHistory.clear();
-        for(var i = 0; i < _boardStateHistoryLoadedGame.moves.length; i++)
-            _boardStateHistory.add(_boardStateHistoryLoadedGame.moves[i], _boardStateHistoryLoadedGame.states[i], _boardStateHistoryLoadedGame.comments[i], false);
-
-        setCurrentBoardStateByMoveIndex(atIndex - 1);
+        resetLoadedGame();
 
         return;
     }
@@ -1820,6 +1868,16 @@ function controlsPasteFENButton_onClick()
     }
 
     pasteFEN();
+}
+
+function controlsPiecesetSelect_onChange()
+{
+    var select = document.getElementById("controls-pieceset-select");
+    var index = select.selectedIndex;
+
+    _pieceset = select.value;
+
+    updateBoardFromBoardState(_currentBoardState);
 }
 
 function controlsRandomPuzzleButton_onClick()

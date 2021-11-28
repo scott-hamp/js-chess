@@ -9,6 +9,11 @@
     pointer-events: none;
 }
 
+#board-div
+{
+    background-size: contain;
+}
+
 #board-div > table 
 {
 	outline-style: double;
@@ -73,6 +78,19 @@
     text-align: center;
 }
 
+#controls-fen-paste-button
+{
+    width: 28px;
+    height: 28px;
+    margin-left: 2px;
+}
+
+#controls-fen-paste-button > img
+{
+    width: 14px;
+    height: 14px;
+}
+
 #controls-game-moves-div
 {
     overflow-y: auto;
@@ -110,17 +128,9 @@
     text-overflow: ellipsis;
 }
 
-#controls-fen-paste-button
+#controls-pieceset-select
 {
-    width: 28px;
-    height: 28px;
-    margin-left: 2px;
-}
-
-#controls-fen-paste-button > img
-{
-    width: 14px;
-    height: 14px;
+    width: 100px;
 }
 
 #controls-puzzle-div
@@ -145,6 +155,11 @@
     width: 130px;
 }
 
+#controls-board-theme-select
+{
+    width: 80px;
+}
+
 #main-div
 {
     position: absolute;
@@ -165,6 +180,11 @@
     position: absolute;
     left: 0px;
     top: 40px;
+}
+
+.board-square-td-img
+{
+    filter: drop-shadow(0px 0px 2px rgba(20,20,20,0.35));
 }
 
 .controls-game-button
