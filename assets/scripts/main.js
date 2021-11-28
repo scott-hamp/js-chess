@@ -915,8 +915,12 @@ function positionControlsDiv()
     */
 
     var boardDiv = document.getElementById("board-div");
+    var content = document.getElementById("content");
     var controlsDiv = document.getElementById("controls-div");
-    controlsDiv.style.left = (boardDiv.offsetLeft + boardDiv.offsetWidth + 25) + "px";
+    var left = boardDiv.offsetLeft + boardDiv.offsetWidth + 25;
+    while(left + controlsDiv.offsetWidth > content.offsetWidth)
+        left--;
+    controlsDiv.style.left = left + "px";
 }
 
 function positionDistance(from, to)
