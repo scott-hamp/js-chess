@@ -26,6 +26,7 @@ var _moveClockMillisecondIntervals =
 var _rightMouseDragPoints = null;
 var _boardHighlights = [];
 var _boardCanvasArrows = [];
+var _boardCanvasCircles = [];
 var _boardCanvasSquares = [];
 var _boardThemes = 
 [
@@ -358,6 +359,7 @@ function animateMove(move, completedFunction)
 function boardCanvasClear()
 {
     _boardCanvasArrows = [];
+    _boardCanvasCircles = [];
     _boardCanvasSquares = [];
 
     var canvas = document.getElementById("board-canvas-1");
@@ -526,6 +528,17 @@ function boardCanvasDrawSquare(atCenter)
 
 function boardCanvasDrawCircle(atCenter)
 {
+    for(var i = 0; i < _boardCanvasCircles.length; i++)
+    {
+        var circle = _boardCanvasCircles[i];
+        if(circle.atCenter.x != circle.x || circle.atCenter.y != atCenter.y)
+            continue;
+
+        return;
+    }
+
+    _boardCanvasCircles.push({ atCenter: atCenter });
+
     var canvas = document.getElementById("board-canvas-1");
     var context = canvas.getContext("2d");
 
