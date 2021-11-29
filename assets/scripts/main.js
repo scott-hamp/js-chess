@@ -23,7 +23,7 @@ var _moveClockMillisecondIntervals =
     setInterval(clockMillisecondIntervalTick, 10, 0),
     setInterval(clockMillisecondIntervalTick, 10, 1)
 ];
-var _rightMouseDragFrom = null;
+var _rightMouseDragPoints = null;
 var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasSquares = [];
@@ -360,9 +360,12 @@ function boardCanvasClear()
     _boardCanvasArrows = [];
     _boardCanvasSquares = [];
 
-    var canvas = document.getElementById("board-canvas");
+    var canvas = document.getElementById("board-canvas-1");
     var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
+    canvas = document.getElementById("board-canvas-2");
+    context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -379,19 +382,22 @@ function boardCanvasDrawArrow(from, to)
 
     _boardCanvasArrows.push({ from: from, to: to });
 
-    var canvas = document.getElementById("board-canvas");
+    var canvas = document.getElementById("board-canvas-2");
     var context = canvas.getContext("2d");
 
     var size = 30;
 
-    context.fillStyle = "rgb(255, 20, 20, 0.75)";
-    context.strokeStyle = "rgb(255, 20, 20, 0.75)";
+    context.fillStyle = "rgb(255, 180, 0, 0.85)";
+    context.strokeStyle = "rgb(255, 180, 0, 0.85)";
     context.lineWidth = size;
+    context.lineCap = "butt";
+    context.lineJoin = "bevel";
 
     var angle = Math.atan2((to.y - from.y), (to.x - from.x));
     var hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
 
     context.save();
+
     context.translate(from.x, from.y);
     context.rotate(angle);
 
@@ -404,6 +410,65 @@ function boardCanvasDrawArrow(from, to)
     context.lineTo(hyp - size, size);
     context.lineTo(hyp, 0);
     context.lineTo(hyp - size, -size);
+    context.fill();
+
+    context.restore();
+}
+
+function boardCanvasDrawArrowComplex(points)
+{
+    if(points.length <= 1) return;
+
+    if(points.length == 2)
+    {
+        boardCanvasDrawArrow(points[0], points[1]);
+        return;
+    }
+
+    var canvas = document.getElementById("board-canvas-2");
+    var context = canvas.getContext("2d");
+
+    var size = 30;
+    var from = null;
+    var to = null;
+    var angle = 0;
+    var hyp = 0;
+
+    context.fillStyle = "rgb(255, 180, 0, 0.85)";
+    context.strokeStyle = "rgb(255, 180, 0, 0.85)";
+    context.lineWidth = size;
+    context.lineCap = "butt";
+    context.lineJoin = "miter";
+
+    context.beginPath();
+    context.moveTo(points[0].x, points[0].y);
+
+    for(var i = 0; i < points.length - 1; i++)
+    {
+        from = points[i];
+        to = points[i + 1];
+
+        _boardCanvasArrows.push({ from: from, to: to });
+
+        context.lineTo(to.x, to.y);
+    }
+
+    context.stroke();
+
+    from = points[points.length - 2];
+    to = points[points.length - 1];
+    angle = Math.atan2((to.y - from.y), (to.x - from.x));
+    hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
+
+    context.save();
+
+    context.translate(from.x, from.y);
+    context.rotate(angle);
+
+    context.beginPath();
+    context.lineTo(hyp, size);
+    context.lineTo(hyp + size, 0);
+    context.lineTo(hyp, -size);
     context.fill();
 
     context.restore();
@@ -422,7 +487,7 @@ function boardCanvasDrawSquare(atCenter)
 
     _boardCanvasSquares.push({ atCenter: atCenter });
 
-    var canvas = document.getElementById("board-canvas");
+    var canvas = document.getElementById("board-canvas-1");
     var context = canvas.getContext("2d");
 
     var boardDiv = document.getElementById("board-div");
@@ -430,7 +495,7 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.fillStyle = "rgb(255, 20, 20, 0.75)";
+    context.fillStyle = "rgb(255, 20, 20, 0.5)";
 
     context.moveTo(0, 0);
     context.beginPath();
@@ -545,16 +610,12 @@ function buildBoardSquaresTable()
         {
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
+            var displayRank = (file == 0) ? "block" : "none";
+            var displayFile = (rank == 7) ? "block" : "none";
 
             innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}">`;
-            if(rank == 7 || file == 0)
-            {
-                var notation = getPositionNotationForRankAndFile(rank, file);
-                var label = notation;
-                if(file > 0) label = notation[0];
-                if(rank < 7) label = notation[1];
-                innerHTML += `<span id="board-square-td-span_${positionNotation}" class="board-square-td-span">${label}</span>`;
-            }
+            innerHTML += `<span id="board-square-td-span_${positionNotation}-rank" class="board-square-td-span" style="display: ${displayRank}; margin-left: 8px; margin-top: 5px;">${positionNotation[1]}</span>`;
+            innerHTML += `<span id="board-square-td-span_${positionNotation}-file" class="board-square-td-span" style="display: ${displayFile}; margin-left: ${boardSquareSize - 20}px; margin-top: ${boardSquareSize - 30}px;">${positionNotation[0]}</span>`;
             innerHTML += `<img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" />`;
             innerHTML += `</td>`;
             
@@ -566,7 +627,12 @@ function buildBoardSquaresTable()
 
     boardSquaresTable.innerHTML = innerHTML;
 
-    var boardCanvas = document.getElementById("board-canvas");
+    var boardCanvas = document.getElementById("board-canvas-1");
+    boardCanvas.width = boardSquareSize * 8;
+    boardCanvas.height = boardSquareSize * 8;
+    boardCanvas.style.width = boardSquareSize * 8;
+    boardCanvas.style.height = boardSquareSize * 8;
+    boardCanvas = document.getElementById("board-canvas-2");
     boardCanvas.width = boardSquareSize * 8;
     boardCanvas.height = boardSquareSize * 8;
     boardCanvas.style.width = boardSquareSize * 8;
@@ -942,6 +1008,17 @@ function playSoundForMove(move)
         else
             _sounds[0].play();
     }
+}
+
+function pointArrayContains(pointArray, point)
+{
+    for(var i = 0; i < pointArray.length; i++)
+    {
+        if(pointArray[i].x == point.x && pointArray[i].y == point.y)
+            return true;
+    }
+
+    return false;
 }
 
 function positionControlsDiv()
@@ -1509,13 +1586,18 @@ function updateBoardFromBoardState(boardState)
 
             if(rank == 7 || file == 0)
             {
-                var boardSquareTDSpan = document.getElementById(`board-square-td-span_${positionNotation}`);
-
+                var boardSquareTDSpan = document.getElementById(`board-square-td-span_${positionNotation}-rank`);
                 if(_boardTheme.backgroundImage != "")
                     boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.labelDark : _boardTheme.labelLight;
                 else
                     boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.dark : _boardTheme.light;
+                boardSquareTDSpan.style.transform = (_boardOrientation == 0) ? "scale(1.0,1.0)" : "scale(-1.0,-1.0)";
 
+                boardSquareTDSpan = document.getElementById(`board-square-td-span_${positionNotation}-file`);
+                if(_boardTheme.backgroundImage != "")
+                    boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.labelDark : _boardTheme.labelLight;
+                else
+                    boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.dark : _boardTheme.light;
                 boardSquareTDSpan.style.transform = (_boardOrientation == 0) ? "scale(1.0,1.0)" : "scale(-1.0,-1.0)";
             }
 
@@ -1724,6 +1806,8 @@ function updateGameDetailsMoveCommentTextArea()
 
 function boardDiv_onMouseDown(mouseEvent)
 {
+    var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
+
     if(mouseEvent.button == 0)
     {
         boardCanvasClear();
@@ -1732,11 +1816,22 @@ function boardDiv_onMouseDown(mouseEvent)
 
     if(mouseEvent.button != 2) return;
 
-    _rightMouseDragFrom = getBoardSquareCenterPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
+    _rightMouseDragPoints = [];
+    _rightMouseDragPoints.push(getBoardSquareCenterPosition(mousePosition));
 }
 
 function boardDiv_onMouseMove(mouseEvent)
 {
+    var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
+
+    if(_rightMouseDragPoints != null && (mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey))
+    {
+        var point = getBoardSquareCenterPosition(mousePosition);
+        if(pointArrayContains(_rightMouseDragPoints, point)) return;
+        _rightMouseDragPoints.push(point);
+        return;
+    }
+
     if(_currentSquareSelected == "") return;
 
     var position = getPositionForBoardDraggingPieceDivFromMouseEvent(mouseEvent);
@@ -1750,24 +1845,18 @@ function boardDiv_onMouseUp(mouseEvent)
 {
     var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
 
-    /*if(mouseEvent.button == 0 && _currentSquareSelected != "")
-    {
-        var positionNotation = getPositionNotationForRealBoardPosition(mousePosition);
-        boardSquareSelected(positionNotation, "up");
-
-        return;
-    }
-    */
-
-    if(mouseEvent.button != 2 || _rightMouseDragFrom == null) return;
+    if(mouseEvent.button != 2 || _rightMouseDragPoints == null) return;
 
     var to = getBoardSquareCenterPosition(mousePosition);
-    if(_rightMouseDragFrom.x == to.x && _rightMouseDragFrom.y == to.y)
+    if(!pointArrayContains(_rightMouseDragPoints, to))
+        _rightMouseDragPoints.push(to);
+
+    if(_rightMouseDragPoints.length <= 1)
         boardCanvasDrawSquare(to);
     else
-        boardCanvasDrawArrow(_rightMouseDragFrom, to);
+        boardCanvasDrawArrowComplex(_rightMouseDragPoints);
 
-    _rightMouseDragFrom = null;
+    _rightMouseDragPoints = null;
 }
 
 function boardSquare_onMouseDown(mouseEvent, positionNotation)
@@ -2032,7 +2121,8 @@ function flipBoardButton_onClick()
     _boardOrientation = (_boardOrientation == 0) ? 1 : 0;
 
     document.getElementById("board-squares-table").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
-    document.getElementById("board-canvas").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+    document.getElementById("board-canvas-1").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+    document.getElementById("board-canvas-2").style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
 
     updateBoardFromBoardState(_currentBoardState);
 }
