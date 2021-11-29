@@ -531,7 +531,7 @@ function boardCanvasDrawCircle(atCenter)
     for(var i = 0; i < _boardCanvasCircles.length; i++)
     {
         var circle = _boardCanvasCircles[i];
-        if(circle.atCenter.x != circle.x || circle.atCenter.y != atCenter.y)
+        if(circle.atCenter.x != atCenter.x || circle.atCenter.y != atCenter.y)
             continue;
 
         return;
@@ -1291,7 +1291,8 @@ function saveGame()
         "Site",
         "Date",
         "EventDate",
-        "Result"
+        "Result",
+        "ECO"
     ];
 
     for(var i = 0; i < headers.length; i++)
@@ -1311,6 +1312,12 @@ function saveGame()
             {
                 result = (_chessJS.turn() == 'w') ? "1-0" : "0-1";
                 inputValue = result;
+            }
+            if(headers[i] == "ECO")
+            {
+                var opening = getOpeningWithMoves(_chessJS.history());
+                if(opening == null) continue;
+                inputValue = opening.ECOCode;
             }
         }
 
