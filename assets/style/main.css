@@ -113,6 +113,7 @@
     padding-bottom: 3px;
     font-size: 14px;
     background-color: rgb(230, 230, 230);
+    text-overflow: ellipsis;
 }
 
 #controls-opening-select
