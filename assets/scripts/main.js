@@ -33,43 +33,57 @@ var _boardThemes =
         name: "Blue",
         light: "rgb(234, 240, 215)", 
         dark: "rgb(73, 101, 147)",
-        backgroundImage: ""
+        backgroundImage: "",
+        labelLight: "rgb(234, 240, 215)", 
+        labelDark: "rgb(73, 101, 147)"
     },
     {
         name: "Brown",
         light: "rgb(240, 219, 174)", 
         dark: "rgb(193, 136, 93)",
-        backgroundImage: ""
+        backgroundImage: "",
+        labelLight: "rgb(240, 219, 174)", 
+        labelDark: "rgb(193, 136, 93)"
     },
     {
         name: "Green",
         light: "rgb(234, 244, 209)", 
         dark: "rgb(99, 166, 83)",
-        backgroundImage: ""
+        backgroundImage: "",
+        labelLight: "rgb(234, 244, 209)", 
+        labelDark: "rgb(99, 166, 83)"
     },
     {
         name: "Ice",
         light: "rgba(236, 257, 241, 0.55)", 
         dark: "rgba(102, 130, 159, 0.55)",
-        backgroundImage: "assets/images/background-ice-0.png"
+        backgroundImage: "assets/images/background-ice-0.png",
+        labelLight: "rgb(236, 257, 241)",
+        labelDark: "rgb(102, 130, 159)"
     },
     {
         name: "Stone",
         light: "rgba(188, 179, 165, 0.4)", 
         dark: "rgba(38, 36, 39, 0.5)",
-        backgroundImage: "assets/images/background-stone-0.png"
+        backgroundImage: "assets/images/background-stone-0.png",
+        labelLight: "rgb(188, 179, 165)",
+        labelDark: "rgb(98, 96, 99)"
     },
     {
         name: "Tournament",
         light: "rgba(236, 239, 234, 0.4)", 
         dark: "rgba(0, 113, 79, 0.75)",
-        backgroundImage: "assets/images/background-vinyl-0.png"
+        backgroundImage: "assets/images/background-vinyl-0.png",
+        labelLight: "rgb(236, 239, 234)",
+        labelDark: "rgb(0, 113, 79)"
     },
     {
         name: "Wood",
         light: "rgba(188, 159, 115, 0.3)", 
         dark: "rgba(60, 26, 0, 0.35)",
-        backgroundImage: "assets/images/background-wood-0.png"
+        backgroundImage: "assets/images/background-wood-0.png",
+        labelLight: "rgb(198, 169, 125)",
+        labelDark: "rgb(130, 96, 70)"
     }
 ];
 var _boardTheme = _boardThemes[1];
@@ -532,7 +546,17 @@ function buildBoardSquaresTable()
             var bgColor = (bgColorIndex % 2 == 0) ? "rgb(240, 219, 174)" : "rgb(193, 136, 93)";
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
 
-            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}"><img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" /></td>`;
+            innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}">`;
+            if(rank == 7 || file == 0)
+            {
+                var notation = getPositionNotationForRankAndFile(rank, file);
+                var label = notation;
+                if(file > 0) label = notation[0];
+                if(rank < 7) label = notation[1];
+                innerHTML += `<span id="board-square-td-span_${positionNotation}" class="board-square-td-span">${label}</span>`;
+            }
+            innerHTML += `<img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" />`;
+            innerHTML += `</td>`;
             
             bgColorIndex++;
         }
@@ -1482,6 +1506,18 @@ function updateBoardFromBoardState(boardState)
             boardSquareTD.style.backgroundColor = bgColor;
             boardSquareTDImg.style.cursor = "default";
             boardSquareTDImg.style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+
+            if(rank == 7 || file == 0)
+            {
+                var boardSquareTDSpan = document.getElementById(`board-square-td-span_${positionNotation}`);
+
+                if(_boardTheme.backgroundImage != "")
+                    boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.labelDark : _boardTheme.labelLight;
+                else
+                    boardSquareTDSpan.style.color = (bgColorIndex % 2 == 0) ? _boardTheme.dark : _boardTheme.light;
+
+                boardSquareTDSpan.style.transform = (_boardOrientation == 0) ? "scale(1.0,1.0)" : "scale(-1.0,-1.0)";
+            }
 
             for(var i = 0; i < _boardHighlights.length; i++)
             {
