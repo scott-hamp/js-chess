@@ -392,10 +392,8 @@ function boardCanvasDrawArrow(from, to)
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "bevel";
-    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowColor = "rgba(20, 20, 20, 0.4)";
     context.shadowBlur = 6;
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
 
     var angle = Math.atan2((to.y - from.y), (to.x - from.x));
     var hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
@@ -443,10 +441,8 @@ function boardCanvasDrawArrowComplex(points)
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
-    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowColor = "rgba(20, 20, 20, 0.4)";
     context.shadowBlur = 6;
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
 
     context.beginPath();
     context.moveTo(points[0].x, points[0].y);
@@ -516,10 +512,8 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.fillStyle = "rgb(255, 20, 20, 0.5)";
-    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowColor = "rgba(20, 20, 20, 0.4)";
     context.shadowBlur = 6;
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
 
     context.moveTo(0, 0);
     context.beginPath();
@@ -541,10 +535,8 @@ function boardCanvasDrawCircle(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.strokeStyle = "rgb(20, 20, 255, 0.75)";
-    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowColor = "rgba(20, 20, 20, 0.4)";
     context.shadowBlur = 6;
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
 
     for(var i = boardDivSquareSize / 2; i >= (boardDivSquareSize / 2) - 5; i--)
     {
