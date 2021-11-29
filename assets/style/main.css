@@ -200,7 +200,7 @@
 .board-square-td-span
 {
     position: absolute;
-    font-size: 18px;
+    font-size: 110%;
     font-weight: bold;
 }
 

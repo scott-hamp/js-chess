@@ -392,6 +392,10 @@ function boardCanvasDrawArrow(from, to)
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "bevel";
+    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 3;
+    context.shadowOffsetY = 3;
 
     var angle = Math.atan2((to.y - from.y), (to.x - from.x));
     var hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
@@ -434,11 +438,15 @@ function boardCanvasDrawArrowComplex(points)
     var angle = 0;
     var hyp = 0;
 
-    context.fillStyle = "rgb(255, 180, 0, 0.85)";
-    context.strokeStyle = "rgb(255, 180, 0, 0.85)";
+    context.fillStyle = "rgba(255, 180, 0, 0.85)";
+    context.strokeStyle = "rgba(255, 180, 0, 0.85)";
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
+    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 3;
+    context.shadowOffsetY = 3;
 
     context.beginPath();
     context.moveTo(points[0].x, points[0].y);
@@ -450,7 +458,19 @@ function boardCanvasDrawArrowComplex(points)
 
         _boardCanvasArrows.push({ from: from, to: to });
 
-        context.lineTo(to.x, to.y);
+        if(i < points.length - 2)
+        {
+            context.lineTo(to.x, to.y);
+            continue;
+        }
+
+        var v1 = new Vector(from.x, from.y);
+        var v2 = new Vector(to.x, to.y);
+        v1.subtract(v2);
+        v1.normalize();
+        v1.scaleBy(size);
+        v2.add(v1);
+        context.lineTo(v2.x, v2.y);
     }
 
     context.stroke();
@@ -466,9 +486,9 @@ function boardCanvasDrawArrowComplex(points)
     context.rotate(angle);
 
     context.beginPath();
-    context.lineTo(hyp, size);
-    context.lineTo(hyp + size, 0);
-    context.lineTo(hyp, -size);
+    context.lineTo(hyp - size, size);
+    context.lineTo(hyp, 0);
+    context.lineTo(hyp - size, -size);
     context.fill();
 
     context.restore();
@@ -496,6 +516,10 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.fillStyle = "rgb(255, 20, 20, 0.5)";
+    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 3;
+    context.shadowOffsetY = 3;
 
     context.moveTo(0, 0);
     context.beginPath();
@@ -504,6 +528,30 @@ function boardCanvasDrawSquare(atCenter)
     context.lineTo(atCenter.x + boardDivSquareSize / 2, atCenter.y + boardDivSquareSize / 2);
     context.lineTo(atCenter.x - boardDivSquareSize / 2, atCenter.y + boardDivSquareSize / 2);
     context.fill();
+}
+
+function boardCanvasDrawCircle(atCenter)
+{
+    var canvas = document.getElementById("board-canvas-1");
+    var context = canvas.getContext("2d");
+
+    var boardDiv = document.getElementById("board-div");
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var boardDivSquareSize = boardDivSize / 8;
+
+    context.strokeStyle = "rgb(20, 20, 255, 0.75)";
+    context.shadowColor = "rgba(20, 20, 20, 0.25)";
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 3;
+    context.shadowOffsetY = 3;
+
+    for(var i = boardDivSquareSize / 2; i >= (boardDivSquareSize / 2) - 5; i--)
+    {
+        context.beginPath();
+        context.arc(atCenter.x, atCenter.y, i, 0, 2 * Math.PI);
+        context.stroke();
+    }
 }
 
 function boardSquareSelected(positionNotation, mouseEventType)
@@ -1852,7 +1900,7 @@ function boardDiv_onMouseUp(mouseEvent)
         _rightMouseDragPoints.push(to);
 
     if(_rightMouseDragPoints.length <= 1)
-        boardCanvasDrawSquare(to);
+        boardCanvasDrawCircle(to);
     else
         boardCanvasDrawArrowComplex(_rightMouseDragPoints);
 
