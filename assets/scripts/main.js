@@ -389,8 +389,8 @@ function boardCanvasDrawArrow(from, to)
 
     var size = 30;
 
-    context.fillStyle = "rgb(255, 180, 0, 0.85)";
-    context.strokeStyle = "rgb(255, 180, 0, 0.85)";
+    context.fillStyle = "rgb(255, 20, 20, 0.85)";
+    context.strokeStyle = "rgb(255, 20, 20, 0.85)";
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "bevel";
@@ -438,8 +438,8 @@ function boardCanvasDrawArrowComplex(points)
     var angle = 0;
     var hyp = 0;
 
-    context.fillStyle = "rgba(255, 180, 0, 0.85)";
-    context.strokeStyle = "rgba(255, 180, 0, 0.85)";
+    context.fillStyle = "rgb(255, 20, 20, 0.85)";
+    context.strokeStyle = "rgb(255, 20, 20, 0.85)";
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
@@ -513,7 +513,7 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.fillStyle = "rgb(255, 20, 20, 0.5)";
+    context.fillStyle = "rgb(20, 20, 255, 0.75)";
     context.shadowColor = "rgba(20, 20, 20, 0.4)";
     context.shadowBlur = 6;
 
@@ -1912,7 +1912,12 @@ function boardDiv_onMouseUp(mouseEvent)
         _rightMouseDragPoints.push(to);
 
     if(_rightMouseDragPoints.length <= 1)
-        boardCanvasDrawCircle(to);
+    {
+        if( mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey)
+            boardCanvasDrawSquare(to);
+        else
+            boardCanvasDrawCircle(to);
+    }
     else
         boardCanvasDrawArrowComplex(_rightMouseDragPoints);
 
