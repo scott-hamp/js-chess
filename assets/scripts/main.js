@@ -88,7 +88,34 @@ var _boardThemes =
     }
 ];
 var _boardTheme = _boardThemes[1];
-var _pieceset = "cburnett";
+var _piecesets = 
+[
+    {
+        name: "CBurnett",
+        path: "assets/images/cburnett-",
+        shadowColor: "rgba(0,0,0,0)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
+    },
+    {
+        name: "CBurnett Alt.",
+        path: "assets/images/cburnettalt-",
+        shadowColor: "rgba(20,20,20,0.5)",
+        shadowBlur: 4,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
+    },
+    {
+        name: "Maestro",
+        path: "assets/images/maestro-",
+        shadowColor: "rgba(20,20,20,0.5)",
+        shadowBlur: 3,
+        shadowOffsetX: 3,
+        shadowOffsetY: 3
+    }
+];
+var _pieceset = _piecesets[0];
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
@@ -790,14 +817,14 @@ function getColorAndPieceForPositionNotation(notation)
 function getImageSourceForColorAndPiece(colorAndPiece)
 {
     var piece = colorAndPiece.piece.toLowerCase();
-    var src = "assets/images/";
+    var src = "";
 
-    if(piece == 'p') src += `${_pieceset}-pawn-`;
-    if(piece == 'n') src += `${_pieceset}-knight-`;
-    if(piece == 'b') src += `${_pieceset}-bishop-`;
-    if(piece == 'r') src += `${_pieceset}-rook-`;
-    if(piece == 'q') src += `${_pieceset}-queen-`;
-    if(piece == 'k') src += `${_pieceset}-king-`;
+    if(piece == 'p') src += `${_pieceset.path}pawn-`;
+    if(piece == 'n') src += `${_pieceset.path}knight-`;
+    if(piece == 'b') src += `${_pieceset.path}bishop-`;
+    if(piece == 'r') src += `${_pieceset.path}rook-`;
+    if(piece == 'q') src += `${_pieceset.path}queen-`;
+    if(piece == 'k') src += `${_pieceset.path}king-`;
 
     src += (colorAndPiece.color == 'w') ? '0' : '1';
     src += ".png";
@@ -1643,6 +1670,7 @@ function updateBoardFromBoardState(boardState)
             boardSquareTD.style.backgroundColor = bgColor;
             boardSquareTDImg.style.cursor = "default";
             boardSquareTDImg.style.transform = (_boardOrientation == 0) ? "scale(1, 1)" : "scale(-1, -1)";
+            boardSquareTDImg.style.filter = `drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})`;
 
             if(rank == 7 || file == 0)
             {
@@ -1695,18 +1723,18 @@ function updateBoardFromBoardState(boardState)
             }
 
             if(squareValue == "") boardSquareTDImg.src = "assets/images/empty-0.png";
-            if(squareValue == "P") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-0.png`;
-            if(squareValue == "N") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-0.png`;
-            if(squareValue == "B") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-0.png`;
-            if(squareValue == "R") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-0.png`;
-            if(squareValue == "Q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-0.png`;
-            if(squareValue == "K") boardSquareTDImg.src = `assets/images/${_pieceset}-king-0.png`;
-            if(squareValue == "p") boardSquareTDImg.src = `assets/images/${_pieceset}-pawn-1.png`;
-            if(squareValue == "n") boardSquareTDImg.src = `assets/images/${_pieceset}-knight-1.png`;
-            if(squareValue == "b") boardSquareTDImg.src = `assets/images/${_pieceset}-bishop-1.png`;
-            if(squareValue == "r") boardSquareTDImg.src = `assets/images/${_pieceset}-rook-1.png`;
-            if(squareValue == "q") boardSquareTDImg.src = `assets/images/${_pieceset}-queen-1.png`;
-            if(squareValue == "k") boardSquareTDImg.src = `assets/images/${_pieceset}-king-1.png`;
+            if(squareValue == "P") boardSquareTDImg.src = `${_pieceset.path}pawn-0.png`;
+            if(squareValue == "N") boardSquareTDImg.src = `${_pieceset.path}knight-0.png`;
+            if(squareValue == "B") boardSquareTDImg.src = `${_pieceset.path}bishop-0.png`;
+            if(squareValue == "R") boardSquareTDImg.src = `${_pieceset.path}rook-0.png`;
+            if(squareValue == "Q") boardSquareTDImg.src = `${_pieceset.path}queen-0.png`;
+            if(squareValue == "K") boardSquareTDImg.src = `${_pieceset.path}king-0.png`;
+            if(squareValue == "p") boardSquareTDImg.src = `${_pieceset.path}pawn-1.png`;
+            if(squareValue == "n") boardSquareTDImg.src = `${_pieceset.path}knight-1.png`;
+            if(squareValue == "b") boardSquareTDImg.src = `${_pieceset.path}bishop-1.png`;
+            if(squareValue == "r") boardSquareTDImg.src = `${_pieceset.path}rook-1.png`;
+            if(squareValue == "q") boardSquareTDImg.src = `${_pieceset.path}queen-1.png`;
+            if(squareValue == "k") boardSquareTDImg.src = `${_pieceset.path}king-1.png`;
 
             if(squareValue != "")
             {
@@ -2138,7 +2166,7 @@ function controlsPiecesetSelect_onChange()
     var select = document.getElementById("controls-pieceset-select");
     var index = select.selectedIndex;
 
-    _pieceset = select.value;
+    _pieceset = _piecesets[select.selectedIndex];
 
     updateBoardFromBoardState(_currentBoardState);
 }
