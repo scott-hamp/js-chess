@@ -1344,7 +1344,7 @@ function saveGame()
             {
                 var opening = getOpeningWithMoves(_chessJS.history());
                 if(opening == null) continue;
-                inputValue = opening.ECOCode;
+                inputValue = opening.opening.ECOCode;
             }
         }
 
@@ -1844,34 +1844,37 @@ function updateControlsMovesTable()
 function updateControlsOpeningDiv(movesNotation)
 {
     if(movesNotation == null) movesNotation = _chessJS.history();
-    var controlsOpeningDiv = document.getElementById("controls-opening-div");
+    var controlsOpeningMatchingSpan = document.getElementById("controls-opening-matching-span");
 
     if(movesNotation.length == 0)
     {
-        controlsOpeningDiv.innerHTML = "...";
+        controlsOpeningMatchingSpan.textContent = "...";
+        populateOpeningMatchingSelect(movesNotation);
         return;
     }
 
     var opening = getOpeningWithMoves(movesNotation);
-    var innerHTML = controlsOpeningDiv.innerHTML;
+    var textContent = controlsOpeningMatchingSpan.textContent;
 
     if(opening == null)
     {
-        if(innerHTML != "...")
+        if(textContent != "...")
         {
-            innerHTML = innerHTML.replace("...", "").trim();
-            innerHTML += " ...";
+            textContent = textContent.replace("...", "").trim();
+            textContent += " ...";
         }
     }
     else
-        innerHTML = `(${opening.ECOCode}) ${opening.name}`;
+        textContent = `(${opening.opening.ECOCode}) ${opening.opening.name}`;
 
-    controlsOpeningDiv.innerHTML = innerHTML;
+        controlsOpeningMatchingSpan.textContent = textContent;
+
+    populateOpeningMatchingSelect(movesNotation);
 }
 
 function updateControlsPuzzleDiv()
 {
-    var controlsPuzzleDiv = document.getElementById("controls-puzzle-div");
+    var controlsPuzzleInfoDiv = document.getElementById("controls-puzzle-info-div");
     var innerHTML = "";
 
     if(_currentPuzzle != null)
@@ -1880,7 +1883,7 @@ function updateControlsPuzzleDiv()
         innerHTML += `<td><img src="assets/images/info-0.png" width="20" height="20" title="${_currentPuzzle.solution}" style="padding-left: 10px; cursor: pointer;" onmousedown="alert('${_currentPuzzle.solution}');" /></td></tr></table>`;
     }
 
-    controlsPuzzleDiv.innerHTML = innerHTML;
+    controlsPuzzleInfoDiv.innerHTML = innerHTML;
 }
 
 function updateGameDetailsMoveCommentTextArea()
@@ -2109,6 +2112,19 @@ function controlsGamesMovesTableCell_onMouseDown(index)
 function controlsOpeningInput_onInput()
 {
     populateOpeningSelect(document.getElementById("controls-opening-input").value);
+}
+
+function controlsOpeningMatchingSelect_onChange()
+{
+    var select = document.getElementById("controls-opening-matching-select");
+    var index = parseInt(select.value.split("_")[1]);
+
+    var movesNotation = _chessJS.history();
+    var openings = getOpeningsWithMoves(movesNotation);
+    if(openings.length == 0) return;
+
+    var opening = openings[index].opening;
+    selectOpening(opening);
 }
 
 function controlsOpeningSelect_onChange()

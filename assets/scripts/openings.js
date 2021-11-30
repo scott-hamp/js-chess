@@ -5870,7 +5870,52 @@ function getOpeningWithMoves(movesNotation)
 		openingMovesMatchingCount = matchingCount;
 	}
 
-	return opening;
+	return { opening: opening, matchingCount: openingMovesMatchingCount };
+}
+
+function getOpeningsWithMoves(movesNotation)
+{
+	var openingsUnsorted = [];
+
+	for(var i = 0; i < _openings.length; i++)
+	{
+		var matchingCount = 0;
+		for(var j = 0; j < _openings[i].movesNotation.length; j++)
+		{
+			if(movesNotation[j] == null) break;
+			if(movesNotation[j] != _openings[i].movesNotation[j]) break;
+
+			matchingCount++;
+		}
+
+		if(matchingCount == 0) continue;
+
+		openingsUnsorted.push({ opening: _openings[i], matchingCount: matchingCount });
+	}
+
+	var sorted = false;
+	while(!sorted)
+	{
+		sorted = true;
+		for(var i = 0; i < openingsUnsorted.length - 1; i++)
+		{
+			if(openingsUnsorted[i].matchingCount >= openingsUnsorted[i + 1].matchingCount)
+				continue;
+
+			var openingFirst = openingsUnsorted[i];
+			openingsUnsorted[i] = openingsUnsorted[i + 1];
+			openingsUnsorted[i + 1] = openingFirst;
+
+			sorted = false;
+			break;
+		}
+	}
+
+	var openings = [];
+	for(var i = 0; i < openingsUnsorted.length - 1; i++)
+		openings.push(openingsUnsorted[i]);
+
+	return openings;
 }
 
 function loadOpenings()
@@ -5900,6 +5945,24 @@ function loadOpenings()
 	}
 
 	populateOpeningSelect();
+}
+
+function populateOpeningMatchingSelect(movesNotation)
+{
+	var select = document.getElementById("controls-opening-matching-select");
+	var innerHTML = "";
+	var openings = getOpeningsWithMoves(movesNotation);
+
+	for(var i = 0; i < openings.length; i++)
+	{
+		var opening = openings[i];
+		var matchingCountMoves = opening.matchingCount;
+		matchingCountMoves += (opening.matchingCount > 1) ? " moves" : " move";
+
+		innerHTML += `<option value="opening_${i}">[${matchingCountMoves}] (${opening.opening.ECOCode}) ${opening.opening.name}</option>`;
+	}
+
+	select.innerHTML = innerHTML;
 }
 
 function populateOpeningSelect(filter)

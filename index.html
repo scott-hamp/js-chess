@@ -121,16 +121,16 @@
                                     </table>
                                 </div>
                             </td>
-                            <td style="padding-left: 10px;">
-                                <table style="border-spacing: 5px;">
-                                    <tr><td>White: </td><td style="padding-left: 15px;"><input id="controls-game-details-white-input" /></td></tr>
-                                    <tr><td>Black: </td><td style="padding-left: 15px;"><input id="controls-game-details-black-input" /></td></tr>
-                                    <tr><td>Event: </td><td style="padding-left: 15px;"><input id="controls-game-details-event-input" /></td></tr>
-                                    <tr><td>Site: </td><td style="padding-left: 15px;"><input id="controls-game-details-site-input" /></td></tr>
-                                    <tr><td>Date: </td><td style="padding-left: 15px;"><input id="controls-game-details-date-input" /></td></tr>
-                                    <tr><td>Event Date: </td><td style="padding-left: 15px;"><input id="controls-game-details-eventdate-input" /></td></tr>
-                                    <tr><td>Result: </td><td style="padding-left: 15px;"><input id="controls-game-details-result-input" /></td></tr>
-                                    <tr><td>Move Comment: </td><td style="padding-left: 15px;"><textarea id="controls-game-details-move-comment-text-area" rows="4" oninput="getDetailsMoveCommentTextArea_onInput()"></textarea></td></tr>
+                            <td style="padding: 5px; padding-left: 15px;">
+                                <table style="padding: 10px; border-spacing: 2px; background-color: rgb(230, 230, 230);">
+                                    <tr><td>White: </td><td style="padding-left: 5px;"><input id="controls-game-details-white-input" /></td></tr>
+                                    <tr><td>Black: </td><td style="padding-left: 5px;"><input id="controls-game-details-black-input" /></td></tr>
+                                    <tr><td>Event: </td><td style="padding-left: 5px;"><input id="controls-game-details-event-input" /></td></tr>
+                                    <tr><td>Site: </td><td style="padding-left: 5px;"><input id="controls-game-details-site-input" /></td></tr>
+                                    <tr><td>Date: </td><td style="padding-left: 5px;"><input id="controls-game-details-date-input" /></td></tr>
+                                    <tr><td>Event Date: </td><td style="padding-left: 5px;"><input id="controls-game-details-eventdate-input" /></td></tr>
+                                    <tr><td>Result: </td><td style="padding-left: 5px;"><input id="controls-game-details-result-input" /></td></tr>
+                                    <tr><td>Move Comment: </td><td style="padding-left: 5px;"><textarea id="controls-game-details-move-comment-text-area" rows="4" oninput="getDetailsMoveCommentTextArea_onInput()"></textarea></td></tr>
                                 </table>
                             </td>
                         </tr>
@@ -151,28 +151,32 @@
                     </table>
                 </div>
                 <div>
-                    Opening:
                     <div id="controls-opening-div">
-                        ...
-                    </div>
-                    <div style="padding-top: 5px;">
-                        <input id="controls-opening-input" placeholder="Search openings..." oninput="controlsOpeningInput_onInput()" />
-                        <select id="controls-opening-select" onchange="controlsOpeningSelect_onChange()">
+                        Opening:<span id="controls-opening-matching-span">...</span><br>
+                        <select id="controls-opening-matching-select" onchange="controlsOpeningMatchingSelect_onChange()">
 
                         </select>
+                        <div style="margin-bottom: 5px; padding-top: 5px;">
+                            <input id="controls-opening-input" placeholder="Search openings..." oninput="controlsOpeningInput_onInput()" />
+                            <select id="controls-opening-select" onchange="controlsOpeningSelect_onChange()">
+    
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    Puzzle:
-                    <div style="padding-top: 5px;">
-                        <button onclick="controlsRandomPuzzleButton_onClick()">Random</button>
-                        <button id="controls-reset-puzzle-button" onclick="controlsResetPuzzleButton_onClick()" disabled>Reset</button>
-                    </div>
                     <div id="controls-puzzle-div">
-                    
+                        <div style="padding-top: 5px;">
+                            Puzzle:
+                            <button style="margin-left: 5px;" onclick="controlsRandomPuzzleButton_onClick()">Random</button>
+                            <button id="controls-reset-puzzle-button" onclick="controlsResetPuzzleButton_onClick()" disabled>Reset</button>
+                        </div>
+                        <div id="controls-puzzle-info-div">
+                            
+                        </div>
                     </div>
                 </div>
-                <div>
+                <div id="controls-stockfish-div">
                     <table>
                         <tr>
                             <td>

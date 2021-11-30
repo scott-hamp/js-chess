@@ -57,6 +57,7 @@
     padding: 5px;
     top: 0px;
     background-color: lightgray;
+    border-radius: 5px;
     filter: drop-shadow(3px 3px 3px lightgray);
 }
 
@@ -106,19 +107,35 @@
 
 #controls-opening-div
 {
-    height: 20px;
     margin-top: 5px;
-    padding-top: 3px;
+    padding-top: 5px;
     padding-left: 10px;
-    padding-bottom: 3px;
-    font-size: 14px;
+    padding-bottom: 5px;
+    border-radius: 3px;
     background-color: rgb(230, 230, 230);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#controls-opening-matching-select
+{
+    margin-top: 8px;
+    width: 75%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#controls-opening-matching-span
+{
+    margin-left: 10px;
+    font-size: 14px;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
 #controls-opening-select
 {
-    width: 425px;
+    width: 65%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -128,15 +145,39 @@
     width: 120px;
 }
 
+#controls-puzzle-info-div
+{
+    margin-top: 5px;
+    padding-top: 2px;
+    padding-left: 10px;
+    font-size: 14px;
+    background-color: rgb(230, 230, 230);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #controls-puzzle-div
 {
-    height: 25px;
+    height: 67px;
     margin-top: 5px;
     padding-top: 3px;
     padding-left: 10px;
     padding-bottom: 3px;
-    font-size: 14px;
+    border-radius: 3px;
     background-color: rgb(230, 230, 230);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#controls-stockfish-div
+{
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    border-radius: 3px;
+    background-color: rgb(230, 230, 230);
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
