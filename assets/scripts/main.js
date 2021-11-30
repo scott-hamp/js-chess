@@ -1616,7 +1616,7 @@ function stockfishUpdate(move)
 
 function stockfishUpdateMessage(message)
 {
-    console.log("Stockfish: " + message);
+    console.log(`Stockfish: ${message}`);
 
     document.getElementById("controls-stockfish-message-div").innerHTML = message;
 }
@@ -2158,6 +2158,7 @@ function controlsStockfishSelect_onChange()
     var select = document.getElementById("controls-stockfish-select");
 
     _stockfishEnabled = select.selectedIndex - 1;
+    stockfishUpdateMessage("...");
 
     if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
         stockfishUpdate();
