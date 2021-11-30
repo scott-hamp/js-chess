@@ -102,9 +102,9 @@ var _piecesets =
         name: "CBurnett Alt.",
         path: "assets/images/cburnettalt-",
         shadowColor: "rgba(20,20,20,0.5)",
-        shadowBlur: 4,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0
+        shadowBlur: 3,
+        shadowOffsetX: 3,
+        shadowOffsetY: 3
     },
     {
         name: "Maestro",
