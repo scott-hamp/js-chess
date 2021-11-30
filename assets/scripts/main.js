@@ -16,6 +16,7 @@ var _boardStateHistoryLoadedGame = null;
 var _boardOrientation = 0;
 var _boardInAnimation = false;
 var _currentPuzzle = null;
+var _stockfishMessageDiv = null;
 var _stockfishScoreEvaluation = 0;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
@@ -1519,6 +1520,7 @@ function setup()
     setCurrentBoardStateToChessJSBoard();
     _boardStateHistory = new BoardStateHistory();
 
+    _stockfishMessageDiv = document.getElementById("controls-stockfish-message-div");
     stockfishPostMessage("uci");
 
     loadOpenings();
@@ -1643,9 +1645,9 @@ function stockfishUpdate(move)
 
 function stockfishUpdateMessage(message)
 {
-    console.log(`Stockfish: ${message}`);
+    console.log(`Stockfish: "${message}"`);
 
-    document.getElementById("controls-stockfish-message-div").innerHTML = message;
+    _stockfishMessageDiv.innerHTML = message;
 }
 
 function updateBoardFromBoardState(boardState)
@@ -2214,7 +2216,7 @@ function controlsStockfishSelect_onChange()
     skillLevelSelect.disabled = (_stockfishEnabled > -1) ? false : true;
     skillLevelSelect.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
     document.getElementById("controls-stockfish-skill-level-span").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
-    document.getElementById("controls-stockfish-message-div").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
+    _stockfishMessageDiv.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
 }
 
 function controlsStockfishSkillLevelSelect_onChange()
