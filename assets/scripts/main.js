@@ -64,8 +64,8 @@ var _boardThemes =
     },
     {
         name: "Stone",
-        light: "rgba(188, 179, 165, 0.4)", 
-        dark: "rgba(38, 36, 39, 0.5)",
+        light: "rgba(188, 179, 165, 0.55)", 
+        dark: "rgba(38, 36, 39, 0.55)",
         backgroundImage: "assets/images/background-stone-0.png",
         labelLight: "rgb(208, 199, 185)",
         labelDark: "rgb(98, 96, 99)"
