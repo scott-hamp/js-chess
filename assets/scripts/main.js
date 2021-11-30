@@ -2208,10 +2208,11 @@ function controlsStockfishSelect_onChange()
     _stockfishEnabled = select.selectedIndex - 1;
     stockfishUpdateMessage("...");
 
-    if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+    if(_stockfishEnabled > -1)
     {
         stockfishUpdateMessage("Ready.");
-        stockfishUpdate();
+        if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+            stockfishUpdate();
     }
 
     var skillLevelSelect = document.getElementById("controls-stockfish-skill-level-select");
