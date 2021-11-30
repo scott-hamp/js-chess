@@ -1057,7 +1057,7 @@ function makeMoveFromCurrentBoardState(move, animate)
         document.getElementById("controls-game-button-last-move").disabled = false;
         document.getElementById("controls-game-button-save").disabled = false;
 
-        console.log(`Move: ${move.san}`);
+        //console.log(`Move: ${move.san}`);
     }
     
     setBoardHighlight(move.from, "from");
@@ -1580,14 +1580,14 @@ function stockfishSetOption(option, value)
 
 function stockfishPostMessage(message) 
 {
-    console.log(`stockfishPostMessage: "${message}"`);
+    //console.log(`stockfishPostMessage: "${message}"`);
 
 	_stockfish.postMessage(message);
 }
 
 function stockfishReceiveData(data) 
 {
-	console.log(`stockfishReceiveData: "${data}"`);
+	//console.log(`stockfishReceiveData: "${data}"`);
 
 	if (!_stockfishIsReady) 
     {
@@ -1645,7 +1645,7 @@ function stockfishUpdate(move)
 
 function stockfishUpdateMessage(message)
 {
-    console.log(`Stockfish: "${message}"`);
+    //console.log(`Stockfish: "${message}"`);
 
     _stockfishMessageDiv.innerHTML = message;
 }
