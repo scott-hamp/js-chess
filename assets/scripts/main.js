@@ -1014,7 +1014,7 @@ function makeMoveFromCurrentBoardState(move, animate)
         if(_chessJS.in_check() || _chessJS.in_checkmate())
         {
             var value = (_chessJS.turn() == 'w') ? 'K' : 'k';
-            var highlight = (_chessJS.in_check()) ? "check" : "checkmate";
+            var highlight = (_chessJS.in_checkmate()) ? "checkmate" : "check";
             setBoardHighlight(getPositionNotationForBoardSquareValue(value), highlight);
         }
 
@@ -2023,7 +2023,7 @@ function controlsGameButton_onClick(descriptor)
             if(_chessJS.in_check() || _chessJS.in_checkmate())
             {
                 var value = (_chessJS.turn() == 'w') ? 'K' : 'k';
-                var highlight = (_chessJS.in_check()) ? "check" : "checkmate";
+                var highlight = (_chessJS.in_checkmate()) ? "checkmate" : "check";
                 setBoardHighlight(getPositionNotationForBoardSquareValue(value), highlight);
             }
 
