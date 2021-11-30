@@ -5870,12 +5870,13 @@ function getOpeningWithMoves(movesNotation)
 		openingMovesMatchingCount = matchingCount;
 	}
 
+	if(opening == null) return null;
 	return { opening: opening, matchingCount: openingMovesMatchingCount };
 }
 
 function getOpeningsWithMoves(movesNotation)
 {
-	var openingsUnsorted = [];
+	var openings = [];
 
 	for(var i = 0; i < _openings.length; i++)
 	{
@@ -5890,30 +5891,26 @@ function getOpeningsWithMoves(movesNotation)
 
 		if(matchingCount == 0) continue;
 
-		openingsUnsorted.push({ opening: _openings[i], matchingCount: matchingCount });
+		openings.push({ opening: _openings[i], matchingCount: matchingCount });
 	}
 
 	var sorted = false;
 	while(!sorted)
 	{
 		sorted = true;
-		for(var i = 0; i < openingsUnsorted.length - 1; i++)
+		for(var i = 0; i < openings.length - 1; i++)
 		{
-			if(openingsUnsorted[i].matchingCount >= openingsUnsorted[i + 1].matchingCount)
+			if(openings[i].matchingCount >= openings[i + 1].matchingCount)
 				continue;
 
-			var openingFirst = openingsUnsorted[i];
-			openingsUnsorted[i] = openingsUnsorted[i + 1];
-			openingsUnsorted[i + 1] = openingFirst;
+			var openingFirst = openings[i];
+			openings[i] = openings[i + 1];
+			openings[i + 1] = openingFirst;
 
 			sorted = false;
 			break;
 		}
 	}
-
-	var openings = [];
-	for(var i = 0; i < openingsUnsorted.length - 1; i++)
-		openings.push(openingsUnsorted[i]);
 
 	return openings;
 }
