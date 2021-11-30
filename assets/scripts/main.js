@@ -67,7 +67,7 @@ var _boardThemes =
         light: "rgba(188, 179, 165, 0.4)", 
         dark: "rgba(38, 36, 39, 0.5)",
         backgroundImage: "assets/images/background-stone-0.png",
-        labelLight: "rgb(188, 179, 165)",
+        labelLight: "rgb(208, 199, 185)",
         labelDark: "rgb(98, 96, 99)"
     },
     {
@@ -80,8 +80,8 @@ var _boardThemes =
     },
     {
         name: "Wood",
-        light: "rgba(188, 159, 115, 0.3)", 
-        dark: "rgba(60, 26, 0, 0.35)",
+        light: "rgba(188, 159, 115, 0.45)", 
+        dark: "rgba(80, 46, 20, 0.55)",
         backgroundImage: "assets/images/background-wood-0.png",
         labelLight: "rgb(198, 169, 125)",
         labelDark: "rgb(130, 96, 70)"
@@ -389,13 +389,13 @@ function boardCanvasDrawArrow(from, to)
 
     var size = 30;
 
-    context.fillStyle = "rgb(255, 20, 20, 0.85)";
-    context.strokeStyle = "rgb(255, 20, 20, 0.85)";
+    context.fillStyle = "rgb(255, 0, 0, 0.75)";
+    context.strokeStyle = "rgb(255, 0, 0, 0.75)";
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "bevel";
-    context.shadowColor = "rgba(20, 20, 20, 0.4)";
-    context.shadowBlur = 6;
+    context.shadowColor = "rgba(150, 150, 150, 0.4)";
+    context.shadowBlur = 3;
 
     var angle = Math.atan2((to.y - from.y), (to.x - from.x));
     var hyp = Math.sqrt((to.x - from.x) * (to.x - from.x) + (to.y - from.y) * (to.y - from.y));
@@ -438,13 +438,13 @@ function boardCanvasDrawArrowComplex(points)
     var angle = 0;
     var hyp = 0;
 
-    context.fillStyle = "rgb(255, 20, 20, 0.85)";
-    context.strokeStyle = "rgb(255, 20, 20, 0.85)";
+    context.fillStyle = "rgb(255, 0, 0, 0.75)";
+    context.strokeStyle = "rgb(255, 0, 0, 0.75)";
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
-    context.shadowColor = "rgba(20, 20, 20, 0.4)";
-    context.shadowBlur = 6;
+    context.shadowColor = "rgba(150, 150, 150, 0.4)";
+    context.shadowBlur = 3;
 
     context.beginPath();
     context.moveTo(points[0].x, points[0].y);
@@ -514,8 +514,8 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.fillStyle = "rgb(20, 20, 255, 0.75)";
-    context.shadowColor = "rgba(20, 20, 20, 0.4)";
-    context.shadowBlur = 6;
+    context.shadowColor = "rgba(150, 150, 150, 0.4)";
+    context.shadowBlur = 3;
 
     context.moveTo(0, 0);
     context.beginPath();
@@ -548,8 +548,8 @@ function boardCanvasDrawCircle(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.strokeStyle = "rgb(20, 20, 255, 0.75)";
-    context.shadowColor = "rgba(20, 20, 20, 0.4)";
-    context.shadowBlur = 6;
+    context.shadowColor = "rgba(150, 150, 150, 0.4)";
+    context.shadowBlur = 3;
 
     for(var i = boardDivSquareSize / 2; i >= (boardDivSquareSize / 2) - 5; i--)
     {
@@ -667,8 +667,8 @@ function buildBoardSquaresTable()
             var displayFile = (rank == 7) ? "block" : "none";
 
             innerHTML += `<td id="board-square-td_${positionNotation}" style="width: ${boardSquareSize}; height: ${boardSquareSize}; background-color: ${bgColor}">`;
-            innerHTML += `<span id="board-square-td-span_${positionNotation}-rank" class="board-square-td-span" style="display: ${displayRank}; margin-left: 8px; margin-top: 5px;">${positionNotation[1]}</span>`;
-            innerHTML += `<span id="board-square-td-span_${positionNotation}-file" class="board-square-td-span" style="display: ${displayFile}; margin-left: ${boardSquareSize - 20}px; margin-top: ${boardSquareSize - 30}px;">${positionNotation[0]}</span>`;
+            innerHTML += `<span id="board-square-td-span_${positionNotation}-rank" class="board-square-td-span" style="display: ${displayRank}; margin-left: ${boardSquareSize / 12}px; margin-top: ${boardSquareSize / 15}px;">${positionNotation[1]}</span>`;
+            innerHTML += `<span id="board-square-td-span_${positionNotation}-file" class="board-square-td-span" style="display: ${displayFile}; margin-left: ${boardSquareSize - (boardSquareSize / 4.2)}px; margin-top: ${boardSquareSize - (boardSquareSize / 3)}px;">${positionNotation[0]}</span>`;
             innerHTML += `<img id="board-square-td-img_${positionNotation}" class="board-square-td-img" src="assets/images/empty-0.png" width="${boardSquareSize}" height="${boardSquareSize}" onmousedown="boardSquare_onMouseDown(event, '${positionNotation}')" onmouseup="boardSquare_onMouseUp(event, '${positionNotation}')" />`;
             innerHTML += `</td>`;
             
