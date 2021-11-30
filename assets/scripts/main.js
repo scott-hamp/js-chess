@@ -1851,14 +1851,14 @@ function updateControlsOpeningDiv(movesNotation)
     if(movesNotation.length == 0)
     {
         controlsOpeningMatchingSpan.textContent = "...";
-        populateOpeningMatchingSelect(movesNotation);
+        populateOpeningMatchingSelect();
         return;
     }
 
-    var opening = getOpeningWithMoves(movesNotation);
+    var openings = getOpeningsWithMoves(movesNotation);
     var textContent = controlsOpeningMatchingSpan.textContent;
 
-    if(opening == null)
+    if(openings.length == 0)
     {
         if(textContent != "...")
         {
@@ -1867,11 +1867,13 @@ function updateControlsOpeningDiv(movesNotation)
         }
     }
     else
+    {
+        var opening = openings[0];
         textContent = `(${opening.opening.ECOCode}) ${opening.opening.name}`;
+    }
 
-        controlsOpeningMatchingSpan.textContent = textContent;
-
-    populateOpeningMatchingSelect(movesNotation);
+    controlsOpeningMatchingSpan.textContent = textContent;
+    populateOpeningMatchingSelect(openings);
 }
 
 function updateControlsPuzzleDiv()

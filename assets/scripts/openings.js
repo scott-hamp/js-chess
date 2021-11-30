@@ -5944,19 +5944,21 @@ function loadOpenings()
 	populateOpeningSelect();
 }
 
-function populateOpeningMatchingSelect(movesNotation)
+function populateOpeningMatchingSelect(openings)
 {
 	var select = document.getElementById("controls-opening-matching-select");
 	var innerHTML = "";
-	var openings = getOpeningsWithMoves(movesNotation);
 
-	for(var i = 0; i < openings.length; i++)
+	if(openings != null)
 	{
-		var opening = openings[i];
-		var matchingCountMoves = opening.matchingCount;
-		matchingCountMoves += (opening.matchingCount > 1) ? " moves" : " move";
+		for(var i = 0; i < openings.length; i++)
+		{
+			var opening = openings[i];
+			var matchingCountMoves = opening.matchingCount;
+			matchingCountMoves += (opening.matchingCount > 1) ? " moves" : " move";
 
-		innerHTML += `<option value="opening_${i}">[${matchingCountMoves}] (${opening.opening.ECOCode}) ${opening.opening.name}</option>`;
+			innerHTML += `<option value="opening_${i}">[${matchingCountMoves}] (${opening.opening.ECOCode}) ${opening.opening.name}</option>`;
+		}
 	}
 
 	select.innerHTML = innerHTML;
