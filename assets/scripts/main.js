@@ -656,7 +656,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
                 document.getElementById(`board-square-td-img_${positionNotation}`).src = "assets/images/empty-0.png";
                 var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-                boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" />`;
+                boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" />`;
                 var left = (_boardOrientation == 0) ? (rankAndFile.file * boardDivSquareSize) : ((7 - rankAndFile.file) * boardDivSquareSize);
                 var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
                 boardDraggingPieceDiv.style.left =  left + "px";
@@ -1577,6 +1577,8 @@ function setup()
 
     var boardDiv = document.getElementById("board-div");
     boardDiv.addEventListener('contextmenu', event => event.preventDefault());
+
+    window.addEventListener('resize', window_resize);
 }
 
 function setupChessJS()
@@ -2330,4 +2332,11 @@ function showControlsButton_onClick()
 
     document.getElementById("show-controls-button").style.display = "none";
     document.getElementById("side-time-div").style.display = "none";
+}
+
+function window_resize()
+{
+    buildBoardSquaresTable();
+    updateBoardFromBoardState(_currentBoardState);
+    positionControlsDiv();
 }
