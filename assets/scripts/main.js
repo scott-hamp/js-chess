@@ -1737,7 +1737,7 @@ function updateBoardFromBoardState(boardState)
                     if(_boardTheme.backgroundImage != "")
                     {
                         if(_boardHighlights[i].highlight == "check")
-                            bgColorHighlight = "rgba(255, 100, 100, 0.5)";
+                            bgColorHighlight = "rgba(255, 100, 100, 0.7)";
                         if(_boardHighlights[i].highlight == "checkmate")
                             bgColorHighlight = "rgba(255, 0, 0, 0.85)";
                         if(_boardHighlights[i].highlight == "from")
