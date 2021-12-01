@@ -1733,7 +1733,7 @@ function stockfishUpdateLines()
                 innerHTML += (j == 0) ? `<b>${line[j]}</b> ` : `${line[j]} `;
             innerHTML += "</li>";
         }
-        innerHTML = "</ol>";
+        innerHTML += "</ol>";
     }
 
     stockfishLinesDiv.innerHTML = innerHTML;
