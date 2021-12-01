@@ -1724,7 +1724,7 @@ function stockfishUpdateLines()
 
     if(_stockfishLines.length > 0)
     {
-        innerHTML = "<option>";
+        innerHTML += "<option>";
         for(var i = Math.min(_stockfishLines.length - 1, 2); i >= 0; i--)
         {
             var line = _stockfishLines[i];
