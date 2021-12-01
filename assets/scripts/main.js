@@ -17,6 +17,7 @@ var _boardOrientation = 0;
 var _boardInAnimation = false;
 var _currentPuzzle = null;
 var _stockfishMessageDiv = null;
+var _stockfishLinesSelect = null;
 var _stockfishLines = [];
 var _stockfishScoreEvaluation = 0;
 var _moveClockSecondTimers = [ 1000, 1000 ];
@@ -1567,6 +1568,7 @@ function setup()
     _boardStateHistory = new BoardStateHistory();
 
     _stockfishMessageDiv = document.getElementById("controls-stockfish-message-div");
+    _stockfishLinesSelect = document.getElementById("controls-stockfish-lines-select");
     stockfishPostMessage("uci");
 
     loadOpenings();
@@ -1720,7 +1722,6 @@ function stockfishUpdate(move)
 
 function stockfishUpdateLines()
 {
-    var stockfishLinesSelect = document.getElementById("controls-stockfish-lines-select");
     var innerHTML = "";
 
     if(_stockfishLines.length > 0)
@@ -1735,7 +1736,7 @@ function stockfishUpdateLines()
         innerHTML += "</option>";
     }
 
-    stockfishLinesSelect.innerHTML = innerHTML;
+    _stockfishLinesSelect.innerHTML = innerHTML;
 }
 
 function stockfishUpdateMessage(message)
@@ -2320,7 +2321,8 @@ function controlsStockfishSelect_onChange()
     skillLevelSelect.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
     document.getElementById("controls-stockfish-skill-level-span").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
     _stockfishMessageDiv.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
-    document.getElementById("controls-stockfish-lines-div").style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
+    _stockfishLinesSelect.disabled = (_stockfishEnabled > -1) ? false : true;
+    _stockfishLinesSelect.style.opacity = (_stockfishEnabled > -1) ? 1.0 : 0.3;
 }
 
 function controlsStockfishSkillLevelSelect_onChange()
