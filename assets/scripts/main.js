@@ -1329,10 +1329,11 @@ function saveBoardAsImage()
     }
 
     var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
-    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    //var boardDivRect = boardDiv.getBoundingClientRect();
+    //var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var boardDivSize = boardDiv.offsetWidth;
 
-    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize * 1.5, boardDivSize * 1.5, (data) => 
+    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize, boardDivSize, (data) => 
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
