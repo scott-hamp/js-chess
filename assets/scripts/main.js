@@ -835,11 +835,12 @@ function getImageSourceForColorAndPiece(colorAndPiece)
     return src;
 }
 
-function getMoveForNotation(notation)
+function getMoveForNotation(notation, chessJSObject)
 {
     if(notation.length != 4) return null;
+    if(chessJSObject == null) chessJSObject = _chessJS;
 
-    var moves = _chessJS.moves({ verbose: true });
+    var moves = chessJSObject.moves({ verbose: true });
     var from = notation.substring(0, 2);
     var to = notation.substring(2);
 
@@ -1672,11 +1673,11 @@ function stockfishReceiveData(data)
                 {
                     if(parts[j] == "bmc") break;
 
-                    var move = getMoveForNotation(parts[j]);
+                    var move = getMoveForNotation(parts[j], chessJSAlt);
                     if(move == null) break;
 
                     movesNotation.push(move.san);
-                    chessJSAlt.move(parts[j]);
+                    chessJSAlt.move(move.san);
                 }
 
                 _stockfishLines.push(movesNotation);
