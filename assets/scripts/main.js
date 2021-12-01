@@ -1311,8 +1311,7 @@ function saveBoardAsImage()
     {
         console.log("getScreenshotOfElement(...)");
 
-        html2canvas(element, {
-            onrendered: function (canvas) 
+        html2canvas(element).then(function (canvas) 
             {
                 console.log("html2canvas(...)");
 
@@ -1332,13 +1331,7 @@ function saveBoardAsImage()
                 callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
                 
                 console.log("callback(...)");
-            },
-            width: width,
-            height: height,
-            useCORS: true,
-            taintTest: false,
-            allowTaint: false
-        });
+            });
     }
 
     var boardDiv = document.getElementById("board-div");
