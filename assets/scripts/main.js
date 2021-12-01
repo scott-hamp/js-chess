@@ -1979,7 +1979,7 @@ function updateControlsPuzzleDiv()
 
     if(_currentPuzzle != null)
     {
-        innerHTML = `<table><tr><td>${_currentPuzzle.instructions} (${_currentPuzzle.description})</td>`;
+        innerHTML = `<table><tr><td style="padding-top: 3px;">${_currentPuzzle.instructions} (${_currentPuzzle.description})</td>`;
         innerHTML += `<td><img src="assets/images/info-0.png" width="20" height="20" title="${_currentPuzzle.solution}" style="padding-left: 10px; cursor: pointer;" onmousedown="alert('${_currentPuzzle.solution}');" /></td></tr></table>`;
     }
 

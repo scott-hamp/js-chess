@@ -145,8 +145,7 @@
 
 #controls-puzzle-info-div
 {
-    margin-top: 5px;
-    padding-left: 10px;
+    padding-left: 15px;
     font-size: 12px;
     background-color: rgb(230, 230, 230);
     overflow: hidden;
@@ -155,11 +154,10 @@
 
 #controls-puzzle-div
 {
-    height: 62px;
+    height: 65px;
     margin-top: 5px;
-    padding-top: 3px;
     padding-left: 10px;
-    padding-bottom: 3px;
+    padding-bottom: 8px;
     border-radius: 3px;
     background-color: rgb(230, 230, 230);
     overflow: hidden;
