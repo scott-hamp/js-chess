@@ -182,6 +182,13 @@
 {
     margin-top: 5px;
     opacity: 0.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#controls-stockfish-lines-div > ol
+{
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
