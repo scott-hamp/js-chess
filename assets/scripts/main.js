@@ -1312,8 +1312,8 @@ function saveBoardAsImage()
     {
         html2canvas(element, 
             {
-                width: 1024,
-                height: 1024
+                width: width,
+                height: height
             })
             .then(function (canvas) 
             {
@@ -1329,7 +1329,6 @@ function saveBoardAsImage()
                 outputContext.putImageData(idata, 0, 0);
 
                 callback(outputCanvas.toDataURL());
-                //callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
             });
     }
 
@@ -1634,7 +1633,7 @@ function stockfishPostMessage(message)
 
 function stockfishReceiveData(data) 
 {
-	//console.log(`stockfishReceiveData: "${data}"`);
+	console.log(`stockfishReceiveData: "${data}"`);
 
 	if (!_stockfishIsReady) 
     {
