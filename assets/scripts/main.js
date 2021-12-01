@@ -1309,10 +1309,13 @@ function saveBoardAsImage()
 {
     function getScreenshotOfElement(element, posX, posY, width, height, callback) 
     {
+        console.log("getScreenshotOfElement(...)");
+
         html2canvas(element, {
             onrendered: function (canvas) 
             {
-                alert("1");
+                console.log("html2canvas(...)");
+
                 var context = canvas.getContext('2d');
                 var imageData = context.getImageData(posX, posY, width, height).data;
                 var outputCanvas = document.createElement('canvas');
@@ -1323,9 +1326,12 @@ function saveBoardAsImage()
                 var idata = outputContext.createImageData(width, height);
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
-                alert("2");
+
+                console.log("outputContext.putImageData(...)");
+
                 callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
-                alert("3");
+                
+                console.log("callback(...)");
             },
             width: width,
             height: height,
