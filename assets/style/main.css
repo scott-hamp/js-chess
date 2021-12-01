@@ -178,6 +178,13 @@
     text-overflow: ellipsis;
 }
 
+#controls-stockfish-lines-div
+{
+    margin-top: 8px;
+    opacity: 0.3;
+    text-overflow: ellipsis;
+}
+
 #controls-stockfish-message-div
 {
     margin-left: 10px;

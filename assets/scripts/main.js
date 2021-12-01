@@ -17,6 +17,7 @@ var _boardOrientation = 0;
 var _boardInAnimation = false;
 var _currentPuzzle = null;
 var _stockfishMessageDiv = null;
+var _stockfishLines = [];
 var _stockfishScoreEvaluation = 0;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
@@ -1660,6 +1661,30 @@ function stockfishReceiveData(data)
                 _stockfishScoreEvaluation = parseInt(parts[i + 1])
                 continue;
             }
+
+            if(parts[i] == "pv")
+            {
+                var movesNotation = [];
+                var chessJSAlt = new Chess();
+                chessJSAlt.load(_chessJS.fen());
+
+                for(var j = i + 1; j < parts.length; j++)
+                {
+                    if(parts[j] == "bmc") break;
+
+                    chessJSAlt.move(parts[j]);
+                    var move = getMoveForNotation(parts[j]);
+                    if(move == null) break;
+
+                    movesNotation.push(move.san);
+                }
+
+                _stockfishLines.push(movesNotation);
+                stockfishUpdateLines();
+                
+                i += movesNotation.length;
+                continue;
+            }
         }
     }
 
@@ -1671,6 +1696,8 @@ function stockfishUpdate(move)
 {
 	if (!_stockfishIsReady) return;
 
+    _stockfishLines = [];
+
 	if (move != null) 
     {
 		var moveAsFromTo = move.from + move.to;
@@ -1681,12 +1708,35 @@ function stockfishUpdate(move)
         stockfishPostMessage("position fen " + _chessJS.fen());
 
     stockfishUpdateMessage("Thinking...");
+    stockfishUpdateLines();
 
     var delay = (move == null) ? 100 : 1000;
 
     setTimeout(() => {
         stockfishPostMessage("go depth 10");
     }, delay);
+}
+
+function stockfishUpdateLines()
+{
+    var stockfishLinesDiv = document.getElementById("controls-stockfish-lines-div");
+    var innerHTML = "...";
+
+    if(_stockfishLines.length > 0)
+    {
+        innerHTML = "<ol>";
+        for(var i = 0; i < _stockfishLines.length; i++)
+        {
+            var line = _stockfishLines[i];
+            innerHTML += "<li>";
+            for(var j = 0; j < line.length; i++)
+                innerHTML += (j == 0) ? `<b>${line[j]}</b> ` : `${line[j]} `;
+            innerHTML += "</li>";
+        }
+        innerHTML = "</ol>";
+    }
+
+    stockfishLinesDiv.innerHTML = innerHTML;
 }
 
 function stockfishUpdateMessage(message)
