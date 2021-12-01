@@ -1662,7 +1662,7 @@ function stockfishReceiveData(data)
                 continue;
             }
 
-            if(parts[i] == "pv")
+            if(parts[i] == "pv" && _stockfishLines.length < 3)
             {
                 var movesNotation = [];
                 var chessJSAlt = new Chess();
@@ -1681,7 +1681,7 @@ function stockfishReceiveData(data)
 
                 _stockfishLines.push(movesNotation);
                 stockfishUpdateLines();
-                
+
                 i += movesNotation.length;
                 continue;
             }
