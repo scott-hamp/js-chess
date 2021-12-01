@@ -7,6 +7,7 @@
 </head>
 <script src="assets/scripts/chess.js"></script>
 <script src="assets/scripts/stockfish.js"></script>
+<script src="assets/scripts/html2canvas.min.js"></script>
 <script src="assets/scripts/openings.js"></script>
 <script src="assets/scripts/puzzles.js"></script>
 <script src="assets/scripts/main.js"></script>
@@ -145,6 +146,7 @@
                                     <input id="loadGameInput" type="file" accept=".pgn" style="display: none;" onchange="loadGame()" />
                                     <button id="controls-game-button-load" class="controls-game-button" title="Load a game (.pgn)." onclick="controlsGameButton_onClick('load')"><img src="assets/images/load-0.png"></button>
                                     <button id="controls-game-button-reset" class="controls-game-button" title="Reset the game." onclick="controlsGameButton_onClick('reset')" disabled><img src="assets/images/redo-0.png"></button>
+                                    <button id="controls-game-button-save-board-image" class="controls-game-button" title="Save an image of the board." onclick="controlsGameButton_onClick('save-image')"><img src="assets/images/save-image-0.png"></button>
                                 </div>
                             </td>
                         </tr>
