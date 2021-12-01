@@ -1310,7 +1310,12 @@ function saveBoardAsImage()
 {
     function getScreenshotOfElement(element, position, width, height, callback) 
     {
-        html2canvas(element).then(function (canvas) 
+        html2canvas(element, 
+            {
+                width: 1024,
+                height: 1024
+            })
+            .then(function (canvas) 
             {
                 var context = canvas.getContext('2d');
                 var imageData = context.getImageData(position.x, position.y, width, height).data;
