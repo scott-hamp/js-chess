@@ -1719,24 +1719,22 @@ function stockfishUpdate(move)
 
 function stockfishUpdateLines()
 {
-    var stockfishLinesDiv = document.getElementById("controls-stockfish-lines-div");
-    var innerHTML = "...";
+    var stockfishLinesSelect = document.getElementById("controls-stockfish-lines-select");
+    var innerHTML = "";
 
     if(_stockfishLines.length > 0)
     {
-        innerHTML = "<ol>";
+        innerHTML = "<option>";
         for(var i = Math.min(_stockfishLines.length - 1, 2); i >= 0; i--)
         {
             var line = _stockfishLines[i];
-            innerHTML += "<li>";
             for(var j = 0; j < line.length; j++)
-                innerHTML += (j == 0) ? `<b>${line[j]}</b> ` : `${line[j]} `;
-            innerHTML += "</li>";
+                innerHTML += `${line[j]} `;
         }
-        innerHTML += "</ol>";
+        innerHTML += "</option>";
     }
 
-    stockfishLinesDiv.innerHTML = innerHTML;
+    stockfishLinesSelect.innerHTML = innerHTML;
 }
 
 function stockfishUpdateMessage(message)

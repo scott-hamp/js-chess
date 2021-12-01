@@ -176,7 +176,7 @@
     text-overflow: ellipsis;
 }
 
-#controls-stockfish-lines-div
+#controls-stockfish-lines-select
 {
     margin-top: 5px;
     opacity: 0.3;
@@ -184,7 +184,7 @@
     text-overflow: ellipsis;
 }
 
-#controls-stockfish-lines-div > ol
+#controls-stockfish-lines-div > option
 {
     overflow: hidden;
     text-overflow: ellipsis;
