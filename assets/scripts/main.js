@@ -1312,6 +1312,7 @@ function saveBoardAsImage()
         html2canvas(element, {
             onrendered: function (canvas) 
             {
+                alert("1");
                 var context = canvas.getContext('2d');
                 var imageData = context.getImageData(posX, posY, width, height).data;
                 var outputCanvas = document.createElement('canvas');
@@ -1322,7 +1323,9 @@ function saveBoardAsImage()
                 var idata = outputContext.createImageData(width, height);
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
+                alert("2");
                 callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
+                alert("3");
             },
             width: width,
             height: height,
