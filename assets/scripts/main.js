@@ -1336,9 +1336,9 @@ function saveBoardAsImage()
     var boardDiv = document.getElementById("board-div");
     //var boardDivRect = boardDiv.getBoundingClientRect();
     //var boardDivSize = (boardDivRect.right - boardDivRect.left);
-    var boardDivSize = boardDiv.offsetWidth;
+    var boardDivSizeFactor = boardDiv.offsetWidth * 0.8;
 
-    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize, boardDivSize, (data) => 
+    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSizeFactor, boardDivSizeFactor, (data) => 
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
