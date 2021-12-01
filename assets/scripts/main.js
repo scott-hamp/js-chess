@@ -1319,7 +1319,7 @@ function saveBoardAsImage()
                 outputCanvas.width = width;
                 outputCanvas.height = height;
     
-                var idata = outputContext.createImageData(1024, 1024);
+                var idata = outputContext.createImageData(width, height);
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
 
@@ -1332,7 +1332,7 @@ function saveBoardAsImage()
     var boardDivRect = boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
 
-    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize, boardDivSize, (data) => 
+    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize * 1.5, boardDivSize * 1.5, (data) => 
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
