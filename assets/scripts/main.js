@@ -1729,7 +1729,7 @@ function stockfishUpdateLines()
         {
             var line = _stockfishLines[i];
             innerHTML += "<li>";
-            for(var j = 0; j < line.length; i++)
+            for(var j = 0; j < line.length; j++)
                 innerHTML += (j == 0) ? `<b>${line[j]}</b> ` : `${line[j]} `;
             innerHTML += "</li>";
         }
