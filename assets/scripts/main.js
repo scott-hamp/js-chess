@@ -1662,7 +1662,7 @@ function stockfishReceiveData(data)
                 continue;
             }
 
-            if(parts[i] == "pv" && _stockfishLines.length < 3)
+            if(parts[i] == "pv")
             {
                 var movesNotation = [];
                 var chessJSAlt = new Chess();
@@ -1672,11 +1672,11 @@ function stockfishReceiveData(data)
                 {
                     if(parts[j] == "bmc") break;
 
-                    chessJSAlt.move(parts[j]);
                     var move = getMoveForNotation(parts[j]);
                     if(move == null) break;
 
                     movesNotation.push(move.san);
+                    chessJSAlt.move(parts[j]);
                 }
 
                 _stockfishLines.push(movesNotation);
@@ -1725,7 +1725,7 @@ function stockfishUpdateLines()
     if(_stockfishLines.length > 0)
     {
         innerHTML = "<ol>";
-        for(var i = 0; i < _stockfishLines.length; i++)
+        for(var i = Math.min(_stockfishLines.length - 1, 2); i >= 0; i--)
         {
             var line = _stockfishLines[i];
             innerHTML += "<li>";
