@@ -338,6 +338,7 @@ function animateMove(move, completedFunction)
             {
                 clearInterval(moveInterval);
                 boardDiv.removeChild(image);
+                delete image;
 
                 _boardInAnimation = false;
 
@@ -1322,7 +1323,8 @@ function saveBoardAsImage()
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
 
-                callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
+                callback(outputCanvas.toDataURL());
+                //callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
             });
     }
 
@@ -1334,10 +1336,11 @@ function saveBoardAsImage()
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
-        link.setAttribute("download", "board.png");
+        link.setAttribute("download", "board.pgn");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        delete link;
     });
 }
 
