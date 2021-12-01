@@ -1309,12 +1309,8 @@ function saveBoardAsImage()
 {
     function getScreenshotOfElement(element, posX, posY, width, height, callback) 
     {
-        console.log("getScreenshotOfElement(...)");
-
         html2canvas(element).then(function (canvas) 
             {
-                console.log("html2canvas(...)");
-
                 var context = canvas.getContext('2d');
                 var imageData = context.getImageData(posX, posY, width, height).data;
                 var outputCanvas = document.createElement('canvas');
@@ -1326,11 +1322,7 @@ function saveBoardAsImage()
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
 
-                console.log("outputContext.putImageData(...)");
-
                 callback(outputCanvas.toDataURL().replace("data:image/png;base64,", ""));
-                
-                console.log("callback(...)");
             });
     }
 
@@ -1338,8 +1330,14 @@ function saveBoardAsImage()
     var boardDivRect = boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
 
-    getScreenshotOfElement(boardDiv, 0, 0, boardDivSize, boardDivSize, (data) => {
-        alert(data);
+    getScreenshotOfElement(boardDiv, 0, 0, boardDivSize, boardDivSize, (data) => 
+    {
+        var link = document.createElement("a");
+        link.setAttribute("href", data);
+        link.setAttribute("download", "board.png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 }
 
