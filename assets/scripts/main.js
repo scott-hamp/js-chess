@@ -1308,18 +1308,18 @@ function resetMoveClocks()
 
 function saveBoardAsImage()
 {
-    function getScreenshotOfElement(element, posX, posY, width, height, callback) 
+    function getScreenshotOfElement(element, position, width, height, callback) 
     {
         html2canvas(element).then(function (canvas) 
             {
                 var context = canvas.getContext('2d');
-                var imageData = context.getImageData(posX, posY, width, height).data;
+                var imageData = context.getImageData(position.x, position.y, width, height).data;
                 var outputCanvas = document.createElement('canvas');
                 var outputContext = outputCanvas.getContext('2d');
                 outputCanvas.width = width;
                 outputCanvas.height = height;
     
-                var idata = outputContext.createImageData(width, height);
+                var idata = outputContext.createImageData(1024, 1024);
                 idata.data.set(imageData);
                 outputContext.putImageData(idata, 0, 0);
 
@@ -1332,11 +1332,11 @@ function saveBoardAsImage()
     var boardDivRect = boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
 
-    getScreenshotOfElement(boardDiv, 0, 0, boardDivSize, boardDivSize, (data) => 
+    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSize, boardDivSize, (data) => 
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
-        link.setAttribute("download", "board.pgn");
+        link.setAttribute("download", "board.png");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
