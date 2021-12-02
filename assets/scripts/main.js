@@ -94,6 +94,14 @@ var _boardTheme = _boardThemes[1];
 var _piecesets = 
 [
     {
+        name: "Begebies",
+        path: "assets/images/begebies-",
+        shadowColor: "rgba(20,20,20,0.5)",
+        shadowBlur: 3,
+        shadowOffsetX: 3,
+        shadowOffsetY: 3
+    },
+    {
         name: "CBurnett",
         path: "assets/images/cburnett-",
         shadowColor: "rgba(0,0,0,0)",
@@ -118,7 +126,7 @@ var _piecesets =
         shadowOffsetY: 3
     }
 ];
-var _pieceset = _piecesets[0];
+var _pieceset = _piecesets[1];
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
