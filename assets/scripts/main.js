@@ -1627,7 +1627,7 @@ function stockfishSetOption(option, value)
 
 function stockfishPostMessage(message) 
 {
-    //console.log(`stockfishPostMessage: "${message}"`);
+    console.log(`stockfishPostMessage: "${message}"`);
 
 	_stockfish.postMessage(message);
 }
