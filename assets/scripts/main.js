@@ -1605,7 +1605,7 @@ function stockfishBestMoveDecided(moveAsFromTo)
     if(_stockfishEnabled == -1) return;
 
     var line = _stockfishLines[_stockfishLines.length - 1];
-    var stockfishScore = (line.score / 1000.0);
+    var stockfishScore = (line.score / 100.0);
     if(stockfishScore >= 0.0) stockfishScore = "+" + stockfishScore;
 
     var move = getMoveForNotation(moveAsFromTo);
@@ -1746,7 +1746,7 @@ function stockfishUpdateLines()
             var line = _stockfishLines[i];
             var additionalHalfMoveCount = (_chessJS.turn() == 'b') ? 1 : 0;
 
-            var score = (line.score / 1000.0);
+            var score = (line.score / 100.0);
             if(score >= 0) score = "+" + score;
             innerHTML += `[${score}] `;
 
