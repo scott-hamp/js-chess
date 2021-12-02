@@ -19,6 +19,7 @@ var _currentPuzzle = null;
 var _stockfishMessageDiv = null;
 var _stockfishLinesSelect = null;
 var _stockfishLines = [];
+var _stockfishTimeout = null;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
 [
@@ -1174,6 +1175,7 @@ function reset()
     _boardStateHistoryLoadedGame = null;
     _currentSquareSelected = "";
     _currentPuzzle = null;
+    if(_stockfishTimeout != null) clearTimeout(_stockfishTimeout);
 
     clearBoardHighlights();
     updateBoardFromBoardState(_currentBoardState);
@@ -1602,7 +1604,14 @@ function stockfishBestMoveDecided(moveAsFromTo)
     stockfishUpdateMessage(`Best move: <b>${moveValue}</b> (Score: ${stockfishScore}).`);
 
     if(((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
-        makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
+    {
+        _stockfishTimeout = setTimeout(() => 
+        {
+            clearTimeout(_stockfishTimeout);
+            _stockfishTimeout = null;
+            makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
+        }, 1000);
+    }
 }
 
 function stockfishSetOption(option, value)
@@ -1705,11 +1714,12 @@ function stockfishUpdate(move)
     stockfishUpdateMessage("Thinking...");
     stockfishUpdateLines();
 
-    var delay = (move == null) ? 100 : 1000;
-
-    setTimeout(() => {
+    _stockfishTimeout = setTimeout(() => 
+    {
+        clearTimeout(_stockfishTimeout);
+        _stockfishTimeout = null;
         stockfishPostMessage("go depth 10");
-    }, delay);
+    }, 10);
 }
 
 function stockfishUpdateLines()
@@ -2318,6 +2328,7 @@ function controlsStockfishSelect_onChange()
 
     _stockfishEnabled = select.selectedIndex - 1;
     _stockfishLines = [];
+    if(_stockfishTimeout != null) clearTimeout(_stockfishTimeout);
     stockfishUpdateMessage("...");
     stockfishUpdateLines();
 
