@@ -96,10 +96,10 @@ var _piecesets =
     {
         name: "Begebies",
         path: "assets/images/begebies-",
-        shadowColor: "rgba(20,20,20,0.5)",
-        shadowBlur: 3,
-        shadowOffsetX: 3,
-        shadowOffsetY: 3
+        shadowColor: "rgba(0,0,0,0)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
     },
     {
         name: "CBurnett",
@@ -112,10 +112,10 @@ var _piecesets =
     {
         name: "CBurnett Alt.",
         path: "assets/images/cburnettalt-",
-        shadowColor: "rgba(20,20,20,0.5)",
-        shadowBlur: 3,
-        shadowOffsetX: 3,
-        shadowOffsetY: 3
+        shadowColor: "rgba(0,0,0,0)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
     },
     {
         name: "Maestro",
@@ -318,6 +318,7 @@ function animateMove(move, completedFunction)
 
         var image = new Image();
         image.id = "animating-piece-0-img";
+        image.style.filter = `drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})`;
         image.style.position = "absolute";
         image.src = getImageSourceForColorAndPiece({ color: color, piece: piece });
         image.width = boardDivSquareSize;
@@ -666,7 +667,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
                 document.getElementById(`board-square-td-img_${positionNotation}`).src = "assets/images/empty-0.png";
                 var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-                boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" />`;
+                boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" style="filter: drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})" />`;
                 var left = (_boardOrientation == 0) ? (rankAndFile.file * boardDivSquareSize) : ((7 - rankAndFile.file) * boardDivSquareSize);
                 var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
                 boardDraggingPieceDiv.style.left =  left + "px";
