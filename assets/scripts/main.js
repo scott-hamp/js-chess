@@ -1627,6 +1627,10 @@ function stockfishSetOption(option, value)
     }
 
     stockfishPostMessage(`setoption name "${option}" value ${value}`);
+
+    if(_stockfishEnabled == -1) return;
+    
+    if(option == "Skill Level") stockfishUpdate();
 }
 
 function stockfishPostMessage(message) 
