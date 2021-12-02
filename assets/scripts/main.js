@@ -1188,6 +1188,8 @@ function reset()
     boardCanvasClear();
     resetMoveClocks();
 
+    if(_stockfishEnabled > -1) stockfishUpdate();
+
     var gameDetailsFields = 
     [
         "white",
@@ -1238,6 +1240,8 @@ function resetCurrentPuzzle()
     updateControlsFENInput();
     updateControlsMovesTable();
     updateGameDetailsMoveCommentTextArea();
+
+    if(_stockfishEnabled > -1) stockfishUpdate();
 
     document.getElementById("controls-reset-puzzle-button").disabled = false;
 }
@@ -1488,9 +1492,7 @@ function selectRandomPuzzle()
 
     document.getElementById("controls-reset-puzzle-button").disabled = false;
 
-    if(_stockfishEnabled == -1) return;
-
-    stockfishUpdate();
+    if(_stockfishEnabled > -1) stockfishUpdate();
 }
 
 function setBoardHighlight(positionNotation, highlightType)
@@ -2294,9 +2296,7 @@ function controlsPasteFENButton_onClick()
         updateControlsMovesTable();
         updateGameDetailsMoveCommentTextArea();
 
-        if(_stockfishEnabled == -1) return;
-
-        stockfishUpdate();
+        if(_stockfishEnabled > -1) stockfishUpdate();
     }
 
     pasteFEN();
@@ -2335,8 +2335,8 @@ function controlsStockfishSelect_onChange()
     if(_stockfishEnabled > -1)
     {
         stockfishUpdateMessage("Ready.");
-        if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
-            stockfishUpdate();
+        //if(_stockfishEnabled == 0 || (_stockfishEnabled == 1 && _chessJS.turn() == 'w') || (_stockfishEnabled == 2 && _chessJS.turn() == 'b'))
+        stockfishUpdate();
     }
 
     var skillLevelSelect = document.getElementById("controls-stockfish-skill-level-select");
