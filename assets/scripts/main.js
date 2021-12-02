@@ -1744,7 +1744,7 @@ function stockfishUpdateLines()
             for(var j = 0; j < line.movesNotation.length; j++)
             {
                 if((j + additionalHalfMoveCount) % 2 == 0)
-                    innerHTML += `${Math.floor((fullMoveCount + j + additionalHalfMoveCount) / 2) + 1}. `;
+                    innerHTML += `${Math.floor(((fullMoveCount * 2) + j + additionalHalfMoveCount) / 2) + 1}. `;
 
                 if(j == 0 && additionalHalfMoveCount == 1) 
                     innerHTML += "... ";
