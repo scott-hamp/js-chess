@@ -1728,17 +1728,27 @@ function stockfishUpdateLines()
 
     if(_stockfishLines.length > 0)
     {
+        var halfMoveCount = _chessJS.history().length;
+        var fullMoveCount = Math.floor(halfMoveCount / 2);
+
         for(var i = _stockfishLines.length - 1; i >= 0; i--)
         {
             innerHTML += "<option>";
             var line = _stockfishLines[i];
 
-            var score = line.score;
+            var score = (line.score / 1000.0);
             if(score >= 0) score = "+" + score;
-            innerHTML += `${score} `;
+            innerHTML += `[${score}] `;
 
             for(var j = 0; j < line.movesNotation.length; j++)
+            {
+                if(j % 2 == 0)
+                    innerHTML += `${Math.floor(fullMoveCount + j)}. `;
+
+                if(j == 0 && _chessJS.turn() == 'b') innerHTML += "...";
+
                 innerHTML += `${line.movesNotation[j]} `;
+            }
             
             innerHTML += "</option>";
         }
