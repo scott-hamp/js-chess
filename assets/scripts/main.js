@@ -19,7 +19,6 @@ var _currentPuzzle = null;
 var _stockfishMessageDiv = null;
 var _stockfishLinesSelect = null;
 var _stockfishLines = [];
-var _stockfishScoreEvaluation = 0;
 var _moveClockSecondTimers = [ 1000, 1000 ];
 var _moveClockMillisecondIntervals = 
 [
@@ -1593,7 +1592,8 @@ function stockfishBestMoveDecided(moveAsFromTo)
 {
     if(_stockfishEnabled == -1) return;
 
-    var stockfishScore = (_stockfishScoreEvaluation / 1000.0);
+    var line = _stockfishLines[_stockfishLines.length - 1];
+    var stockfishScore = (line.score / 1000.0);
     if(stockfishScore >= 0.0) stockfishScore = "+" + stockfishScore;
 
     if(_stockfishEnabled == 0)
@@ -1657,11 +1657,13 @@ function stockfishReceiveData(data)
 
     if(parts[0] == "info")
     {
+        var score = 0;
+
         for(var i = 0; i < parts.length; i++)
         {
             if(parts[i] == "cp")
             {
-                _stockfishScoreEvaluation = parseInt(parts[i + 1])
+                score = parseInt(parts[i + 1])
                 continue;
             }
 
@@ -1682,7 +1684,7 @@ function stockfishReceiveData(data)
                     chessJSAlt.move(move.san);
                 }
 
-                _stockfishLines.push(movesNotation);
+                _stockfishLines.push({ score: score, movesNotation: movesNotation });
                 stockfishUpdateLines();
 
                 i += movesNotation.length;
@@ -1727,13 +1729,19 @@ function stockfishUpdateLines()
     if(_stockfishLines.length > 0)
     {
         innerHTML += "<option>";
-        for(var i = Math.min(_stockfishLines.length - 1, 2); i >= 0; i--)
+        for(var i = _stockfishLines.length - 1; i >= 0; i--)
         {
             var line = _stockfishLines[i];
-            for(var j = 0; j < line.length; j++)
-                innerHTML += `${line[j]} `;
+
+            var score = line.score;
+            if(score >= 0) score = "+" + score;
+            innerHTML += `${score} `;
+
+            for(var j = 0; j < line.movesNotation.length; j++)
+                innerHTML += `${line.movesNotation[j]} `;
         }
         innerHTML += "</option>";
+        console.log(innerHTML);
     }
 
     _stockfishLinesSelect.innerHTML = innerHTML;
