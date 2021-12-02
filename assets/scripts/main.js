@@ -1646,13 +1646,8 @@ function stockfishReceiveData(data)
 
 	if (!_stockfishIsReady) 
     {
-		if (data == "uciok") 
-        {
-			_stockfishIsReady = true;
-
-			stockfishUpdateMessage("Ready.");
-		}
-
+		if (data == "uciok") _stockfishIsReady = true;
+        
 		return;
 	}
 
