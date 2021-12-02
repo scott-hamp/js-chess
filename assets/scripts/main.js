@@ -2325,7 +2325,9 @@ function controlsStockfishSelect_onChange()
     var select = document.getElementById("controls-stockfish-select");
 
     _stockfishEnabled = select.selectedIndex - 1;
+    _stockfishLines = [];
     stockfishUpdateMessage("...");
+    stockfishUpdateLines();
 
     if(_stockfishEnabled > -1)
     {
