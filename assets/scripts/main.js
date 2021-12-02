@@ -1599,17 +1599,10 @@ function stockfishBestMoveDecided(moveAsFromTo)
     var move = getMoveForNotation(moveAsFromTo);
     var moveValue = (move == null) ? moveAsFromTo : move.san;
 
-    var stockfishMessage = `Best move: <b>${moveValue}</b> (Score: ${stockfishScore}). Ready.`;
+    stockfishUpdateMessage(`Best move: <b>${moveValue}</b> (Score: ${stockfishScore}).`);
 
     if(((_chessJS.turn() == 'w' && _stockfishEnabled == 1) || (_chessJS.turn() == 'b' && _stockfishEnabled == 2)))
-    {
-        stockfishMessage = stockfishMessage.replace("Ready.", "Moving...");
-        stockfishUpdateMessage(stockfishMessage);
         makeMoveFromCurrentBoardStateFromTo(moveAsFromTo);
-        return;
-    }
-
-    stockfishUpdateMessage(stockfishMessage);
 }
 
 function stockfishSetOption(option, value)
