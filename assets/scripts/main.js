@@ -1743,9 +1743,9 @@ function stockfishUpdateLines()
             for(var j = 0; j < line.movesNotation.length; j++)
             {
                 if(j % 2 == 0)
-                    innerHTML += `${Math.floor(fullMoveCount + j)}. `;
+                    innerHTML += `${Math.floor((fullMoveCount + j) / 2) + 1}. `;
 
-                if(j == 0 && _chessJS.turn() == 'b') innerHTML += "...";
+                if(j == 0 && _chessJS.turn() == 'b') innerHTML += "... ";
 
                 innerHTML += `${line.movesNotation[j]} `;
             }
