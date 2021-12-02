@@ -1732,6 +1732,7 @@ function stockfishUpdateLines()
         {
             innerHTML += "<option>";
             var line = _stockfishLines[i];
+            var additionalHalfMoveCount = (_chessJS.turn() == 'b') ? 1 : 0;
 
             var score = (line.score / 1000.0);
             if(score >= 0) score = "+" + score;
@@ -1740,9 +1741,10 @@ function stockfishUpdateLines()
             for(var j = 0; j < line.movesNotation.length; j++)
             {
                 if(j % 2 == 0)
-                    innerHTML += `${Math.floor((fullMoveCount + j) / 2) + 1}. `;
+                    innerHTML += `${Math.floor((fullMoveCount + j + additionalHalfMoveCount) / 2) + 1}. `;
 
-                if(j == 0 && _chessJS.turn() == 'b') innerHTML += "... ";
+                if(j == 0 && additionalHalfMoveCount == 1) 
+                    innerHTML += "... ";
 
                 innerHTML += `${line.movesNotation[j]} `;
             }
