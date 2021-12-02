@@ -1728,9 +1728,9 @@ function stockfishUpdateLines()
 
     if(_stockfishLines.length > 0)
     {
-        innerHTML += "<option>";
         for(var i = _stockfishLines.length - 1; i >= 0; i--)
         {
+            innerHTML += "<option>";
             var line = _stockfishLines[i];
 
             var score = line.score;
@@ -1739,9 +1739,9 @@ function stockfishUpdateLines()
 
             for(var j = 0; j < line.movesNotation.length; j++)
                 innerHTML += `${line.movesNotation[j]} `;
+            
+            innerHTML += "</option>";
         }
-        innerHTML += "</option>";
-        console.log(innerHTML);
     }
 
     _stockfishLinesSelect.innerHTML = innerHTML;
