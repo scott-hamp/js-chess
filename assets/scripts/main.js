@@ -463,7 +463,7 @@ function boardCanvasDrawArrow(from, to)
     context.restore();
 }
 
-function boardCanvasDrawArrowComplex(points)
+function boardCanvasDrawArrowComplex(points, color)
 {
     if(points.length <= 1) return;
 
@@ -482,8 +482,10 @@ function boardCanvasDrawArrowComplex(points)
     var angle = 0;
     var hyp = 0;
 
-    context.fillStyle = "rgb(255, 0, 0, 0.75)";
-    context.strokeStyle = "rgb(255, 0, 0, 0.75)";
+    if(color == null) color = "rgba(255, 0, 0, 0.75)";
+
+    context.fillStyle = color;
+    context.strokeStyle = color;
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
@@ -536,7 +538,7 @@ function boardCanvasDrawArrowComplex(points)
     context.restore();
 }
 
-function boardCanvasDrawSquare(atCenter)
+function boardCanvasDrawSquare(atCenter, color)
 {
     for(var i = 0; i < _boardCanvasSquares.length; i++)
     {
@@ -557,7 +559,10 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.fillStyle = "rgb(20, 20, 255, 0.75)";
+    if(color == null) color = "rgba(0, 0, 255, 0.75)";
+
+    context.fillStyle = color;
+    context.strokeStyle = color;
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
@@ -591,7 +596,7 @@ function boardCanvasDrawCircle(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.strokeStyle = "rgb(20, 20, 255, 0.75)";
+    context.strokeStyle = "rgb(0, 0, 255, 0.75)";
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
@@ -2049,13 +2054,24 @@ function boardDiv_onMouseUp(mouseEvent)
 
     if(_rightMouseDragPoints.length <= 1)
     {
-        if( mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey)
-            boardCanvasDrawSquare(to);
+        if(mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey)
+        {
+            var color = "rgba(255, 0, 0, 0.75)";
+            if(mouseEvent.ctrlKey) color = "rgba(0, 255, 0, 0.75)";
+            if(mouseEvent.altKey) color = "rgba(0, 0, 255, 0.75)";
+            boardCanvasDrawSquare(to, color);
+        }
         else
             boardCanvasDrawCircle(to);
     }
     else
-        boardCanvasDrawArrowComplex(_rightMouseDragPoints);
+    {
+        var color = "rgba(255, 0, 0, 0.75)";
+        if(mouseEvent.ctrlKey) color = "rgba(0, 255, 0, 0.75)";
+        if(mouseEvent.altKey) color = "rgba(0, 0, 255, 0.75)";
+
+        boardCanvasDrawArrowComplex(_rightMouseDragPoints, color);
+    }
 
     _rightMouseDragPoints = null;
 }
