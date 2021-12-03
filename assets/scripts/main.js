@@ -2366,8 +2366,10 @@ function hideControlsButton_onClick()
     document.getElementById("controls-div").style.display = "none";
 
     var boardDiv = document.getElementById("board-div");
-    var content = document.getElementById("content");
-    boardDiv.style.transform = `translateX(${((content.offsetWidth / 2) - (boardDiv.offsetWidth / 2))}px)`;
+    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivSize = (boardDivRect.right - boardDivRect.left);
+    var clientWidth = document.getElementsByTagName('body')[0].clientWidth;
+    boardDiv.style.transform = `translateX(${((clientWidth / 2) - (boardDivSize / 1.70))}px)`;
 
     document.getElementById("show-controls-button").style.display = "block";
     document.getElementById("side-time-div").style.display = "block";
