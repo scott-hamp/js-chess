@@ -31,6 +31,7 @@ var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasCircles = [];
 var _boardCanvasSquares = [];
+var _boardCanvasDrawColor = "rgba(255,0,0,0.75)";
 var _boardThemes = 
 [
     {
@@ -433,8 +434,8 @@ function boardCanvasDrawArrow(from, to)
 
     var size = 30;
 
-    context.fillStyle = "rgb(255, 0, 0, 0.75)";
-    context.strokeStyle = "rgb(255, 0, 0, 0.75)";
+    context.fillStyle = _boardCanvasDrawColor;
+    context.strokeStyle = _boardCanvasDrawColor;
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "bevel";
@@ -463,7 +464,7 @@ function boardCanvasDrawArrow(from, to)
     context.restore();
 }
 
-function boardCanvasDrawArrowComplex(points, color)
+function boardCanvasDrawArrowComplex(points)
 {
     if(points.length <= 1) return;
 
@@ -482,10 +483,8 @@ function boardCanvasDrawArrowComplex(points, color)
     var angle = 0;
     var hyp = 0;
 
-    if(color == null) color = "rgba(255, 0, 0, 0.75)";
-
-    context.fillStyle = color;
-    context.strokeStyle = color;
+    context.fillStyle = _boardCanvasDrawColor;
+    context.strokeStyle = _boardCanvasDrawColor;
     context.lineWidth = size;
     context.lineCap = "butt";
     context.lineJoin = "miter";
@@ -538,7 +537,7 @@ function boardCanvasDrawArrowComplex(points, color)
     context.restore();
 }
 
-function boardCanvasDrawSquare(atCenter, color)
+function boardCanvasDrawSquare(atCenter)
 {
     for(var i = 0; i < _boardCanvasSquares.length; i++)
     {
@@ -559,10 +558,8 @@ function boardCanvasDrawSquare(atCenter, color)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    if(color == null) color = "rgba(0, 0, 255, 0.75)";
-
-    context.fillStyle = color;
-    context.strokeStyle = color;
+    context.fillStyle = _boardCanvasDrawColor;
+    context.strokeStyle = _boardCanvasDrawColor;
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
@@ -596,7 +593,7 @@ function boardCanvasDrawCircle(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.strokeStyle = "rgb(0, 0, 255, 0.75)";
+    context.strokeStyle = _boardCanvasDrawColor;
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
@@ -2025,7 +2022,7 @@ function boardDiv_onMouseMove(mouseEvent)
 {
     var mousePosition = { x: mouseEvent.clientX, y: mouseEvent.clientY };
 
-    if(_rightMouseDragPoints != null && (mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey))
+    if(_rightMouseDragPoints != null && mouseEvent.shiftKey)
     {
         var point = getBoardSquareCenterPosition(mousePosition);
         if(pointArrayContains(_rightMouseDragPoints, point)) return;
@@ -2054,24 +2051,13 @@ function boardDiv_onMouseUp(mouseEvent)
 
     if(_rightMouseDragPoints.length <= 1)
     {
-        if(mouseEvent.shiftKey || mouseEvent.altKey || mouseEvent.ctrlKey)
-        {
-            var color = "rgba(255, 0, 0, 0.75)";
-            if(mouseEvent.ctrlKey) color = "rgba(0, 255, 0, 0.75)";
-            if(mouseEvent.altKey) color = "rgba(0, 0, 255, 0.75)";
-            boardCanvasDrawSquare(to, color);
-        }
+        if(mouseEvent.shiftKey)
+            boardCanvasDrawSquare(to);
         else
             boardCanvasDrawCircle(to);
     }
     else
-    {
-        var color = "rgba(255, 0, 0, 0.75)";
-        if(mouseEvent.ctrlKey) color = "rgba(0, 255, 0, 0.75)";
-        if(mouseEvent.altKey) color = "rgba(0, 0, 255, 0.75)";
-
-        boardCanvasDrawArrowComplex(_rightMouseDragPoints, color);
-    }
+        boardCanvasDrawArrowComplex(_rightMouseDragPoints);
 
     _rightMouseDragPoints = null;
 }
@@ -2108,6 +2094,24 @@ function body_onKeyDown(keyboardEvent)
     if(keyCode == 39 && !document.getElementById("controls-game-button-next-move").disabled)
     {
         controlsGameButton_onClick("next");
+        return;
+    }
+
+    if(keyCode == 49)
+    {
+        _boardCanvasDrawColor = "rgba(255,0,0,0.75)";
+        return;
+    }
+
+    if(keyCode == 50)
+    {
+        _boardCanvasDrawColor = "rgba(0,255,0,0.75)";
+        return;
+    }
+
+    if(keyCode == 51)
+    {
+        _boardCanvasDrawColor = "rgba(0,0,255,0.75)";
         return;
     }
 }
@@ -2385,7 +2389,7 @@ function hideControlsButton_onClick()
     var boardDivRect = boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var clientWidth = document.getElementsByTagName('body')[0].clientWidth;
-    boardDiv.style.transform = `translateX(${((clientWidth / 2) - (boardDivSize / 1.70))}px)`;
+    boardDiv.style.transform = `translateX(${((clientWidth / 2) - (boardDivSize / 2))}px)`;
 
     document.getElementById("show-controls-button").style.display = "block";
     document.getElementById("side-time-div").style.display = "block";
