@@ -14,6 +14,7 @@ var _currentSquareSelectedMoves = null;
 var _boardStateHistory = null;
 var _boardStateHistoryLoadedGame = null;
 var _boardOrientation = 0;
+var _boardDraggingPieceDiv = null;
 var _boardInAnimation = false;
 var _currentPuzzle = null;
 var _stockfishMessageDiv = null;
@@ -612,32 +613,9 @@ function boardSquareSelected(positionNotation, mouseEventType)
     var index = (rank * 8) + file;
     var squareValue = _currentBoardState.squares[index];
 
-    /*
-    var positionDescription = "empty";
-    if(squareValue.length > 0)
-    {
-        var color = (squareValue == squareValue.toUpperCase()) ? "white" : "black";
-        var piece = "";
-
-        var squareValueLower = squareValue.toLowerCase();
-        if(squareValueLower == "p") piece = "pawn";
-        if(squareValueLower == "k") piece = "knight";
-        if(squareValueLower == "b") piece = "bishop";
-        if(squareValueLower == "r") piece = "rook";
-        if(squareValueLower == "q") piece = "queen";
-        if(squareValueLower == "k") piece = "king";
-
-        positionDescription = color + " " + piece;
-    }
-
-    console.log(`Square selected: ${positionNotation} == ${positionDescription}`);
-    */
-
     if(_currentSquareSelected != "")
     {
-        var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-        boardDraggingPieceDiv.innerHTML = "";
-        document.getElementsByTagName('body')[0].classList.remove("grabbing");
+        _boardDraggingPieceDiv.innerHTML = "";
 
         for(var i = 0; i < _currentSquareSelectedMoves.length; i++)
         {
@@ -672,14 +650,11 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 var boardDivSquareSize = boardDivSize / 8;
 
                 document.getElementById(`board-square-td-img_${positionNotation}`).src = "assets/images/empty-0.png";
-                var boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
-                boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" style="filter: drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})" />`;
+                _boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" style="filter: drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})" />`;
                 var left = (_boardOrientation == 0) ? (rankAndFile.file * boardDivSquareSize) : ((7 - rankAndFile.file) * boardDivSquareSize);
                 var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
-                boardDraggingPieceDiv.style.left =  left + "px";
-                boardDraggingPieceDiv.style.top = top + "px";
-
-                document.getElementsByTagName('body')[0].classList.add("grabbing");
+                _boardDraggingPieceDiv.style.left =  left + "px";
+                _boardDraggingPieceDiv.style.top = top + "px";
             }
         }
         else
@@ -689,8 +664,6 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
             _currentSquareSelected = "";
             _currentSquareSelectedMoves = null;
-
-            document.getElementsByTagName('body')[0].classList.remove("grabbing");
         }
     }
 }
@@ -1555,6 +1528,8 @@ function setup()
     setupChessJS();
     setCurrentBoardStateToChessJSBoard();
     _boardStateHistory = new BoardStateHistory();
+
+    _boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
 
     _stockfishMessageDiv = document.getElementById("controls-stockfish-message-div");
     _stockfishLinesSelect = document.getElementById("controls-stockfish-lines-select");
