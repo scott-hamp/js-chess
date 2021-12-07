@@ -617,8 +617,6 @@ function boardSquareSelected(positionNotation, mouseEventType)
     {
         _boardDraggingPieceDiv.innerHTML = "";
 
-        //document.getElementsByTagName('body')[0].classList.remove("grabbing");
-
         for(var i = 0; i < _currentSquareSelectedMoves.length; i++)
         {
             var move = _currentSquareSelectedMoves[i];
@@ -657,8 +655,8 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
                 _boardDraggingPieceDiv.style.left =  left + "px";
                 _boardDraggingPieceDiv.style.top = top + "px";
-
-                //document.getElementsByTagName('body')[0].classList.add("grabbing");
+                _boardDraggingPieceDiv.style.width =  boardDivSquareSize + "px";
+                _boardDraggingPieceDiv.style.height = boardDivSquareSize + "px";
             }
         }
         else

@@ -23,8 +23,6 @@
     position: absolute;
     left: 100px;
     top: 100px;
-    width: 90px;
-    height: 90px;
     pointer-events: none;
 }
 
