@@ -11,6 +11,7 @@ _stockfish.onmessage = function (event) {
 var _currentBoardState = null;
 var _currentSquareSelected = "";
 var _currentSquareSelectedMoves = null;
+var _boardDiv = null;
 var _boardStateHistory = null;
 var _boardStateHistoryLoadedGame = null;
 var _boardOrientation = 0;
@@ -308,8 +309,7 @@ class Vector
 
 function animateMove(move, completedFunction)
 {
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -329,7 +329,7 @@ function animateMove(move, completedFunction)
         image.src = getImageSourceForColorAndPiece({ color: color, piece: piece });
         image.width = boardDivSquareSize;
         image.height = boardDivSquareSize;
-        boardDiv.appendChild(image);
+        _boardDiv.appendChild(image);
         image.style.left = from.x + "px";
         image.style.top = from.y + "px";
         var imagePosition = new Vector(from.x, from.y);
@@ -354,7 +354,7 @@ function animateMove(move, completedFunction)
             else
             {
                 clearInterval(moveInterval);
-                boardDiv.removeChild(image);
+                _boardDiv.removeChild(image);
                 delete image;
 
                 _boardInAnimation = false;
@@ -554,8 +554,7 @@ function boardCanvasDrawSquare(atCenter)
     var canvas = document.getElementById("board-canvas-1");
     var context = canvas.getContext("2d");
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -589,8 +588,7 @@ function boardCanvasDrawCircle(atCenter)
     var canvas = document.getElementById("board-canvas-1");
     var context = canvas.getContext("2d");
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -616,6 +614,10 @@ function boardSquareSelected(positionNotation, mouseEventType)
     if(_currentSquareSelected != "")
     {
         _boardDraggingPieceDiv.innerHTML = "";
+
+        var images = _boardDiv.getElementsByTagName("img");
+        for(var i = 0; i < images.length; i++)
+            images[i].style.cursor = "grabbing";
 
         for(var i = 0; i < _currentSquareSelectedMoves.length; i++)
         {
@@ -644,8 +646,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 var colorAndPiece = getColorAndPieceForPositionNotation(positionNotation); 
                 var imageSrc = getImageSourceForColorAndPiece(colorAndPiece);
 
-                var boardDiv = document.getElementById("board-div");
-                var boardDivRect = boardDiv.getBoundingClientRect();
+                var boardDivRect = _boardDiv.getBoundingClientRect();
                 var boardDivSize = (boardDivRect.right - boardDivRect.left);
                 var boardDivSquareSize = boardDivSize / 8;
 
@@ -657,6 +658,10 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 _boardDraggingPieceDiv.style.top = top + "px";
                 _boardDraggingPieceDiv.style.width =  boardDivSquareSize + "px";
                 _boardDraggingPieceDiv.style.height = boardDivSquareSize + "px";
+
+                var images = _boardDiv.getElementsByTagName("img");
+                for(var i = 0; i < images.length; i++)
+                    images[i].style.cursor = "grabbing";
             }
         }
         else
@@ -755,8 +760,7 @@ function clockMillisecondIntervalTick(turn)
 
 function getBoardSquareCenterPosition(moveEventClientPosition)
 {
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -781,8 +785,7 @@ function getBoardSquarePositionForPositionNotation(notation)
 {
     var rankFile = getRankAndFileForPositionNotation(notation);
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -850,8 +853,7 @@ function getMoveForNotation(notation, chessJSObject)
 
 function getPositionForBoardDraggingPieceDivFromMouseEvent(mouseEvent)
 {
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -882,8 +884,7 @@ function getPositionNotationForBoardSquareValue(value)
 
 function getPositionNotationForRealBoardPosition(position)
 {
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
@@ -1098,20 +1099,9 @@ function pointArrayContains(pointArray, point)
 
 function positionControlsDiv()
 {
-    /*
-    var content = document.getElementById("content");
-    var contentDivRect = content.getBoundingClientRect();
-    var contentDivSize = contentDivRect.right - contentDivRect.left;
-    var controlsDiv = document.getElementById("controls-div");
-    var controlsDivRect = controlsDiv.getBoundingClientRect();
-    var controlsDivSize = controlsDivRect.right - controlsDivRect.left;
-    controlsDiv.style.left = (contentDivSize - (controlsDivSize + 10)) + "px";
-    */
-
-    var boardDiv = document.getElementById("board-div");
     var content = document.getElementById("content");
     var controlsDiv = document.getElementById("controls-div");
-    var left = boardDiv.offsetLeft + boardDiv.offsetWidth + 25;
+    var left = _boardDiv.offsetLeft + _boardDiv.offsetWidth + 25;
     while(left + controlsDiv.offsetWidth > content.offsetWidth)
         left--;
     controlsDiv.style.left = left + "px";
@@ -1301,12 +1291,11 @@ function saveBoardAsImage()
             });
     }
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSizeFactor = boardDivSize * 1.25;
 
-    getScreenshotOfElement(boardDiv, { x: 0, y: 0 }, boardDivSizeFactor, boardDivSizeFactor, (data) => 
+    getScreenshotOfElement(_boardDiv, { x: 0, y: 0 }, boardDivSizeFactor, boardDivSizeFactor, (data) => 
     {
         var link = document.createElement("a");
         link.setAttribute("href", data);
@@ -1531,6 +1520,8 @@ function setup()
     setCurrentBoardStateToChessJSBoard();
     _boardStateHistory = new BoardStateHistory();
 
+    _boardDiv = document.getElementById("board-div");
+    _boardDiv.addEventListener('contextmenu', event => event.preventDefault());
     _boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
 
     _stockfishMessageDiv = document.getElementById("controls-stockfish-message-div");
@@ -1543,9 +1534,6 @@ function setup()
     updateBoardFromBoardState(_currentBoardState);
     updateControlsFENInput();
     updateControlsMovesTable();
-
-    var boardDiv = document.getElementById("board-div");
-    boardDiv.addEventListener('contextmenu', event => event.preventDefault());
 
     window.addEventListener('resize', window_resize);
 }
@@ -1732,9 +1720,8 @@ function stockfishUpdateMessage(message)
 
 function updateBoardFromBoardState(boardState)
 {
-    var boardDiv = document.getElementById("board-div");
-    boardDiv.style.background = "rgba(255, 255, 255, 0)";
-    boardDiv.style.backgroundImage = (_boardTheme.backgroundImage != "") ? `url(${_boardTheme.backgroundImage})` : "none";
+    _boardDiv.style.background = "rgba(255, 255, 255, 0)";
+    _boardDiv.style.backgroundImage = (_boardTheme.backgroundImage != "") ? `url(${_boardTheme.backgroundImage})` : "none";
 
     var bgColorIndex = 0;
 
@@ -2362,11 +2349,10 @@ function hideControlsButton_onClick()
     _controlsVisible = false;
     document.getElementById("controls-div").style.display = "none";
 
-    var boardDiv = document.getElementById("board-div");
-    var boardDivRect = boardDiv.getBoundingClientRect();
+    var boardDivRect = _boardDiv.getBoundingClientRect();
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var clientWidth = document.getElementsByTagName('body')[0].clientWidth;
-    boardDiv.style.transform = `translateX(${((clientWidth / 2) - (boardDivSize / 2))}px)`;
+    _boardDiv.style.transform = `translateX(${((clientWidth / 2) - (boardDivSize / 2))}px)`;
 
     document.getElementById("show-controls-button").style.display = "block";
     document.getElementById("side-time-div").style.display = "block";
@@ -2382,9 +2368,8 @@ function showControlsButton_onClick()
     _controlsVisible = true;
     document.getElementById("controls-div").style.display = "block";
 
-    var boardDiv = document.getElementById("board-div");
     var content = document.getElementById("content");
-    boardDiv.style.transform = "";
+    _boardDiv.style.transform = "";
 
     document.getElementById("show-controls-button").style.display = "none";
     document.getElementById("side-time-div").style.display = "none";
