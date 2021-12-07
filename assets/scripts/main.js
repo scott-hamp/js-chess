@@ -1513,16 +1513,16 @@ function setCurrentBoardStateToFEN(fen)
 
 function setup()
 {
+    _boardDiv = document.getElementById("board-div");
+    _boardDiv.addEventListener('contextmenu', event => event.preventDefault());
+    _boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
+
     buildBoardSquaresTable();
     positionControlsDiv();
 
     setupChessJS();
     setCurrentBoardStateToChessJSBoard();
     _boardStateHistory = new BoardStateHistory();
-
-    _boardDiv = document.getElementById("board-div");
-    _boardDiv.addEventListener('contextmenu', event => event.preventDefault());
-    _boardDraggingPieceDiv = document.getElementById("board-dragging-piece-div");
 
     _stockfishMessageDiv = document.getElementById("controls-stockfish-message-div");
     _stockfishLinesSelect = document.getElementById("controls-stockfish-lines-select");
