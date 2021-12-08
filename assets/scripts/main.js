@@ -100,10 +100,10 @@ var _piecesets =
         name: "Begebies",
         path: "assets/images/begebies-",
         extension: "svg",
-        shadowColor: "rgba(20,20,20,0.45)",
-        shadowBlur: 3,
-        shadowOffsetX: 3,
-        shadowOffsetY: 3
+        shadowColor: "rgba(0,0,0,0)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
     },
     {
         name: "CBurnett",
