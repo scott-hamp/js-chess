@@ -617,7 +617,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
         var images = _boardDiv.getElementsByTagName("img");
         for(var i = 0; i < images.length; i++)
-            images[i].style.cursor = "grabbing";
+            images[i].style.cursor = "default";
 
         for(var i = 0; i < _currentSquareSelectedMoves.length; i++)
         {
@@ -671,6 +671,8 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
             _currentSquareSelected = "";
             _currentSquareSelectedMoves = null;
+
+            updateBoardFromBoardState(_currentBoardState);
         }
     }
 }
