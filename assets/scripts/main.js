@@ -133,7 +133,7 @@ var _piecesets =
         shadowOffsetY: 3
     }
 ];
-var _pieceset = _piecesets[0];
+var _pieceset = _piecesets[1];
 var _controlsVisible = true;
 var _inFullscreen = false;
 var _sounds = 
