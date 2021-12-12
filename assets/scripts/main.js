@@ -69,6 +69,14 @@ var _boardThemes =
         labelDark: "rgb(102, 130, 159)"
     },
     {
+        name: "Purple",
+        light: "rgb(240, 238, 240)", 
+        dark: "rgb(148, 95, 183)",
+        backgroundImage: "",
+        labelLight: "rgb(240, 238, 240)", 
+        labelDark: "rgb(148, 95, 183)"
+    },
+    {
         name: "Stone",
         light: "rgba(188, 179, 165, 0.60)", 
         dark: "rgba(38, 36, 39, 0.60)",
