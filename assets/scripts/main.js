@@ -1,39 +1,21 @@
 var _chessJS = new Chess();
-
-const _stockfish = STOCKFISH();
-var _stockfishIsReady = false;
-var _stockfishEnabled = -1;      // -1 = disabled; 0 = enabled; 1 = play as white; 2 = play as black;
-
-_stockfish.onmessage = function (event) {
-	stockfishReceiveData(event.data ? event.data : event);
-};
-
+var _controlsVisible = true;
 var _currentBoardState = null;
+var _currentPuzzle = null;
 var _currentSquareSelected = "";
 var _currentSquareSelectedMoves = null;
-var _boardDiv = null;
-var _boardStateHistory = null;
-var _boardStateHistoryLoadedGame = null;
-var _boardOrientation = 0;
-var _boardDraggingPieceDiv = null;
-var _boardInAnimation = false;
-var _currentPuzzle = null;
-var _stockfishMessageDiv = null;
-var _stockfishLinesSelect = null;
-var _stockfishLines = [];
-var _stockfishTimeout = null;
-var _moveClockSecondTimers = [ 1000, 1000 ];
-var _moveClockMillisecondIntervals = 
-[
-    setInterval(clockMillisecondIntervalTick, 10, 0),
-    setInterval(clockMillisecondIntervalTick, 10, 1)
-];
-var _rightMouseDragPoints = null;
-var _boardHighlights = [];
 var _boardCanvasArrows = [];
 var _boardCanvasCircles = [];
-var _boardCanvasSquares = [];
 var _boardCanvasDrawColor = "rgba(255,0,0,0.75)";
+var _boardCanvasSquares = [];
+var _boardDiv = null;
+var _boardDraggingPieceDiv = null;
+var _boardHighlights = [];
+var _boardInAnimation = false;
+var _boardOrientation = 0;
+var _boardSquareTDImgs = null;
+var _boardStateHistory = null;
+var _boardStateHistoryLoadedGame = null;
 var _boardThemes = 
 [
     {
@@ -102,6 +84,13 @@ var _boardThemes =
     }
 ];
 var _boardTheme = _boardThemes[1];
+var _inFullscreen = false;
+var _moveClockSecondTimers = [ 1000, 1000 ];
+var _moveClockMillisecondIntervals = 
+[
+    setInterval(clockMillisecondIntervalTick, 10, 0),
+    setInterval(clockMillisecondIntervalTick, 10, 1)
+];
 var _piecesets = 
 [
     {
@@ -142,14 +131,24 @@ var _piecesets =
     }
 ];
 var _pieceset = _piecesets[1];
-var _controlsVisible = true;
-var _inFullscreen = false;
+var _rightMouseDragPoints = null;
 var _sounds = 
 [
     new Audio("assets/sounds/move-0.wav"),
     new Audio("assets/sounds/capture-0.wav"),
     new Audio("assets/sounds/castle-0.wav")
 ];
+const _stockfish = STOCKFISH();
+var _stockfishEnabled = -1;      // -1 = disabled; 0 = enabled; 1 = play as white; 2 = play as black;
+var _stockfishIsReady = false;
+var _stockfishLinesSelect = null;
+var _stockfishLines = [];
+var _stockfishMessageDiv = null;
+var _stockfishTimeout = null;
+
+_stockfish.onmessage = function (event) {
+	stockfishReceiveData(event.data ? event.data : event);
+};
 
 class BoardState
 {
@@ -328,7 +327,7 @@ function animateMove(move, completedFunction)
         var from = getBoardSquarePositionForPositionNotation(fromNotation);
         var to = getBoardSquarePositionForPositionNotation(toNotation);
 
-        document.getElementById(`board-square-td-img_${fromNotation}`).src = "assets/images/empty-0.png";
+        _boardSquareTDImgs[fromNotation].src = "assets/images/empty-0.png";
 
         var image = new Image();
         image.id = "animating-piece-0-img";
@@ -639,7 +638,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
         var colorAndPiece = getColorAndPieceForPositionNotation(_currentSquareSelected); 
         var imageSrc = getImageSourceForColorAndPiece(colorAndPiece);
-        document.getElementById(`board-square-td-img_${_currentSquareSelected}`).src = imageSrc;
+        _boardSquareTDImgs[_currentSquareSelected].src = imageSrc;
     }
     
     if(squareValue != "")
@@ -658,7 +657,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
                 var boardDivSize = (boardDivRect.right - boardDivRect.left);
                 var boardDivSquareSize = boardDivSize / 8;
 
-                document.getElementById(`board-square-td-img_${positionNotation}`).src = "assets/images/empty-0.png";
+                _boardSquareTDImgs[positionNotation].src = "assets/images/empty-0.png";
                 _boardDraggingPieceDiv.innerHTML = `<img src="${imageSrc}" width="${boardDivSquareSize}" height="${boardDivSquareSize}" style="filter: drop-shadow(${_pieceset.shadowOffsetX}px ${_pieceset.shadowOffsetY}px ${_pieceset.shadowBlur}px ${_pieceset.shadowColor})" />`;
                 var left = (_boardOrientation == 0) ? (rankAndFile.file * boardDivSquareSize) : ((7 - rankAndFile.file) * boardDivSquareSize);
                 var top = (_boardOrientation == 0) ? (rankAndFile.rank * boardDivSquareSize) : ((7 - rankAndFile.rank) * boardDivSquareSize);
@@ -675,7 +674,7 @@ function boardSquareSelected(positionNotation, mouseEventType)
         else
         {
             if(_currentSquareSelected == positionNotation)
-                document.getElementById(`board-square-td-img_${positionNotation}`).src = getImageSourceForColorAndPiece(getColorAndPieceForPositionNotation(positionNotation));
+                _boardSquareTDImgs[positionNotation].src = getImageSourceForColorAndPiece(getColorAndPieceForPositionNotation(positionNotation));
 
             _currentSquareSelected = "";
             _currentSquareSelectedMoves = null;
@@ -687,6 +686,8 @@ function boardSquareSelected(positionNotation, mouseEventType)
 
 function buildBoardSquaresTable()
 {
+    _boardSquareTDImgs = {};
+
     var boardSquaresTable = document.getElementById("board-squares-table");
     var boardSquareSize = (document.getElementById("content").offsetHeight * 0.95) / 8;
     var innerHTML = "";
@@ -715,6 +716,15 @@ function buildBoardSquaresTable()
     }
 
     boardSquaresTable.innerHTML = innerHTML;
+
+    for(var rank = 0; rank < 8; rank++)
+    {
+        for(var file = 0; file < 8; file++)
+        {
+            var positionNotation = getPositionNotationForRankAndFile(rank, file);
+            _boardSquareTDImgs[positionNotation] = document.getElementById(`board-square-td-img_${positionNotation}`);
+        }
+    }
 
     var boardCanvas = document.getElementById("board-canvas-1");
     boardCanvas.width = boardSquareSize * 8;
@@ -1743,7 +1753,7 @@ function updateBoardFromBoardState(boardState)
             var squareValue = boardState.squares[squareIndex];
             var positionNotation = getPositionNotationForRankAndFile(rank, file);
             var boardSquareTD = document.getElementById(`board-square-td_${positionNotation}`);
-            var boardSquareTDImg = document.getElementById(`board-square-td-img_${positionNotation}`);
+            var boardSquareTDImg = _boardSquareTDImgs[positionNotation];
             var bgColor = (bgColorIndex % 2 == 0) ? _boardTheme.light : _boardTheme.dark;
 
             boardSquareTD.style.backgroundColor = bgColor;
@@ -2138,7 +2148,7 @@ function controlsGameButton_onClick(descriptor)
             move = _boardStateHistory.moves[_boardStateHistory.atIndex];
         }
 
-        document.getElementById(`board-square-td-img_${move.from}`).src = "assets/images/empty-0.png";
+        _boardSquareTDImgs[move.from].src = "assets/images/empty-0.png";
         boardCanvasClear();
         setBoardHighlight(move.from, "from");
         setBoardHighlight(move.to, "to");
