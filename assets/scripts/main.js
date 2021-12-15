@@ -260,6 +260,14 @@ class BoardStateHistory
         }
         else
         {
+            if(this.atIndex == 0 && this.startingFEN.split(' ')[1] == 'b')
+            {
+                this.comments.push("");
+                this.moves.push(null);
+                this.states.push(_currentBoardState);
+                this.atIndex++;
+            }
+
             this.comments[this.atIndex] = comment;
             this.moves[this.atIndex] = move;
             this.states[this.atIndex] = boardState;
@@ -1071,8 +1079,6 @@ function makeMoveFromCurrentBoardState(move, animate)
         document.getElementById("controls-game-button-next-move").disabled = false;
         document.getElementById("controls-game-button-last-move").disabled = false;
         document.getElementById("controls-game-button-save").disabled = false;
-
-        //console.log(`Move: ${move.san}`);
     }
     
     setBoardHighlight(move.from, "from");
