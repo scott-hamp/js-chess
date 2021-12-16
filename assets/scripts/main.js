@@ -1,3 +1,6 @@
+'use strict';
+
+var _animateMoveSubInterval = null;
 var _chessJS = new Chess();
 var _controlsVisible = true;
 var _currentBoardState = null;
@@ -354,7 +357,13 @@ function animateMove(move, completedFunction)
         moveVector.normalize();
         moveVector.scaleBy(positionDistance(from, to) / 20.0);
 
-        var moveInterval = setInterval(() => 
+        if(_animateMoveSubInterval != null)
+        {
+            clearInterval(_animateMoveSubInterval);
+            _animateMoveSubInterval = null;
+        }
+
+        _animateMoveSubInterval = setInterval(() => 
         {
             if(imagePosition.x != to.x || imagePosition.y != to.y)
             {
@@ -368,9 +377,9 @@ function animateMove(move, completedFunction)
             }
             else
             {
-                clearInterval(moveInterval);
+                clearInterval(_animateMoveSubInterval);
                 _boardDiv.removeChild(image);
-                delete image;
+                //delete image;
 
                 _boardInAnimation = false;
 
@@ -1152,7 +1161,18 @@ function reset()
     _boardStateHistoryLoadedGame = null;
     _currentSquareSelected = "";
     _currentPuzzle = null;
-    if(_stockfishTimeout != null) clearTimeout(_stockfishTimeout);
+
+    if(_animateMoveSubInterval != null) 
+    {
+        clearInterval(_animateMoveSubInterval);
+        _animateMoveSubInterval = null;
+    }
+
+    if(_stockfishTimeout != null)
+    {
+        clearTimeout(_stockfishTimeout);
+        _stockfishTimeout = null;
+    }
 
     clearBoardHighlights();
     updateBoardFromBoardState(_currentBoardState);
@@ -1329,7 +1349,7 @@ function saveBoardAsImage()
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        delete link;
+        //delete link;
     });
 }
 
@@ -1739,8 +1759,6 @@ function stockfishUpdateLines()
 
 function stockfishUpdateMessage(message)
 {
-    //console.log(`Stockfish: "${message}"`);
-
     _stockfishMessageDiv.innerHTML = message;
 }
 
@@ -2042,9 +2060,9 @@ function boardDiv_onMouseUp(mouseEvent)
     if(_rightMouseDragPoints.length <= 1)
     {
         if(mouseEvent.shiftKey)
-            boardCanvasDrawSquare(to);
-        else
             boardCanvasDrawCircle(to);
+        else
+            boardCanvasDrawSquare(to);
     }
     else
         boardCanvasDrawArrowComplex(_rightMouseDragPoints);
@@ -2159,7 +2177,7 @@ function controlsGameButton_onClick(descriptor)
         setBoardHighlight(move.from, "from");
         setBoardHighlight(move.to, "to");
 
-        animateMove(move, () => 
+        function completedFunction()
         {
             setCurrentBoardStateByMoveIndex(_boardStateHistory.atIndex);
 
@@ -2174,7 +2192,9 @@ function controlsGameButton_onClick(descriptor)
             }
 
             playSoundForMove(move);
-        });
+        }
+
+        animateMove(move, completedFunction);
 
         return;
     }
@@ -2214,6 +2234,8 @@ function controlsGameButton_onClick(descriptor)
 
 function controlsGamesMovesTableCell_onMouseDown(index)
 {
+    if(_boardInAnimation) return;
+
     setCurrentBoardStateByMoveIndex(index);
 
     if(index == 0) return;
