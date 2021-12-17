@@ -1599,9 +1599,12 @@ function stockfishBestMoveDecided(moveAsFromTo)
     if(_stockfishEnabled == -1) return;
 
     var line = _stockfishLines[_stockfishLines.length - 1];
-    var stockfishScore = (line.score / 100.0);
-    if(stockfishScore >= 0.0) stockfishScore = "+" + stockfishScore;
-
+    var stockfishScore = 0.0;
+    if(line)
+    {
+        stockfishScore = (line.score / 100.0);
+        if(stockfishScore >= 0.0) stockfishScore = "+" + stockfishScore;
+    }
     var move = getMoveForNotation(moveAsFromTo);
     var moveValue = (move == null) ? moveAsFromTo : move.san;
 
