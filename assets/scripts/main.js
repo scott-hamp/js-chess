@@ -582,18 +582,22 @@ function boardCanvasDrawSquare(atCenter)
     var boardDivSize = (boardDivRect.right - boardDivRect.left);
     var boardDivSquareSize = boardDivSize / 8;
 
-    context.fillStyle = _boardCanvasDrawColor;
     context.strokeStyle = _boardCanvasDrawColor;
+    context.lineWidth = 10;
+    context.lineCap = "butt";
+    context.lineJoin = "bevel";
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
     context.moveTo(0, 0);
     context.beginPath();
-    context.lineTo(atCenter.x - boardDivSquareSize / 2, atCenter.y - boardDivSquareSize / 2);
-    context.lineTo(atCenter.x + boardDivSquareSize / 2, atCenter.y - boardDivSquareSize / 2);
-    context.lineTo(atCenter.x + boardDivSquareSize / 2, atCenter.y + boardDivSquareSize / 2);
-    context.lineTo(atCenter.x - boardDivSquareSize / 2, atCenter.y + boardDivSquareSize / 2);
-    context.fill();
+    context.moveTo((atCenter.x - boardDivSquareSize / 2) + 5, (atCenter.y - boardDivSquareSize / 2) + 5);
+    context.lineTo((atCenter.x + boardDivSquareSize / 2) - 5, (atCenter.y - boardDivSquareSize / 2) + 5);
+    context.lineTo((atCenter.x + boardDivSquareSize / 2) - 5, (atCenter.y + boardDivSquareSize / 2) - 5);
+    context.lineTo((atCenter.x - boardDivSquareSize / 2) + 5, (atCenter.y + boardDivSquareSize / 2) - 5);
+    context.lineTo((atCenter.x - boardDivSquareSize / 2) + 5, (atCenter.y - boardDivSquareSize / 2) + 5);
+    context.closePath();
+    context.stroke();
 }
 
 function boardCanvasDrawCircle(atCenter)
@@ -617,10 +621,11 @@ function boardCanvasDrawCircle(atCenter)
     var boardDivSquareSize = boardDivSize / 8;
 
     context.strokeStyle = _boardCanvasDrawColor;
+    context.lineWidth = 5;
     context.shadowColor = "rgba(150, 150, 150, 0.4)";
     context.shadowBlur = 3;
 
-    for(var i = boardDivSquareSize / 2; i >= (boardDivSquareSize / 2) - 5; i--)
+    for(var i = (boardDivSquareSize / 2) - 3; i >= (boardDivSquareSize / 2) - 8; i--)
     {
         context.beginPath();
         context.arc(atCenter.x, atCenter.y, i, 0, 2 * Math.PI);
