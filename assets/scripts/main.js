@@ -291,11 +291,9 @@ class BoardStateHistory
     clear()
     {
         this.atIndex = 0;
-        while(this.moves.length > 0)
-        {
-            this.moves.pop();
-            this.states.pop();
-        }
+        while(this.comments.length > 0) this.comments.pop();
+        while(this.moves.length > 0) this.moves.pop();
+        while(this.states.length > 0) this.states.pop();
         this.startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
 }
@@ -985,26 +983,33 @@ function loadGame()
         _boardStateHistory.clear();
         _boardStateHistoryLoadedGame = new BoardStateHistory();
 
+        var history = _chessJS.history({ verbose: true });
+        var comments = _chessJS.get_comments();
+
         var chessJSAlt = new Chess();
         chessJSAlt.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        var fen = "";
 
-        var history = _chessJS.history({ verbose: true });
         for(var i = 0; i < history.length; i++)
         {
+            var comment = "";
+
+            if(fen != "")
+            {
+                for(var j = 0; j < comments.length; j++)
+                {
+                    if(comments[j].fen.trim() != fen) continue;
+
+                    comment = comments[j].comment;
+                    break;
+                }
+            }
+
             var move = history[i];
             chessJSAlt.move(move.san);
 
-            var fen = chessJSAlt.fen();
+            fen = chessJSAlt.fen().trim();
             var boardState = new BoardState(fen);
-            var comments = _chessJS.get_comments();
-            var comment = "";
-
-            for(var j = 0; j < comments.length; j++)
-            {
-                if(comments[j].fen != fen) continue;
-                comment = comments[j].comment;
-                break;
-            }
 
             _boardStateHistory.add(move, boardState, comment, false);
             _boardStateHistoryLoadedGame.add(move, boardState, comment, false);
@@ -1412,7 +1417,7 @@ function saveGame()
         var moveWhite = _boardStateHistory.moves[i];
         content += `${fullMoveNumber}. ${moveWhite.san} `;
 
-        var comment = _boardStateHistory.comments[i];
+        var comment = _boardStateHistory.comments[i + 1];
         if(comment != null)
         {
             comment = comment.trim();
@@ -1424,7 +1429,7 @@ function saveGame()
             var moveBlack = _boardStateHistory.moves[i + 1];
             content += `${moveBlack.san} `;
 
-            comment = _boardStateHistory.comments[i + 1];
+            comment = _boardStateHistory.comments[i + 2];
             if(comment != null)
             {
                 comment = comment.trim();
@@ -1443,8 +1448,6 @@ function saveGame()
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    //window.open("data:application/txt," + encodeURIComponent(content), "_self");
 }
 
 function selectOpening(opening)
@@ -2011,7 +2014,7 @@ function updateControlsPuzzleDiv()
 
 function updateGameDetailsMoveCommentTextArea()
 {
-    var comment = _boardStateHistory.comments[_boardStateHistory.atIndex]
+    var comment = _boardStateHistory.comments[_boardStateHistory.atIndex];
     if(comment == null) comment = "";
 
     document.getElementById("controls-game-details-move-comment-text-area").value = comment;
